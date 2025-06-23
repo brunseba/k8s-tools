@@ -4,6 +4,7 @@ CLI interface for Kubernetes Resource Analyzer.
 
 import json
 import logging
+from datetime import datetime
 from pathlib import Path
 from typing import List, Optional
 
@@ -15,7 +16,7 @@ from rich.tree import Tree
 
 from .analyzer import ResourceAnalyzer
 from .models import ClusterState, RelationshipType
-from .parser import parse_kubectl_export
+from .parser import parse_kubectl_export, discover_and_parse, find_kubernetes_files
 
 # Initialize CLI app and console
 app = typer.Typer(
@@ -203,6 +204,143 @@ def validate(
         
     except Exception as e:
         console.print(f"[red]Error validating configurations:[/red] {e}")
+        raise typer.Exit(1)
+
+
+@app.command()
+def scan(
+    directory: str = typer.Argument(..., help="Directory to scan for Kubernetes files"),
+    patterns: Optional[List[str]] = typer.Option(
+        None, "--pattern", "-p", help="Glob patterns to match files (e.g., '*.yaml', 'deployment-*.json')"
+    ),
+    recursive: bool = typer.Option(True, "--recursive/--no-recursive", "-r", help="Search recursively in subdirectories"),
+    max_files: Optional[int] = typer.Option(None, "--max-files", "-m", help="Maximum number of files to process"),
+    output: Optional[str] = typer.Option(
+        None, "--output", "-o", help="Output file path (JSON format)"
+    ),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose logging"),
+) -> None:
+    """Scan directory for Kubernetes files and parse them all."""
+    
+    if verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+    
+    console.print(f"[bold blue]Scanning directory:[/bold blue] {directory}")
+    
+    try:
+        # Discover and parse files
+        cluster_state = discover_and_parse(
+            directory, 
+            patterns=patterns, 
+            recursive=recursive, 
+            max_files=max_files
+        )
+        
+        # Display results
+        _display_parse_results(cluster_state)
+        
+        # Save output if requested
+        if output:
+            _save_cluster_state(cluster_state, output)
+            console.print(f"[green]Results saved to:[/green] {output}")
+        
+    except Exception as e:
+        console.print(f"[red]Error scanning directory:[/red] {e}")
+        raise typer.Exit(1)
+
+
+@app.command()
+def batch_analyze(
+    directory: str = typer.Argument(..., help="Directory to scan for Kubernetes files"),
+    patterns: Optional[List[str]] = typer.Option(
+        None, "--pattern", "-p", help="Glob patterns to match files"
+    ),
+    recursive: bool = typer.Option(True, "--recursive/--no-recursive", "-r", help="Search recursively in subdirectories"),
+    max_files: Optional[int] = typer.Option(None, "--max-files", "-m", help="Maximum number of files to process"),
+    output: Optional[str] = typer.Option(
+        None, "--output", "-o", help="Output file path (JSON format)"
+    ),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose logging"),
+) -> None:
+    """Scan directory, parse all Kubernetes files, and perform relationship analysis."""
+    
+    if verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+    
+    console.print(f"[bold blue]Batch analyzing directory:[/bold blue] {directory}")
+    
+    try:
+        # Discover and parse files
+        cluster_state = discover_and_parse(
+            directory, 
+            patterns=patterns, 
+            recursive=recursive, 
+            max_files=max_files
+        )
+        
+        # Analyze relationships
+        analyzer = ResourceAnalyzer()
+        cluster_state = analyzer.analyze_cluster(cluster_state)
+        
+        # Display analysis results
+        _display_analysis_results(cluster_state)
+        
+        # Save output if requested
+        if output:
+            _save_cluster_state(cluster_state, output)
+            console.print(f"[green]Analysis results saved to:[/green] {output}")
+        
+    except Exception as e:
+        console.print(f"[red]Error in batch analysis:[/red] {e}")
+        raise typer.Exit(1)
+
+
+@app.command()
+def list_files(
+    directory: str = typer.Argument(..., help="Directory to scan for Kubernetes files"),
+    patterns: Optional[List[str]] = typer.Option(
+        None, "--pattern", "-p", help="Glob patterns to match files"
+    ),
+    recursive: bool = typer.Option(True, "--recursive/--no-recursive", "-r", help="Search recursively in subdirectories"),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose logging"),
+) -> None:
+    """List all Kubernetes files that would be processed in a directory."""
+    
+    if verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+    
+    console.print(f"[bold blue]Finding Kubernetes files in:[/bold blue] {directory}")
+    
+    try:
+        # Find files
+        files = find_kubernetes_files(directory, patterns=patterns, recursive=recursive)
+        
+        if not files:
+            console.print("[yellow]No Kubernetes files found[/yellow]")
+            return
+        
+        # Display files in a table
+        table = Table(title=f"Found {len(files)} Kubernetes Files", show_header=True, header_style="bold magenta")
+        table.add_column("#", style="dim", width=4)
+        table.add_column("File Path", style="cyan")
+        table.add_column("Size", justify="right", style="green")
+        table.add_column("Modified", style="yellow")
+        
+        for i, file_path in enumerate(files, 1):
+            try:
+                stat = file_path.stat()
+                size = f"{stat.st_size:,} bytes"
+                modified = datetime.fromtimestamp(stat.st_mtime).strftime("%Y-%m-%d %H:%M")
+            except OSError:
+                size = "Unknown"
+                modified = "Unknown"
+            
+            table.add_row(str(i), str(file_path), size, modified)
+        
+        console.print(table)
+        
+    except Exception as e:
+        console.print(f"[red]Error listing files:[/red] {e}")
         raise typer.Exit(1)
 
 

@@ -7,6 +7,8 @@ import logging
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
+import glob
+import os
 
 import yaml
 from pydantic import ValidationError
@@ -73,16 +75,23 @@ class ResourceParser:
     def parse_multiple_files(self, file_paths: List[Union[str, Path]]) -> ClusterState:
         """Parse multiple export files and merge into single cluster state."""
         cluster_state = ClusterState()
+        total_files = len(file_paths)
         
-        for file_path in file_paths:
+        for i, file_path in enumerate(file_paths, 1):
             try:
+                logger.info(f"Processing file {i}/{total_files}: {Path(file_path).name}")
                 file_cluster_state = self.parse_file(file_path)
+                
                 # Merge resources
                 cluster_state.resources.extend(file_cluster_state.resources)
                 cluster_state.relationships.extend(file_cluster_state.relationships)
                 
                 # Merge cluster info
                 cluster_state.cluster_info.update(file_cluster_state.cluster_info)
+                
+                # Log progress every 10 files or on completion
+                if i % 10 == 0 or i == total_files:
+                    logger.info(f"Progress: {i}/{total_files} files processed")
                 
             except Exception as e:
                 logger.error(f"Error parsing file {file_path}: {e}")
@@ -252,6 +261,105 @@ class ResourceParser:
             "skipped": self.skipped_count,
             "total": self.parsed_count + self.error_count + self.skipped_count,
         }
+
+
+def find_kubernetes_files(
+    path: Union[str, Path],
+    patterns: Optional[List[str]] = None,
+    recursive: bool = True
+) -> List[Path]:
+    """
+    Find Kubernetes files in a directory using glob patterns.
+    
+    Args:
+        path: Directory path to search
+        patterns: Glob patterns to match (default: kubernetes-related patterns)
+        recursive: Whether to search recursively
+    
+    Returns:
+        List of matching file paths
+    """
+    path = Path(path)
+    
+    if not path.exists():
+        raise FileNotFoundError(f"Path not found: {path}")
+    
+    if not path.is_dir():
+        # If it's a file, return it if it matches patterns
+        if not patterns or any(path.match(pattern) for pattern in patterns):
+            return [path]
+        return []
+    
+    # Default patterns for Kubernetes files
+    if not patterns:
+        patterns = [
+            "*.yaml",
+            "*.yml", 
+            "*.json",
+            "*-export.yaml",
+            "*-export.yml",
+            "*-export.json",
+            "kubectl-*.yaml",
+            "kubectl-*.yml",
+            "kubectl-*.json",
+        ]
+    
+    found_files = []
+    
+    for pattern in patterns:
+        if recursive:
+            # Use ** for recursive search
+            search_pattern = path / "**" / pattern
+            found_files.extend(path.glob(f"**/{pattern}"))
+        else:
+            # Search only in the current directory
+            found_files.extend(path.glob(pattern))
+    
+    # Remove duplicates and sort
+    unique_files = list(set(found_files))
+    unique_files.sort()
+    
+    logger.info(f"Found {len(unique_files)} Kubernetes files in {path}")
+    return unique_files
+
+
+def discover_and_parse(
+    path: Union[str, Path],
+    patterns: Optional[List[str]] = None,
+    recursive: bool = True,
+    max_files: Optional[int] = None
+) -> ClusterState:
+    """
+    Discover and parse all Kubernetes files in a directory.
+    
+    Args:
+        path: Directory path to search
+        patterns: Glob patterns to match files
+        recursive: Whether to search recursively
+        max_files: Maximum number of files to process
+    
+    Returns:
+        ClusterState with parsed resources from all found files
+    """
+    files = find_kubernetes_files(path, patterns, recursive)
+    
+    if not files:
+        logger.warning(f"No Kubernetes files found in {path}")
+        return ClusterState()
+    
+    if max_files and len(files) > max_files:
+        logger.warning(f"Found {len(files)} files, limiting to {max_files}")
+        files = files[:max_files]
+    
+    logger.info(f"Parsing {len(files)} files from {path}")
+    
+    parser = ResourceParser()
+    cluster_state = parser.parse_multiple_files(files)
+    
+    stats = parser.get_parse_stats()
+    logger.info(f"Directory parsing complete: {stats}")
+    
+    return cluster_state
 
 
 def parse_kubectl_export(

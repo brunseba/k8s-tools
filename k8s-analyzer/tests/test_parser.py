@@ -3,13 +3,14 @@ Tests for the Kubernetes resource parser.
 """
 
 import json
+import os
 from pathlib import Path
 
 import pytest
 import yaml
 
 from k8s_analyzer.models import ClusterState, KubernetesResource
-from k8s_analyzer.parser import ResourceParser
+from k8s_analyzer.parser import ResourceParser, find_kubernetes_files, discover_and_parse
 
 
 class TestResourceParser:
@@ -270,3 +271,143 @@ def test_parse_kubectl_export_function(sample_pod_data: dict, tmp_path: Path) ->
     assert pod.kind == "Pod"
     assert pod.metadata.name == "test-pod"
     assert isinstance(cluster_state, ClusterState)
+
+
+class TestFileDiscovery:
+    """Test file discovery and batch processing capabilities."""
+    
+    def test_find_kubernetes_files_default_patterns(self, tmp_path: Path) -> None:
+        """Test finding Kubernetes files with default patterns."""
+        # Create test files
+        (tmp_path / "pod.yaml").write_text("apiVersion: v1\nkind: Pod")
+        (tmp_path / "service.yml").write_text("apiVersion: v1\nkind: Service")
+        (tmp_path / "config.json").write_text('{"apiVersion": "v1", "kind": "ConfigMap"}')
+        (tmp_path / "deployment-export.yaml").write_text("apiVersion: apps/v1\nkind: Deployment")
+        (tmp_path / "kubectl-all.json").write_text('{"kind": "List", "items": []}')
+        (tmp_path / "readme.txt").write_text("This is not a Kubernetes file")
+        
+        # Find files
+        files = find_kubernetes_files(tmp_path)
+        
+        # Should find all Kubernetes files but not readme.txt
+        assert len(files) == 5
+        file_names = {f.name for f in files}
+        assert "pod.yaml" in file_names
+        assert "service.yml" in file_names
+        assert "config.json" in file_names
+        assert "deployment-export.yaml" in file_names
+        assert "kubectl-all.json" in file_names
+        assert "readme.txt" not in file_names
+    
+    def test_find_kubernetes_files_custom_patterns(self, tmp_path: Path) -> None:
+        """Test finding files with custom patterns."""
+        # Create test files
+        (tmp_path / "my-pod.yaml").write_text("apiVersion: v1\nkind: Pod")
+        (tmp_path / "my-service.yml").write_text("apiVersion: v1\nkind: Service")
+        (tmp_path / "other.yaml").write_text("apiVersion: v1\nkind: ConfigMap")
+        
+        # Find files with custom pattern
+        files = find_kubernetes_files(tmp_path, patterns=["my-*.yaml", "my-*.yml"])
+        
+        # Should only find files matching "my-*" pattern
+        assert len(files) == 2
+        file_names = {f.name for f in files}
+        assert "my-pod.yaml" in file_names
+        assert "my-service.yml" in file_names
+        assert "other.yaml" not in file_names
+    
+    def test_find_kubernetes_files_recursive(self, tmp_path: Path) -> None:
+        """Test recursive file discovery."""
+        # Create nested directory structure
+        subdir = tmp_path / "manifests" / "apps"
+        subdir.mkdir(parents=True)
+        
+        # Create files in different directories
+        (tmp_path / "namespace.yaml").write_text("apiVersion: v1\nkind: Namespace")
+        (tmp_path / "manifests" / "service.yaml").write_text("apiVersion: v1\nkind: Service")
+        (subdir / "deployment.yaml").write_text("apiVersion: apps/v1\nkind: Deployment")
+        
+        # Test recursive search (default)
+        files = find_kubernetes_files(tmp_path, recursive=True)
+        assert len(files) == 3
+        
+        # Test non-recursive search
+        files_non_recursive = find_kubernetes_files(tmp_path, recursive=False)
+        assert len(files_non_recursive) == 1
+        assert files_non_recursive[0].name == "namespace.yaml"
+    
+    def test_find_kubernetes_files_single_file(self, tmp_path: Path) -> None:
+        """Test finding a single file instead of directory."""
+        # Create a single file
+        single_file = tmp_path / "pod.yaml"
+        single_file.write_text("apiVersion: v1\nkind: Pod")
+        
+        # Find files using the file path directly
+        files = find_kubernetes_files(single_file)
+        
+        assert len(files) == 1
+        assert files[0] == single_file
+    
+    def test_discover_and_parse(self, tmp_path: Path) -> None:
+        """Test discovering and parsing all files in a directory."""
+        # Create test files with valid Kubernetes resources
+        pod_data = {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {"name": "test-pod", "namespace": "default"},
+            "spec": {"containers": [{"name": "c1", "image": "nginx"}]}
+        }
+        
+        service_data = {
+            "apiVersion": "v1",
+            "kind": "Service",
+            "metadata": {"name": "test-service", "namespace": "default"},
+            "spec": {"selector": {"app": "test"}}
+        }
+        
+        # Create files
+        (tmp_path / "pod.json").write_text(json.dumps(pod_data))
+        (tmp_path / "service.yaml").write_text(yaml.dump(service_data))
+        
+        # Discover and parse
+        cluster_state = discover_and_parse(tmp_path)
+        
+        # Verify results
+        assert len(cluster_state.resources) == 2
+        kinds = {r.kind for r in cluster_state.resources}
+        assert kinds == {"Pod", "Service"}
+    
+    def test_discover_and_parse_with_max_files(self, tmp_path: Path) -> None:
+        """Test discover and parse with file limit."""
+        # Create multiple test files
+        for i in range(5):
+            pod_data = {
+                "apiVersion": "v1",
+                "kind": "Pod",
+                "metadata": {"name": f"pod-{i}", "namespace": "default"},
+                "spec": {"containers": [{"name": "c1", "image": "nginx"}]}
+            }
+            (tmp_path / f"pod-{i}.json").write_text(json.dumps(pod_data))
+        
+        # Discover and parse with limit
+        cluster_state = discover_and_parse(tmp_path, max_files=3)
+        
+        # Should only process 3 files
+        assert len(cluster_state.resources) == 3
+    
+    def test_discover_and_parse_empty_directory(self, tmp_path: Path) -> None:
+        """Test discover and parse with no matching files."""
+        # Create non-Kubernetes files
+        (tmp_path / "readme.txt").write_text("Not a Kubernetes file")
+        (tmp_path / "config.ini").write_text("[section]\nkey=value")
+        
+        # Discover and parse
+        cluster_state = discover_and_parse(tmp_path)
+        
+        # Should return empty cluster state
+        assert len(cluster_state.resources) == 0
+    
+    def test_find_kubernetes_files_nonexistent_path(self) -> None:
+        """Test finding files in nonexistent path."""
+        with pytest.raises(FileNotFoundError):
+            find_kubernetes_files("/nonexistent/path")
