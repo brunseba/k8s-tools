@@ -381,6 +381,43 @@ def export_sqlite(
 
 
 @app.command()
+def export_multiple_sqlite(
+    files: List[str] = typer.Argument(..., help="Multiple kubectl export files to process"),
+    db_path: str = typer.Option(..., "--database", "-d", help="Path to SQLite database file"),
+    replace: bool = typer.Option(True, "--replace/--append", help="Replace existing data or append"),
+    batch_size: int = typer.Option(10, "--batch-size", "-b", help="Number of files to process in each batch"),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose logging"),
+) -> None:
+    """Export multiple kubectl export files to SQLite database with batch processing."""
+    
+    if verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+    
+    console.print(f"[bold blue]Exporting {len(files)} files to SQLite database:[/bold blue] {db_path}")
+    
+    if not files:
+        console.print(f"[red]No files provided[/red]")
+        raise typer.Exit(1)
+    
+    try:
+        from .sqlite_exporter import export_multiple_files_to_sqlite
+        
+        # Export multiple files with progress reporting
+        total_resources, total_relationships = export_multiple_files_to_sqlite(
+            files, db_path, replace_existing=replace, batch_size=batch_size
+        )
+        
+        console.print(f"[green]✓ Successfully exported {len(files)} files to SQLite database[/green]")
+        console.print(f"[dim]   Total Resources: {total_resources}[/dim]")
+        console.print(f"[dim]   Total Relationships: {total_relationships}[/dim]")
+        console.print(f"[dim]   Database: {db_path}[/dim]")
+        
+    except Exception as e:
+        console.print(f"[red]Error exporting multiple files to SQLite:[/red] {e}")
+        raise typer.Exit(1)
+
+
+@app.command()
 def export_directory_sqlite(
     directory: str = typer.Argument(..., help="Directory to scan for Kubernetes files"),
     db_path: str = typer.Argument(..., help="Path to SQLite database file"),

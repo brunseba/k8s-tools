@@ -525,3 +525,128 @@ def export_cluster_to_sqlite(
         exporter.export_cluster_state(cluster_state, replace_existing)
         
     logger.info(f"Cluster state exported to SQLite database: {db_path}")
+
+
+def export_multiple_files_to_sqlite(
+    file_paths: List[Union[str, Path]],
+    db_path: Union[str, Path],
+    replace_existing: bool = True,
+    batch_size: int = 10
+) -> tuple[int, int]:
+    """Export multiple kubectl export files to SQLite database with batch processing.
+    
+    Args:
+        file_paths: List of file paths to process
+        db_path: Path to SQLite database file
+        replace_existing: Whether to replace existing data or append
+        batch_size: Number of files to process in each batch
+        
+    Returns:
+        Tuple of (total_resources, total_relationships)
+    """
+    from .parser import ResourceParser
+    from .analyzer import ResourceAnalyzer
+    
+    total_resources = 0
+    total_relationships = 0
+    
+    with SQLiteExporter(db_path) as exporter:
+        exporter.create_schema()
+        
+        # Clear existing data if requested
+        if replace_existing:
+            exporter._clear_existing_data()
+        
+        parser = ResourceParser()
+        analyzer = ResourceAnalyzer()
+        
+        # Process files in batches
+        for i in range(0, len(file_paths), batch_size):
+            batch_files = file_paths[i:i + batch_size]
+            batch_num = (i // batch_size) + 1
+            total_batches = (len(file_paths) + batch_size - 1) // batch_size
+            
+            logger.info(f"Processing batch {batch_num}/{total_batches} ({len(batch_files)} files)")
+            
+            # Parse batch of files
+            batch_cluster_state = ClusterState()
+            
+            for file_path in batch_files:
+                try:
+                    logger.info(f"Processing file: {Path(file_path).name}")
+                    file_cluster_state = parser.parse_file(file_path)
+                    
+                    # Merge into batch cluster state
+                    batch_cluster_state.resources.extend(file_cluster_state.resources)
+                    batch_cluster_state.relationships.extend(file_cluster_state.relationships)
+                    batch_cluster_state.cluster_info.update(file_cluster_state.cluster_info)
+                    
+                except Exception as e:
+                    logger.error(f"Error processing file {file_path}: {e}")
+                    continue
+            
+            if not batch_cluster_state.resources:
+                logger.warning(f"No resources found in batch {batch_num}")
+                continue
+            
+            # Analyze relationships for this batch
+            batch_cluster_state = analyzer.analyze_cluster(batch_cluster_state)
+            
+            # Export batch to database (append mode for subsequent batches)
+            exporter.export_cluster_state(batch_cluster_state, replace_existing=False)
+            
+            # Update totals
+            total_resources += len(batch_cluster_state.resources)
+            total_relationships += len(batch_cluster_state.relationships)
+            
+            logger.info(f"Batch {batch_num} complete: {len(batch_cluster_state.resources)} resources, "
+                       f"{len(batch_cluster_state.relationships)} relationships")
+    
+    # Get final parsing statistics
+    stats = parser.get_parse_stats()
+    logger.info(f"Multiple files export complete: {stats}")
+    logger.info(f"Total exported: {total_resources} resources, {total_relationships} relationships")
+    
+    return total_resources, total_relationships
+
+
+def export_files_by_pattern_to_sqlite(
+    directory: Union[str, Path],
+    db_path: Union[str, Path],
+    patterns: Optional[List[str]] = None,
+    recursive: bool = True,
+    max_files: Optional[int] = None,
+    replace_existing: bool = True,
+    batch_size: int = 10
+) -> tuple[int, int]:
+    """Find and export Kubernetes files matching patterns to SQLite database.
+    
+    Args:
+        directory: Directory to search for files
+        db_path: Path to SQLite database file
+        patterns: Glob patterns to match files
+        recursive: Whether to search recursively
+        max_files: Maximum number of files to process
+        replace_existing: Whether to replace existing data
+        batch_size: Number of files to process in each batch
+        
+    Returns:
+        Tuple of (total_resources, total_relationships)
+    """
+    from .parser import find_kubernetes_files
+    
+    # Find files matching patterns
+    files = find_kubernetes_files(directory, patterns=patterns, recursive=recursive)
+    
+    if not files:
+        logger.warning(f"No Kubernetes files found in {directory}")
+        return 0, 0
+    
+    if max_files and len(files) > max_files:
+        logger.warning(f"Found {len(files)} files, limiting to {max_files}")
+        files = files[:max_files]
+    
+    logger.info(f"Found {len(files)} files to process from {directory}")
+    
+    # Export the found files
+    return export_multiple_files_to_sqlite(files, db_path, replace_existing, batch_size)
