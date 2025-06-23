@@ -8,8 +8,8 @@ Kubernetes cluster data exported by k8s-analyzer to SQLite databases.
 __version__ = "0.1.0"
 __author__ = "K8s Reporter Team"
 
-from .database import DatabaseClient
-from .models import ClusterOverview, ResourceSummary, NamespaceAnalysis
+from k8s_reporter.database import DatabaseClient
+from k8s_reporter.models import ClusterOverview, ResourceSummary, NamespaceAnalysis
 
 __all__ = [
     "DatabaseClient",

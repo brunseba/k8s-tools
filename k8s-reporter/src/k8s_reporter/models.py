@@ -6,7 +6,7 @@ These models define the structure for various analysis views and reports.
 
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union, Any
 
 from pydantic import BaseModel, Field
 
@@ -42,7 +42,7 @@ class ClusterOverview(BaseModel):
     total_resources: int
     total_namespaces: int
     health_ratio: float  # Percentage of healthy resources
-    top_namespaces: List[Dict[str, int]]
+    top_namespaces: List[Dict[str, Union[str, int]]]  # Allow both str and int values
     resource_distribution: Dict[str, int]
     issues_summary: Dict[str, int]
 

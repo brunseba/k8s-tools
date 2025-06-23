@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 import pandas as pd
 from typing import Dict, Any
 
-from .database import DatabaseClient
+from k8s_reporter.database import DatabaseClient
 
 
 def render_overview(db_client: DatabaseClient, filters: Dict[str, Any]):

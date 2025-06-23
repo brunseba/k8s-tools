@@ -12,9 +12,9 @@ import pandas as pd
 from pathlib import Path
 from typing import Optional
 
-from .database import DatabaseClient
-from .models import ANALYSIS_VIEWS
-from .views import (
+from k8s_reporter.database import DatabaseClient
+from k8s_reporter.models import ANALYSIS_VIEWS
+from k8s_reporter.views import (
     render_overview,
     render_security_analysis,
     render_namespace_analysis,

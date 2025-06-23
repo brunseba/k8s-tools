@@ -13,7 +13,7 @@ from typing import Dict, List, Optional, Any, Tuple
 
 import pandas as pd
 
-from .models import (
+from k8s_reporter.models import (
     ClusterOverview,
     ResourceSummary,
     NamespaceAnalysis,
