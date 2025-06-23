@@ -1,0 +1,110 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "k8s-reporter"
+version = "0.1.0"
+description = "Web UI for analyzing Kubernetes cluster data from k8s-analyzer SQLite databases"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [
+    { name = "K8s Reporter Team", email = "team@k8s-reporter.dev" },
+]
+keywords = ["kubernetes", "analysis", "reporting", "visualization", "dashboard"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: System Administrators",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: System :: Systems Administration",
+    "Topic :: System :: Monitoring",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "streamlit>=1.28.0",
+    "pandas>=2.1.0",
+    "plotly>=5.17.0",
+    "altair>=5.1.0",
+    "streamlit-aggrid>=0.3.4",
+    "pydantic>=2.4.0",
+    "python-dateutil>=2.8.2",
+    "numpy>=1.24.0",
+    "jinja2>=3.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.9.0",
+    "isort>=5.12.0",
+    "flake8>=6.1.0",
+    "mypy>=1.6.0",
+    "pre-commit>=3.4.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/k8s-tools/k8s-reporter"
+Documentation = "https://k8s-reporter.readthedocs.io"
+Repository = "https://github.com/k8s-tools/k8s-reporter.git"
+Issues = "https://github.com/k8s-tools/k8s-reporter/issues"
+
+[project.scripts]
+k8s-reporter = "k8s_reporter.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/k8s_reporter"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/tests",
+    "/README.md",
+    "/LICENSE",
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py39", "py310", "py311", "py312"]
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+multi_line_output = 3
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+strict_optional = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_functions = ["test_*"]
+addopts = "--verbose --cov=src/k8s_reporter --cov-report=html --cov-report=term-missing"
