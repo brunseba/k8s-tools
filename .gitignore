@@ -61,6 +61,12 @@ htmlcov/
 !examples/**/*.json
 !**/test_*.json
 
+# SQLite databases
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+
 # Logs
 *.log
 logs/
