@@ -17,6 +17,7 @@ from rich.tree import Tree
 from .analyzer import ResourceAnalyzer
 from .models import ClusterState, RelationshipType
 from .parser import parse_kubectl_export, discover_and_parse, find_kubernetes_files
+from .sqlite_exporter import SQLiteExporter, export_cluster_to_sqlite
 
 # Initialize CLI app and console
 app = typer.Typer(
@@ -341,6 +342,264 @@ def list_files(
         
     except Exception as e:
         console.print(f"[red]Error listing files:[/red] {e}")
+        raise typer.Exit(1)
+
+
+@app.command()
+def export_sqlite(
+    file_path: str = typer.Argument(..., help="Path to kubectl export file (JSON/YAML)"),
+    db_path: str = typer.Argument(..., help="Path to SQLite database file"),
+    additional_files: Optional[List[str]] = typer.Option(
+        None, "--additional", "-a", help="Additional files to merge"
+    ),
+    replace: bool = typer.Option(True, "--replace/--append", help="Replace existing data or append"),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose logging"),
+) -> None:
+    """Export analyzed cluster data to SQLite database."""
+    
+    if verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+    
+    console.print(f"[bold blue]Exporting to SQLite database:[/bold blue] {db_path}")
+    
+    try:
+        # Parse and analyze
+        cluster_state = parse_kubectl_export(file_path, additional_files)
+        analyzer = ResourceAnalyzer()
+        cluster_state = analyzer.analyze_cluster(cluster_state)
+        
+        # Export to SQLite
+        export_cluster_to_sqlite(cluster_state, db_path, replace_existing=replace)
+        
+        console.print(f"[green]✓ Successfully exported to SQLite database:[/green] {db_path}")
+        console.print(f"[dim]   Resources: {len(cluster_state.resources)}[/dim]")
+        console.print(f"[dim]   Relationships: {len(cluster_state.relationships)}[/dim]")
+        
+    except Exception as e:
+        console.print(f"[red]Error exporting to SQLite:[/red] {e}")
+        raise typer.Exit(1)
+
+
+@app.command()
+def export_directory_sqlite(
+    directory: str = typer.Argument(..., help="Directory to scan for Kubernetes files"),
+    db_path: str = typer.Argument(..., help="Path to SQLite database file"),
+    patterns: Optional[List[str]] = typer.Option(
+        None, "--pattern", "-p", help="Glob patterns to match files"
+    ),
+    recursive: bool = typer.Option(True, "--recursive/--no-recursive", "-r", help="Search recursively"),
+    max_files: Optional[int] = typer.Option(None, "--max-files", "-m", help="Maximum number of files to process"),
+    replace: bool = typer.Option(True, "--replace/--append", help="Replace existing data or append"),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose logging"),
+) -> None:
+    """Scan directory and export all analyzed data to SQLite database."""
+    
+    if verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+    
+    console.print(f"[bold blue]Scanning and exporting directory to SQLite:[/bold blue] {directory}")
+    console.print(f"[dim]Database: {db_path}[/dim]")
+    
+    try:
+        # Discover, parse and analyze
+        cluster_state = discover_and_parse(
+            directory, 
+            patterns=patterns, 
+            recursive=recursive, 
+            max_files=max_files
+        )
+        
+        analyzer = ResourceAnalyzer()
+        cluster_state = analyzer.analyze_cluster(cluster_state)
+        
+        # Export to SQLite
+        export_cluster_to_sqlite(cluster_state, db_path, replace_existing=replace)
+        
+        console.print(f"[green]✓ Successfully exported directory analysis to SQLite database[/green]")
+        console.print(f"[dim]   Resources: {len(cluster_state.resources)}[/dim]")
+        console.print(f"[dim]   Relationships: {len(cluster_state.relationships)}[/dim]")
+        
+    except Exception as e:
+        console.print(f"[red]Error exporting directory to SQLite:[/red] {e}")
+        raise typer.Exit(1)
+
+
+@app.command()
+def query_db(
+    db_path: str = typer.Argument(..., help="Path to SQLite database file"),
+    resource_kind: Optional[str] = typer.Option(None, "--kind", "-k", help="Filter by resource kind"),
+    namespace: Optional[str] = typer.Option(None, "--namespace", "-n", help="Filter by namespace"),
+    health_status: Optional[str] = typer.Option(None, "--health", "-h", help="Filter by health status"),
+    has_issues: Optional[bool] = typer.Option(None, "--issues/--no-issues", help="Filter resources with/without issues"),
+    limit: int = typer.Option(50, "--limit", "-l", help="Maximum number of results to show"),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose logging"),
+) -> None:
+    """Query resources from SQLite database."""
+    
+    if verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+    
+    console.print(f"[bold blue]Querying SQLite database:[/bold blue] {db_path}")
+    
+    try:
+        with SQLiteExporter(db_path) as db:
+            # Query resources
+            resources = db.query_resources(
+                kind=resource_kind,
+                namespace=namespace,
+                health_status=health_status,
+                has_issues=has_issues
+            )
+            
+            if not resources:
+                console.print("[yellow]No resources found matching the criteria[/yellow]")
+                return
+            
+            # Display results in table
+            table = Table(title=f"Query Results ({len(resources)} resources)", show_header=True, header_style="bold magenta")
+            table.add_column("Name", style="cyan")
+            table.add_column("Namespace", style="blue")
+            table.add_column("Kind", style="green")
+            table.add_column("Health", style="yellow")
+            table.add_column("Issues", style="red")
+            
+            for resource in resources[:limit]:
+                # Parse issues JSON
+                issues_count = 0
+                if resource.get('issues'):
+                    try:
+                        import json
+                        issues = json.loads(resource['issues'])
+                        issues_count = len(issues) if issues else 0
+                    except:
+                        issues_count = 0
+                
+                # Health status styling
+                health = resource['health_status']
+                if health == 'healthy':
+                    health_display = f"[green]{health}[/green]"
+                elif health == 'warning':
+                    health_display = f"[yellow]{health}[/yellow]"
+                elif health == 'error':
+                    health_display = f"[red]{health}[/red]"
+                else:
+                    health_display = health
+                
+                issues_display = f"[red]{issues_count}[/red]" if issues_count > 0 else "0"
+                
+                table.add_row(
+                    resource['name'] or 'N/A',
+                    resource['namespace'] or 'N/A',
+                    resource['kind'],
+                    health_display,
+                    issues_display
+                )
+            
+            console.print(table)
+            
+            if len(resources) > limit:
+                console.print(f"[dim]Showing first {limit} of {len(resources)} results[/dim]")
+        
+    except Exception as e:
+        console.print(f"[red]Error querying database:[/red] {e}")
+        raise typer.Exit(1)
+
+
+@app.command()
+def db_summary(
+    db_path: str = typer.Argument(..., help="Path to SQLite database file"),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose logging"),
+) -> None:
+    """Show summary statistics from SQLite database."""
+    
+    if verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+    
+    console.print(f"[bold blue]Database Summary:[/bold blue] {db_path}")
+    
+    try:
+        with SQLiteExporter(db_path) as db:
+            summary = db.get_health_summary()
+            
+            # Overall stats table
+            stats_table = Table(title="Overall Statistics", show_header=True, header_style="bold magenta")
+            stats_table.add_column("Metric", style="cyan")
+            stats_table.add_column("Count", justify="right", style="green")
+            
+            stats_table.add_row("Total Resources", str(summary['total_resources']))
+            stats_table.add_row("Total Relationships", str(summary['total_relationships']))
+            stats_table.add_row("Resources with Issues", str(summary['issues_count']))
+            
+            console.print(stats_table)
+            
+            # Health status table
+            health_table = Table(title="Health Status Distribution", show_header=True, header_style="bold magenta")
+            health_table.add_column("Status", style="cyan")
+            health_table.add_column("Count", justify="right")
+            
+            for status, count in summary['health_status'].items():
+                if status == 'healthy':
+                    style = 'green'
+                elif status == 'warning':
+                    style = 'yellow'
+                elif status == 'error':
+                    style = 'red'
+                else:
+                    style = 'white'
+                
+                health_table.add_row(status.title(), f"[{style}]{count}[/{style}]")
+            
+            console.print(health_table)
+            
+            # Resource types table
+            types_table = Table(title="Resource Type Distribution", show_header=True, header_style="bold magenta")
+            types_table.add_column("Resource Type", style="cyan")
+            types_table.add_column("Count", justify="right", style="green")
+            
+            for kind, count in list(summary['resource_type_distribution'].items())[:10]:
+                types_table.add_row(kind, str(count))
+            
+            console.print(types_table)
+            
+            # Namespace distribution table (top 10)
+            if summary['namespace_distribution']:
+                ns_table = Table(title="Top Namespaces", show_header=True, header_style="bold magenta")
+                ns_table.add_column("Namespace", style="cyan")
+                ns_table.add_column("Resources", justify="right", style="green")
+                
+                for ns, count in list(summary['namespace_distribution'].items())[:10]:
+                    ns_table.add_row(ns, str(count))
+                
+                console.print(ns_table)
+        
+    except Exception as e:
+        console.print(f"[red]Error getting database summary:[/red] {e}")
+        raise typer.Exit(1)
+
+
+@app.command()
+def export_csv(
+    db_path: str = typer.Argument(..., help="Path to SQLite database file"),
+    output_dir: str = typer.Argument(..., help="Directory to save CSV files"),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose logging"),
+) -> None:
+    """Export SQLite database contents to CSV files."""
+    
+    if verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+    
+    console.print(f"[bold blue]Exporting database to CSV:[/bold blue] {db_path}")
+    console.print(f"[dim]Output directory: {output_dir}[/dim]")
+    
+    try:
+        with SQLiteExporter(db_path) as db:
+            db.export_to_csv(output_dir)
+        
+        console.print(f"[green]✓ Successfully exported database to CSV files in:[/green] {output_dir}")
+        console.print(f"[dim]   Files: resources.csv, relationships.csv[/dim]")
+        
+    except Exception as e:
+        console.print(f"[red]Error exporting to CSV:[/red] {e}")
         raise typer.Exit(1)
 
 

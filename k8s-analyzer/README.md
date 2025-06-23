@@ -60,6 +60,21 @@ k8s-analyzer graph cluster-export.json --namespace default
 
 # Validate configurations
 k8s-analyzer validate cluster-export.json
+
+# Export to SQLite database
+k8s-analyzer export_sqlite cluster-export.json cluster.db
+
+# Batch process directory and export to SQLite
+k8s-analyzer export_directory_sqlite ./manifests/ cluster.db
+
+# Query the database
+k8s-analyzer query_db cluster.db --kind Pod --namespace default
+
+# Get database summary
+k8s-analyzer db_summary cluster.db
+
+# Export database to CSV
+k8s-analyzer export_csv cluster.db ./csv_output/
 ```
 
 ## 🔧 CLI Commands
