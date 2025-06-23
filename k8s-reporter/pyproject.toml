@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "k8s-reporter"
-version = "0.4.0"
+version = "0.7.3"
 description = "Web UI for analyzing Kubernetes cluster data from k8s-analyzer SQLite databases"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -37,6 +37,7 @@ dependencies = [
     "python-dateutil>=2.8.2",
     "numpy>=1.24.0",
     "jinja2>=3.1.0",
+    "networkx>=3.0",
 ]
 
 [project.optional-dependencies]

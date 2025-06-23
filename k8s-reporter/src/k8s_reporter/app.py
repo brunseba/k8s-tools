@@ -9,6 +9,7 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
+from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
@@ -20,6 +21,10 @@ from k8s_reporter.views import (
     render_namespace_analysis,
     render_health_dashboard,
     render_relationships_view,
+    render_namespace_components_view,
+    render_storage_analysis,
+    render_temporal_analysis,
+    render_resource_efficiency,
 )
 
 
@@ -219,8 +224,14 @@ def main():
             render_health_dashboard(db_client, filters)
         elif selected_view == 'relationships':
             render_relationships_view(db_client, filters)
+        elif selected_view == 'namespace_components':
+            render_namespace_components_view(db_client, filters)
+        elif selected_view == 'storage':
+            render_storage_analysis(db_client, filters)
+        elif selected_view == 'temporal':
+            render_temporal_analysis(db_client, filters)
         elif selected_view == 'efficiency':
-            render_efficiency_analysis(db_client, filters)
+            render_resource_efficiency(db_client, filters)
         elif selected_view == 'compliance':
             render_compliance_report(db_client, filters)
         elif selected_view == 'trends':

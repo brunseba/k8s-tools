@@ -34,6 +34,43 @@ class NamespaceAnalysis(BaseModel):
     top_resources: List[Dict[str, str]]
 
 
+class NamespaceComponent(BaseModel):
+    """Individual component within a namespace."""
+    
+    name: str
+    kind: str
+    health_status: str
+    labels: Dict[str, str] = {}
+    annotations: Dict[str, str] = {}
+    issues: List[str] = []
+    created_at: Optional[str] = None
+    
+
+class NamespaceRelationship(BaseModel):
+    """Relationship between components in a namespace."""
+    
+    source_name: str
+    source_kind: str
+    target_name: str
+    target_kind: str
+    relationship_type: str
+    strength: float = 1.0
+    description: Optional[str] = None
+
+
+class NamespaceComponentsView(BaseModel):
+    """Detailed view of namespace components and their relationships."""
+    
+    namespace: str
+    total_components: int
+    components: List[NamespaceComponent]
+    relationships: List[NamespaceRelationship]
+    component_groups: Dict[str, List[str]]  # Group components by type
+    dependency_chains: List[List[str]]  # Ordered dependency chains
+    orphaned_components: List[str]  # Components with no relationships
+    critical_components: List[str]  # Components with many relationships
+
+
 class ClusterOverview(BaseModel):
     """High-level cluster overview."""
     
@@ -60,15 +97,35 @@ class SecurityAnalysis(BaseModel):
     config_maps_count: int
 
 
+class PodResourceIssue(BaseModel):
+    """Pod with resource configuration issues."""
+    
+    name: str
+    namespace: str
+    containers: List[str]
+    missing_requests: List[str]  # cpu, memory
+    missing_limits: List[str]   # cpu, memory
+    health_status: str
+    created_at: Optional[datetime] = None
+    node: Optional[str] = None
+    issue_severity: str  # low, medium, high, critical
+    recommendations: List[str] = []
+
+
 class ResourceEfficiency(BaseModel):
     """Resource efficiency and optimization insights."""
     
     pods_without_limits: int
     pods_without_requests: int
+    pods_without_any_resources: int  # No requests AND no limits
+    pods_with_partial_resources: int  # Some containers missing resources
     over_requested_resources: List[Dict[str, str]]
     unused_config_maps: int
     orphaned_pvcs: int
     services_without_endpoints: int
+    problematic_pods: List[PodResourceIssue]
+    resource_coverage_percentage: float
+    total_pods_analyzed: int
 
 
 class ComplianceReport(BaseModel):
@@ -81,6 +138,78 @@ class ComplianceReport(BaseModel):
     compliance_score: float  # Percentage
     failed_policies: List[Dict[str, str]]
     recommendations: List[str]
+
+
+class StorageVolume(BaseModel):
+    """Individual storage volume information."""
+    
+    name: str
+    namespace: Optional[str] = None
+    kind: str  # PV, PVC, etc.
+    capacity: Optional[str] = None
+    storage_class: Optional[str] = None
+    access_modes: List[str] = []
+    status: str
+    bound_to: Optional[str] = None  # For PVC -> PV binding
+    created_at: Optional[datetime] = None
+    labels: Dict[str, str] = {}
+
+
+class StorageConsumption(BaseModel):
+    """Storage consumption analysis."""
+    
+    total_volumes: int
+    total_capacity_gb: float
+    used_capacity_gb: float
+    utilization_percentage: float
+    volumes_by_class: Dict[str, int]
+    capacity_by_class: Dict[str, float]
+    volumes_by_status: Dict[str, int]
+    unbound_pvcs: int
+    orphaned_pvs: int
+    top_consumers: List[StorageVolume]
+
+
+class NamespaceStorageAnalysis(BaseModel):
+    """Per-namespace storage analysis."""
+    
+    namespace: str
+    total_volumes: int
+    total_capacity_gb: float
+    storage_classes: Dict[str, int]
+    access_patterns: Dict[str, int]  # ReadWriteOnce, ReadOnlyMany, etc.
+    volume_status: Dict[str, int]
+    volumes: List[StorageVolume]
+    largest_volumes: List[StorageVolume]
+
+
+class ResourceTimeline(BaseModel):
+    """Timeline data for resource lifecycle events."""
+    
+    resource_name: str
+    resource_kind: str
+    namespace: Optional[str] = None
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+    events: List[Dict[str, Any]] = []  # Timeline events
+    age_days: float
+    lifecycle_stage: str  # new, active, stale, etc.
+
+
+class TemporalAnalysis(BaseModel):
+    """Temporal analysis of cluster resources."""
+    
+    analysis_period: str  # Description of time period analyzed
+    total_resources: int
+    creation_timeline: List[Dict[str, Any]]  # Resources created over time
+    update_timeline: List[Dict[str, Any]]  # Resources updated over time
+    age_distribution: Dict[str, int]  # Resources by age groups
+    most_active_namespaces: List[Dict[str, Union[str, int]]]
+    newest_resources: List[ResourceTimeline]
+    oldest_resources: List[ResourceTimeline]
+    stale_resources: List[ResourceTimeline]  # Not updated recently
+    creation_patterns: Dict[str, int]  # Creation by day of week, hour, etc.
+    resource_lifecycle_stats: Dict[str, Dict[str, float]]  # Avg age by type
 
 
 @dataclass
@@ -159,6 +288,15 @@ ANALYSIS_VIEWS = {
             icon="🔗",
         )
     ),
+    "namespace_components": AnalysisView(
+        "namespace_components",
+        ViewConfig(
+            title="Namespace Components",
+            description="Detailed per-namespace component analysis with relationships",
+            icon="🏗️",
+            requires_namespace_filter=False,  # We handle namespace selection internally
+        )
+    ),
     "health": AnalysisView(
         "health",
         ViewConfig(
@@ -173,6 +311,23 @@ ANALYSIS_VIEWS = {
             title="Trends Analysis",
             description="Historical trends and changes over time",
             icon="📈",
+            supports_time_range=True,
+        )
+    ),
+    "storage": AnalysisView(
+        "storage",
+        ViewConfig(
+            title="Storage Analysis",
+            description="Storage consumption and volume analysis",
+            icon="💾",
+        )
+    ),
+    "temporal": AnalysisView(
+        "temporal",
+        ViewConfig(
+            title="Temporal Analysis",
+            description="Resource lifecycle and creation patterns over time",
+            icon="⏰",
             supports_time_range=True,
         )
     ),
