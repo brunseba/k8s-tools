@@ -1,0 +1,344 @@
+version: '3'
+
+vars:
+  REPO_NAME: k8s-tools
+  REPO_DESCRIPTION: "Kubernetes analysis and reporting tools"
+  DEFAULT_BRANCH: master
+  GITHUB_ORG: "{{.GITHUB_ORG | default .USER}}"
+  USER:
+    sh: git config user.name || echo "your-username"
+
+env:
+  GITHUB_TOKEN: "{{.GITHUB_TOKEN}}"
+
+tasks:
+  default:
+    desc: Show available tasks
+    cmds:
+      - task --list
+
+  check-gh:
+    desc: Check if GitHub CLI is installed and authenticated
+    cmds:
+      - |
+        if ! command -v gh &> /dev/null; then
+          echo "❌ GitHub CLI not installed. Install with: brew install gh"
+          exit 1
+        fi
+        if ! gh auth status &> /dev/null; then
+          echo "❌ GitHub CLI not authenticated. Run: gh auth login"
+          exit 1
+        fi
+        echo "✅ GitHub CLI is installed and authenticated"
+
+  check-repo-exists:
+    desc: Check if repository exists on GitHub
+    internal: true
+    cmds:
+      - |
+        if gh repo view {{.GITHUB_ORG}}/{{.REPO_NAME}} &> /dev/null; then
+          echo "✅ Repository {{.GITHUB_ORG}}/{{.REPO_NAME}} exists"
+          exit 0
+        else
+          echo "❌ Repository {{.GITHUB_ORG}}/{{.REPO_NAME}} does not exist"
+          exit 1
+        fi
+
+  create-repo:
+    desc: Create GitHub repository
+    deps: [check-gh]
+    cmds:
+      - |
+        echo "🚀 Creating GitHub repository: {{.GITHUB_ORG}}/{{.REPO_NAME}}"
+        gh repo create {{.GITHUB_ORG}}/{{.REPO_NAME}} \
+          --description "{{.REPO_DESCRIPTION}}" \
+          --public \
+          --clone=false \
+          --add-readme=false
+        echo "✅ Repository created successfully"
+      - |
+        echo "🔗 Adding remote origin..."
+        git remote add origin https://github.com/{{.GITHUB_ORG}}/{{.REPO_NAME}}.git || \
+        git remote set-url origin https://github.com/{{.GITHUB_ORG}}/{{.REPO_NAME}}.git
+        echo "✅ Remote origin configured"
+
+  setup-repo:
+    desc: Setup repository with initial configuration
+    deps: [create-repo]
+    cmds:
+      - |
+        echo "⚙️ Setting up repository configuration..."
+        gh repo edit {{.GITHUB_ORG}}/{{.REPO_NAME}} \
+          --description "{{.REPO_DESCRIPTION}}" \
+          --homepage "https://github.com/{{.GITHUB_ORG}}/{{.REPO_NAME}}" \
+          --add-topic "kubernetes" \
+          --add-topic "analysis" \
+          --add-topic "reporting" \
+          --add-topic "streamlit" \
+          --add-topic "dashboard" \
+          --enable-issues \
+          --enable-wiki \
+          --enable-projects
+        echo "✅ Repository configured with topics and features"
+
+  push:
+    desc: Push current branch to GitHub
+    deps: [check-gh]
+    cmds:
+      - |
+        CURRENT_BRANCH=$(git branch --show-current)
+        echo "📤 Pushing branch: $CURRENT_BRANCH"
+        git push origin $CURRENT_BRANCH
+        echo "✅ Successfully pushed $CURRENT_BRANCH"
+
+  push-all:
+    desc: Push all branches and tags to GitHub
+    deps: [check-gh]
+    cmds:
+      - |
+        echo "📤 Pushing all branches..."
+        git push origin --all
+        echo "📤 Pushing all tags..."
+        git push origin --tags
+        echo "✅ Successfully pushed all branches and tags"
+
+  force-push:
+    desc: Force push current branch (use with caution)
+    deps: [check-gh]
+    cmds:
+      - |
+        CURRENT_BRANCH=$(git branch --show-current)
+        echo "⚠️  Force pushing branch: $CURRENT_BRANCH"
+        read -p "Are you sure? This will overwrite remote history (y/N): " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+          git push origin $CURRENT_BRANCH --force-with-lease
+          echo "✅ Force push completed"
+        else
+          echo "❌ Force push cancelled"
+          exit 1
+        fi
+
+  create-release:
+    desc: Create a new GitHub release from the latest tag
+    deps: [check-gh]
+    cmds:
+      - |
+        LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+        if [ -z "$LATEST_TAG" ]; then
+          echo "❌ No tags found. Create a tag first with: git tag -a v1.0.0 -m 'Release v1.0.0'"
+          exit 1
+        fi
+        echo "🏷️  Creating release for tag: $LATEST_TAG"
+        
+        # Extract release notes from tag annotation
+        RELEASE_NOTES=$(git tag -l --format='%(contents)' $LATEST_TAG)
+        
+        gh release create $LATEST_TAG \
+          --title "Release $LATEST_TAG" \
+          --notes "$RELEASE_NOTES" \
+          --verify-tag
+        echo "✅ Release $LATEST_TAG created successfully"
+
+  create-prerelease:
+    desc: Create a pre-release from the latest tag
+    deps: [check-gh]
+    cmds:
+      - |
+        LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+        if [ -z "$LATEST_TAG" ]; then
+          echo "❌ No tags found. Create a tag first."
+          exit 1
+        fi
+        echo "🏷️  Creating pre-release for tag: $LATEST_TAG"
+        
+        RELEASE_NOTES=$(git tag -l --format='%(contents)' $LATEST_TAG)
+        
+        gh release create $LATEST_TAG \
+          --title "Pre-release $LATEST_TAG" \
+          --notes "$RELEASE_NOTES" \
+          --prerelease \
+          --verify-tag
+        echo "✅ Pre-release $LATEST_TAG created successfully"
+
+  draft-release:
+    desc: Create a draft release from the latest tag
+    deps: [check-gh]
+    cmds:
+      - |
+        LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+        if [ -z "$LATEST_TAG" ]; then
+          echo "❌ No tags found. Create a tag first."
+          exit 1
+        fi
+        echo "🏷️  Creating draft release for tag: $LATEST_TAG"
+        
+        RELEASE_NOTES=$(git tag -l --format='%(contents)' $LATEST_TAG)
+        
+        gh release create $LATEST_TAG \
+          --title "Release $LATEST_TAG" \
+          --notes "$RELEASE_NOTES" \
+          --draft \
+          --verify-tag
+        echo "✅ Draft release $LATEST_TAG created successfully"
+
+  list-releases:
+    desc: List all GitHub releases
+    deps: [check-gh]
+    cmds:
+      - |
+        echo "📋 GitHub Releases:"
+        gh release list --limit 10
+
+  delete-release:
+    desc: Delete a GitHub release
+    deps: [check-gh]
+    cmds:
+      - |
+        echo "📋 Available releases:"
+        gh release list --limit 10
+        echo
+        read -p "Enter tag name to delete: " TAG_NAME
+        if [ -z "$TAG_NAME" ]; then
+          echo "❌ No tag name provided"
+          exit 1
+        fi
+        
+        read -p "Are you sure you want to delete release $TAG_NAME? (y/N): " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+          gh release delete $TAG_NAME --yes
+          echo "✅ Release $TAG_NAME deleted"
+        else
+          echo "❌ Deletion cancelled"
+        fi
+
+  view-repo:
+    desc: Open repository in browser
+    deps: [check-gh]
+    cmds:
+      - |
+        echo "🌐 Opening repository in browser..."
+        gh repo view {{.GITHUB_ORG}}/{{.REPO_NAME}} --web
+
+  clone-repo:
+    desc: Clone repository to a specified directory
+    deps: [check-gh]
+    cmds:
+      - |
+        read -p "Enter directory to clone into [./{{.REPO_NAME}}]: " CLONE_DIR
+        CLONE_DIR=${CLONE_DIR:-"./{{.REPO_NAME}}"}
+        echo "📥 Cloning repository to $CLONE_DIR..."
+        gh repo clone {{.GITHUB_ORG}}/{{.REPO_NAME}} $CLONE_DIR
+        echo "✅ Repository cloned successfully"
+
+  sync-fork:
+    desc: Sync forked repository with upstream
+    deps: [check-gh]
+    cmds:
+      - |
+        echo "🔄 Syncing fork with upstream..."
+        gh repo sync {{.GITHUB_ORG}}/{{.REPO_NAME}} --source {{.UPSTREAM_ORG | default "upstream"}}/{{.REPO_NAME}}
+        echo "✅ Fork synced successfully"
+
+  create-pr:
+    desc: Create a pull request
+    deps: [check-gh]
+    cmds:
+      - |
+        CURRENT_BRANCH=$(git branch --show-current)
+        if [ "$CURRENT_BRANCH" = "{{.DEFAULT_BRANCH}}" ]; then
+          echo "❌ Cannot create PR from {{.DEFAULT_BRANCH}} branch"
+          exit 1
+        fi
+        
+        echo "📝 Creating pull request from $CURRENT_BRANCH..."
+        gh pr create --title "$(git log -1 --pretty=%s)" --body "$(git log -1 --pretty=%B)"
+        echo "✅ Pull request created successfully"
+
+  repo-status:
+    desc: Show comprehensive repository status
+    deps: [check-gh]
+    cmds:
+      - |
+        echo "📊 Repository Status for {{.GITHUB_ORG}}/{{.REPO_NAME}}"
+        echo "=================================="
+        
+        # Repository info
+        echo "🏠 Repository Info:"
+        gh repo view {{.GITHUB_ORG}}/{{.REPO_NAME}}
+        
+        echo
+        echo "🏷️  Latest Releases (last 3):"
+        gh release list --limit 3 || echo "  No releases found"
+        
+        echo
+        echo "🌿 Recent Branches:"
+        git branch -r --sort=-committerdate | head -5 || echo "  No remote branches found"
+        
+        echo
+        echo "📊 Repository Statistics:"
+        gh repo view {{.GITHUB_ORG}}/{{.REPO_NAME}} --json stargazerCount,forkCount,openIssues
+
+  full-deploy:
+    desc: Complete deployment workflow (push + create release)
+    deps: [check-gh]
+    cmds:
+      - task: push-all
+      - task: create-release
+
+  quick-setup:
+    desc: Quick setup for new repository (create + setup + push)
+    deps: [check-gh]
+    cmds:
+      - task: create-repo
+      - task: setup-repo
+      - task: push-all
+      - |
+        echo "🎉 Repository setup complete!"
+        echo "🌐 Repository URL: https://github.com/{{.GITHUB_ORG}}/{{.REPO_NAME}}"
+
+  help:
+    desc: Show detailed help for repository management
+    cmds:
+      - |
+        echo "🚀 GitHub Repository Management Tasks"
+        echo "====================================="
+        echo
+        echo "📋 Setup & Configuration:"
+        echo "  check-gh         - Verify GitHub CLI installation and authentication"
+        echo "  create-repo      - Create new GitHub repository"
+        echo "  setup-repo       - Configure repository with topics and settings"
+        echo "  quick-setup      - Complete new repository setup workflow"
+        echo
+        echo "📤 Push Operations:"
+        echo "  push             - Push current branch"
+        echo "  push-all         - Push all branches and tags"
+        echo "  force-push       - Force push current branch (with confirmation)"
+        echo
+        echo "🏷️  Release Management:"
+        echo "  create-release   - Create release from latest tag"
+        echo "  create-prerelease- Create pre-release from latest tag"
+        echo "  draft-release    - Create draft release from latest tag"
+        echo "  list-releases    - List all releases"
+        echo "  delete-release   - Delete a release (with confirmation)"
+        echo
+        echo "🔄 Repository Operations:"
+        echo "  view-repo        - Open repository in browser"
+        echo "  clone-repo       - Clone repository to specified directory"
+        echo "  sync-fork        - Sync forked repository with upstream"
+        echo "  create-pr        - Create pull request from current branch"
+        echo "  repo-status      - Show comprehensive repository status"
+        echo
+        echo "⚡ Workflows:"
+        echo "  full-deploy      - Push all + create release"
+        echo
+        echo "💡 Configuration:"
+        echo "  Set GITHUB_ORG environment variable to use organization instead of personal account"
+        echo "  Set GITHUB_TOKEN environment variable for authentication (optional)"
+        echo
+        echo "📖 Examples:"
+        echo "  task quick-setup                    # Setup new repository"
+        echo "  task push                          # Push current branch"
+        echo "  task create-release                # Create release from latest tag"
+        echo "  GITHUB_ORG=myorg task create-repo  # Create repo in organization"
