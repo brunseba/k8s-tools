@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 
-from k8s_analyzer.models import ClusterState, HealthStatus, KubernetesResource, Relationship, RelationshipType, ResourceMetadata
+from k8s_analyzer.models import ClusterState, ResourceStatus, KubernetesResource, ResourceRelationship, RelationshipType, ResourceMetadata
 from k8s_analyzer.sqlite_exporter import SQLiteExporter, export_cluster_to_sqlite
 
 
@@ -33,7 +33,7 @@ class TestSQLiteExporter:
                 ),
                 spec={"containers": [{"name": "app", "image": "nginx:1.20"}]},
                 status={"phase": "Running"},
-                health_status=HealthStatus.HEALTHY,
+                health_status=ResourceStatus.HEALTHY,
                 issues=[]
             ),
             KubernetesResource(
@@ -46,20 +46,35 @@ class TestSQLiteExporter:
                     labels={"app": "test"}
                 ),
                 spec={"selector": {"app": "test"}, "ports": [{"port": 80}]},
-                health_status=HealthStatus.WARNING,
+                health_status=ResourceStatus.WARNING,
                 issues=["No endpoints found"]
             )
         ]
         
+        # Create ResourceReference objects
+        from k8s_analyzer.models import ResourceReference
+        
+        source_ref = ResourceReference(
+            api_version="v1",
+            kind="Service",
+            name="test-service",
+            namespace="default",
+            uid="svc-456"
+        )
+        
+        target_ref = ResourceReference(
+            api_version="v1",
+            kind="Pod",
+            name="test-pod",
+            namespace="default",
+            uid="pod-123"
+        )
+        
         relationships = [
-            Relationship(
-                source_uid="svc-456",
-                target="Pod/test-pod/default",
-                relationship_type=RelationshipType.SELECTS,
-                source_name="test-service",
-                source_namespace="default",
-                source_kind="Service",
-                description="Service selects pod"
+            ResourceRelationship(
+                source=source_ref,
+                target=target_ref,
+                relationship_type=RelationshipType.SELECTS
             )
         ]
         

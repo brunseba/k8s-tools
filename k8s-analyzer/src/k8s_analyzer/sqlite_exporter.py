@@ -12,7 +12,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-from .models import ClusterState, KubernetesResource, Relationship, RelationshipType, HealthStatus
+from .models import ClusterState, KubernetesResource, ResourceRelationship, RelationshipType, ResourceStatus
 
 logger = logging.getLogger(__name__)
 
@@ -241,16 +241,14 @@ class SQLiteExporter:
                 
         logger.info(f"Exported {len(resources)} resources to database")
         
-    def _export_relationships(self, relationships: List[Relationship]) -> None:
+    def _export_relationships(self, relationships: List[ResourceRelationship]) -> None:
         """Export relationships to database."""
         cursor = self.connection.cursor()
         
         for rel in relationships:
-            # Parse target to extract components
-            target_parts = rel.target.split('/')
-            target_kind = target_parts[0] if len(target_parts) > 0 else None
-            target_name = target_parts[1] if len(target_parts) > 1 else None
-            target_namespace = target_parts[2] if len(target_parts) > 2 else None
+            # Extract information from source and target ResourceReference objects
+            source_uid = rel.source.uid if rel.source.uid else None
+            target_str = str(rel.target)  # Use string representation
             
             cursor.execute("""
                 INSERT INTO relationships (
@@ -259,17 +257,17 @@ class SQLiteExporter:
                     target_kind, description, strength
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
-                rel.source_uid,
-                rel.target,
+                source_uid,
+                target_str,
                 rel.relationship_type.value,
-                rel.source_name,
-                rel.source_namespace,
-                rel.source_kind,
-                target_name,
-                target_namespace,
-                target_kind,
-                rel.description,
-                rel.strength
+                rel.source.name,
+                rel.source.namespace,
+                rel.source.kind,
+                rel.target.name,
+                rel.target.namespace,
+                rel.target.kind,
+                "",  # description - not available in ResourceRelationship
+                1.0  # strength - not available in ResourceRelationship, default to 1.0
             ))
             
         logger.info(f"Exported {len(relationships)} relationships to database")
