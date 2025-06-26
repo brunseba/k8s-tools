@@ -1728,9 +1728,62 @@ def render_resource_efficiency(db_client: DatabaseClient, filters: Dict[str, Any
 
 
 def render_label_analysis(db_client: DatabaseClient, filters: Dict[str, Any]):
-    """Render label analysis view (placeholder)."""
+    """Render label analysis view."""
     st.header("🏷️ Label Analysis")
-    st.info("Label analysis coming soon!")
+    
+    # Retrieve label analysis data
+    label_analysis = db_client.get_label_analysis()
+
+    # Overview Metrics
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.metric("Labeled Resources", label_analysis.total_labeled_resources)
+        st.metric("Label Coverage", f"{label_analysis.label_coverage_percentage:.1f}%")
+
+    with col2:
+        st.metric("Unlabeled Resources", label_analysis.total_unlabeled_resources)
+        st.metric("Label Quality Score", f"{label_analysis.label_quality_score:.1f}")
+
+    # Label Distribution
+    st.subheader("📊 Common Labels")
+    if label_analysis.common_labels:
+        common_labels_df = pd.DataFrame(
+            list(label_analysis.common_labels.items()), columns=["Label Key", "Count"]
+        ).sort_values(by="Count", ascending=False)
+        st.bar_chart(common_labels_df.set_index("Label Key"))
+    else:
+        st.info("No common labels found")
+
+    # Multi-label Analysis
+    st.subheader("🔍 Multi-label Resources")
+    multi_label_data = {}
+    for label, resources in label_analysis.resources_by_label.items():
+        if len(resources) > 1:
+            multi_label_data[label] = len(resources)
+    if multi_label_data:
+        multi_label_df = pd.DataFrame(
+            list(multi_label_data.items()), columns=["Label Key", "Resource Count"]
+        ).sort_values(by="Resource Count", ascending=False)
+        st.bar_chart(multi_label_df.set_index("Label Key"))
+    else:
+        st.info("No multi-label resources found")
+
+    # Orphaned Resources
+    st.subheader("🧩 Orphaned Resources")
+    if label_analysis.orphaned_resources:
+        orphaned_df = pd.DataFrame(label_analysis.orphaned_resources)
+        st.dataframe(orphaned_df)
+    else:
+        st.info("No orphaned resources found")
+
+    # Resources by Label
+    st.subheader("🔖 Resources by Label")
+    selected_label = st.selectbox("Select a Label to View Resources", list(label_analysis.resources_by_label.keys()))
+    if selected_label in label_analysis.resources_by_label:
+        resources = label_analysis.resources_by_label[selected_label]
+        resources_df = pd.DataFrame(resources)
+        st.dataframe(resources_df)
 
 
 def render_application_view(db_client: DatabaseClient, filters: Dict[str, Any]):

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "k8s-reporter"
-version = "0.7.5"
+version = "0.7.6"
 description = "Web UI for analyzing Kubernetes cluster data from k8s-analyzer SQLite databases"
 readme = "README.md"
 license = { file = "LICENSE" }
