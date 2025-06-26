@@ -1897,7 +1897,7 @@ def render_application_view(db_client: DatabaseClient, filters: Dict[str, Any]):
                 color_continuous_scale='blues'
             )
             fig_apps.update_layout(showlegend=False, xaxis_title="Application", yaxis_title="Resource Count")
-            fig_apps.update_xaxis(tickangle=45)
+            fig_apps.update_xaxes(tickangle=45)
             st.plotly_chart(fig_apps, use_container_width=True)
     
     # All Labels Table
