@@ -1,0 +1,152 @@
+site_name: K8s Tools Documentation
+site_description: Comprehensive Kubernetes Cluster Analysis and Reporting Tools
+site_author: K8s Tools Team
+site_url: https://k8s-tools.github.io/k8s-tools/
+
+repo_name: k8s-tools/k8s-tools
+repo_url: https://github.com/k8s-tools/k8s-tools
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.action.edit
+    - content.action.view
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil
+    view: material/eye
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - attr_list
+  - md_in_html
+  - tables
+  - footnotes
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+
+plugins:
+  - search:
+      lang: en
+  - git-revision-date-localized:
+      enable_creation_date: true
+  - git-committers:
+      repository: k8s-tools/k8s-tools
+      branch: main
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/k8s-tools/k8s-tools
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/k8s-analyzer/
+  version:
+    provider: mike
+    default: stable
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - https://unpkg.com/mermaid@10.6.1/dist/mermaid.min.js
+  - javascripts/mermaid.js
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Components:
+    - k8s-analyzer:
+      - Overview: analyzer/overview.md
+      - CLI Reference: analyzer/cli-reference.md
+      - Data Models: analyzer/data-models.md
+      - Examples: analyzer/examples.md
+    - k8s-reporter:
+      - Overview: reporter/overview.md
+      - Dashboard Guide: reporter/dashboard-guide.md
+      - Configuration: reporter/configuration.md
+      - Examples: reporter/examples.md
+  - Analysis Views:
+    - Overview: analysis-views/overview.md
+    - Cluster Overview: analysis-views/cluster-overview.md
+    - Security Analysis: analysis-views/security-analysis.md
+    - Resource Efficiency: analysis-views/resource-efficiency.md
+    - Storage Analysis: analysis-views/storage-analysis.md
+    - Temporal Analysis: analysis-views/temporal-analysis.md
+    - Namespace Analysis: analysis-views/namespace-analysis.md
+    - Health Dashboard: analysis-views/health-dashboard.md
+    - Relationship Analysis: analysis-views/relationship-analysis.md
+  - Development:
+    - Setup: development/setup.md
+    - Contributing: development/contributing.md
+    - Testing: development/testing.md
+    - Architecture: development/architecture.md
+    - API Reference: development/api-reference.md
+  - Deployment:
+    - Installation: deployment/installation.md
+    - Docker: deployment/docker.md
+    - Kubernetes: deployment/kubernetes.md
+    - CI/CD Integration: deployment/cicd.md
+  - Examples:
+    - Basic Usage: examples/basic-usage.md
+    - Advanced Workflows: examples/advanced-workflows.md
+    - Multi-cluster Analysis: examples/multi-cluster.md
+    - Custom Dashboards: examples/custom-dashboards.md
+  - Reference:
+    - CLI Commands: reference/cli-commands.md
+    - Configuration: reference/configuration.md
+    - Database Schema: reference/database-schema.md
+    - Troubleshooting: reference/troubleshooting.md
+    - FAQ: reference/faq.md
+  - About:
+    - Changelog: ../CHANGELOG.md
+    - License: ../LICENSE
+    - Contributing: ../CONTRIBUTING.md

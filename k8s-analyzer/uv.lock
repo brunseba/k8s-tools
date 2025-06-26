@@ -301,7 +301,7 @@ wheels = [
 
 [[package]]
 name = "k8s-analyzer"
-version = "0.2.0"
+version = "0.7.3"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
