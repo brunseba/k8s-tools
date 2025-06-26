@@ -10,6 +10,8 @@
 
 K8s Tools is a powerful suite designed to provide deep insights into Kubernetes cluster operations through automated analysis and interactive reporting. The toolkit consists of two main components that work together to deliver comprehensive cluster intelligence.
 
+**Latest Release: v0.7.9** - Now with enhanced label-based analysis and application discovery features!
+
 ### 🎯 Key Components
 
 - **[k8s-analyzer](analyzer/overview.md)** - CLI tool for extracting and analyzing cluster data

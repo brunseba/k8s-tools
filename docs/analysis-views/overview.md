@@ -174,6 +174,51 @@ K8s-reporter provides multiple specialized analysis views, each designed to prov
 - Creation pattern analysis
 - Lifecycle statistics
 
+### 🏷️ Label Analysis *(New in v0.7.9)*
+**Purpose**: Comprehensive labeling governance and quality assessment
+
+**Key Metrics**:
+- Label coverage percentage and quality scoring
+- Common labels identification and usage patterns
+- Multi-label resource analysis with statistical insights
+- Orphaned resource detection without proper labels
+
+**Use Cases**:
+- Labeling governance and compliance
+- Resource organization and categorization
+- Cleanup and standardization initiatives
+- Application discovery and inventory
+
+**Key Features**:
+- Label coverage metrics and quality scoring
+- Interactive label filtering and search
+- Orphaned resource identification
+- Label usage pattern analysis
+- Export functionality for governance reports
+
+### 🚀 Application View *(New in v0.7.9)*
+**Purpose**: Application-centric cluster analysis using Kubernetes labels
+
+**Key Metrics**:
+- Total applications discovered via standard labels
+- Application health status and resource breakdowns
+- Orphaned resources without application labels
+- Label coverage percentage for applications
+
+**Use Cases**:
+- Application portfolio management
+- Resource governance and ownership
+- Development team reporting
+- Application lifecycle tracking
+
+**Key Features**:
+- Automatic application discovery using standard Kubernetes labels
+- Application health and resource breakdowns
+- Orphaned resource identification and labeling recommendations
+- Detailed per-application resource inventory
+- Interactive label-based filtering and analysis
+- Export functionality for application reports
+
 ## Navigation and Filtering
 
 ### Common Filters Available Across Views

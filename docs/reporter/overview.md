@@ -5,9 +5,10 @@ The `k8s-reporter` is an interactive web dashboard built with Streamlit that pro
 ## Key Features
 
 - **Interactive Web Dashboard**: Built with Streamlit for modern, responsive user experience
-- **Multiple Analysis Views**: 8+ specialized dashboards for different analysis types
+- **Multiple Analysis Views**: 10+ specialized dashboards for different analysis types
 - **Real-time Filtering**: Dynamic data exploration with namespace, resource type, and health filters
 - **Advanced Visualizations**: Plotly charts, network graphs, and interactive tables
+- **Label-based Analysis**: Comprehensive labeling governance and application discovery
 - **Export Capabilities**: Download reports and analysis data in various formats
 - **Database Integration**: Seamless integration with k8s-analyzer SQLite databases
 
@@ -81,6 +82,22 @@ graph TB
 - Temporal patterns over time
 - Age distribution analysis
 - Most active namespaces
+
+### 🏷️ Label Analysis
+- Comprehensive label coverage analysis with quality scoring
+- Common labels identification and usage patterns
+- Multi-label resource analysis with statistical insights
+- Orphaned resource detection without proper labels
+- Label governance recommendations
+- Interactive label filtering and search capabilities
+
+### 🚀 Application View
+- Automatic application discovery using standard Kubernetes labels
+- Application health status and resource breakdowns
+- Component identification and relationships within applications
+- Orphaned resource identification and labeling recommendations
+- Detailed per-application resource inventory and analysis
+- Export functionality for governance reports
 
 ## Getting Started
 
