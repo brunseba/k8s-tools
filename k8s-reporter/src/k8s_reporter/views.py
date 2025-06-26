@@ -1787,9 +1787,389 @@ def render_label_analysis(db_client: DatabaseClient, filters: Dict[str, Any]):
 
 
 def render_application_view(db_client: DatabaseClient, filters: Dict[str, Any]):
-    """Render application-centric view (placeholder)."""
+    """Render application-centric view based on Kubernetes labels."""
     st.header("🚀 Application View")
-    st.info("Application view coming soon!")
+    
+    st.markdown("""
+    Applications are identified using Kubernetes labels like `app.kubernetes.io/name`, `app`, or `application`.
+    This view helps you understand your application landscape and identify components without proper labeling.
+    """)
+    
+    # Get application viewpoint data
+    app_viewpoint = db_client.get_application_viewpoint()
+    
+    # Overview metrics
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        st.metric(
+            "Total Applications",
+            app_viewpoint.total_applications,
+            help="Applications identified by standard labels"
+        )
+    
+    with col2:
+        total_app_resources = sum(len(resources) for resources in app_viewpoint.application_resources.values())
+        st.metric(
+            "Application Resources",
+            total_app_resources,
+            help="Resources belonging to identified applications"
+        )
+    
+    with col3:
+        orphaned_count = len(app_viewpoint.orphaned_resources)
+        st.metric(
+            "Orphaned Resources",
+            orphaned_count,
+            delta=-orphaned_count if orphaned_count > 0 else None,
+            delta_color="inverse",
+            help="Resources without application labels"
+        )
+    
+    with col4:
+        if total_app_resources + orphaned_count > 0:
+            coverage = (total_app_resources / (total_app_resources + orphaned_count)) * 100
+            st.metric(
+                "Label Coverage",
+                f"{coverage:.1f}%",
+                delta=f"{coverage - 90:.1f}%" if coverage < 90 else None,
+                help="Percentage of resources with application labels"
+            )
+        else:
+            st.metric("Label Coverage", "0%")
+    
+    # Application health overview
+    st.subheader("📊 Application Health Overview")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        # Application health distribution
+        if app_viewpoint.application_health:
+            health_counts = {'healthy': 0, 'warning': 0, 'error': 0}
+            for app_health in app_viewpoint.application_health.values():
+                if app_health in health_counts:
+                    health_counts[app_health] += 1
+            
+            health_data = pd.DataFrame([
+                {'status': status, 'count': count}
+                for status, count in health_counts.items()
+                if count > 0
+            ])
+            
+            if not health_data.empty:
+                color_map = {
+                    'healthy': '#28a745',
+                    'warning': '#ffc107',
+                    'error': '#dc3545'
+                }
+                
+                fig_health = px.pie(
+                    health_data,
+                    values='count',
+                    names='status',
+                    title="Application Health Distribution",
+                    color='status',
+                    color_discrete_map=color_map
+                )
+                fig_health.update_traces(textposition='inside', textinfo='percent+label')
+                st.plotly_chart(fig_health, use_container_width=True)
+    
+    with col2:
+        # Applications by resource count
+        if app_viewpoint.applications:
+            app_resources_data = pd.DataFrame([
+                {
+                    'application': app['name'],
+                    'resources': app['resource_count'],
+                    'namespaces': len(app['namespaces']),
+                    'components': len(app['component_types'])
+                }
+                for app in sorted(app_viewpoint.applications, key=lambda x: x['resource_count'], reverse=True)[:10]
+            ])
+            
+            fig_apps = px.bar(
+                app_resources_data,
+                x='application',
+                y='resources',
+                title="Top 10 Applications by Resource Count",
+                color='resources',
+                color_continuous_scale='blues'
+            )
+            fig_apps.update_layout(showlegend=False, xaxis_title="Application", yaxis_title="Resource Count")
+            fig_apps.update_xaxis(tickangle=45)
+            st.plotly_chart(fig_apps, use_container_width=True)
+    
+    # All Labels Table
+    st.subheader("🏷️ All Application Labels")
+    
+    # Get all unique labels from application resources
+    all_labels = {}
+    resource_label_mapping = {}
+    
+    for app_name, resources in app_viewpoint.application_resources.items():
+        for resource in resources:
+            resource_key = f"{resource['namespace']}/{resource['kind']}/{resource['name']}"
+            resource_label_mapping[resource_key] = {
+                'application': app_name,
+                'namespace': resource['namespace'],
+                'kind': resource['kind'],
+                'name': resource['name'],
+                'health': resource['health_status']
+            }
+            
+            for label_key, label_value in resource.get('labels', {}).items():
+                if label_key not in all_labels:
+                    all_labels[label_key] = set()
+                all_labels[label_key].add(label_value)
+    
+    # Create label summary table
+    if all_labels:
+        label_summary_data = []
+        for label_key, values in all_labels.items():
+            # Count resources using this label
+            resource_count = 0
+            for resources in app_viewpoint.application_resources.values():
+                for resource in resources:
+                    if label_key in resource.get('labels', {}):
+                        resource_count += 1
+            
+            label_summary_data.append({
+                'Label Key': label_key,
+                'Unique Values': len(values),
+                'Resource Count': resource_count,
+                'Sample Values': ', '.join(sorted(values)[:5]) + ('...' if len(values) > 5 else '')
+            })
+        
+        label_df = pd.DataFrame(label_summary_data)
+        label_df = label_df.sort_values('Resource Count', ascending=False)
+        
+        st.dataframe(label_df, use_container_width=True, hide_index=True)
+        
+        # Label filter for detailed view
+        st.subheader("🔍 Resources by Specific Label")
+        selected_label = st.selectbox(
+            "Select a label to view resources",
+            ['Select a label...'] + sorted(all_labels.keys())
+        )
+        
+        if selected_label and selected_label != 'Select a label...':
+            # Show resources with this label
+            selected_resources = []
+            for app_name, resources in app_viewpoint.application_resources.items():
+                for resource in resources:
+                    if selected_label in resource.get('labels', {}):
+                        selected_resources.append({
+                            'Application': app_name,
+                            'Resource Name': resource['name'],
+                            'Namespace': resource['namespace'],
+                            'Kind': resource['kind'],
+                            'Label Value': resource['labels'][selected_label],
+                            'Health': f"{'🟢' if resource['health_status'] == 'healthy' else '🟡' if resource['health_status'] == 'warning' else '🔴'} {resource['health_status'].title()}"
+                        })
+            
+            if selected_resources:
+                selected_df = pd.DataFrame(selected_resources)
+                st.dataframe(selected_df, use_container_width=True, hide_index=True)
+                st.info(f"Found {len(selected_resources)} resources with label '{selected_label}'")
+            else:
+                st.warning(f"No resources found with label '{selected_label}'")
+    else:
+        st.info("No labels found in application resources")
+    
+    # Components without labels (Orphaned Resources)
+    st.subheader("🧩 Components Without Application Labels")
+    
+    if app_viewpoint.orphaned_resources:
+        st.warning(f"⚠️ Found {len(app_viewpoint.orphaned_resources)} resources without application labels!")
+        
+        # Group orphaned resources by namespace and kind
+        orphaned_by_ns = {}
+        orphaned_by_kind = {}
+        
+        for resource in app_viewpoint.orphaned_resources:
+            namespace = resource.get('namespace', 'cluster-wide')
+            kind = resource.get('kind', 'Unknown')
+            
+            if namespace not in orphaned_by_ns:
+                orphaned_by_ns[namespace] = []
+            orphaned_by_ns[namespace].append(resource)
+            
+            orphaned_by_kind[kind] = orphaned_by_kind.get(kind, 0) + 1
+        
+        # Show orphaned resources summary
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.write("**Orphaned Resources by Namespace:**")
+            for namespace, resources in sorted(orphaned_by_ns.items(), key=lambda x: len(x[1]), reverse=True):
+                st.write(f"- **{namespace}**: {len(resources)} resources")
+        
+        with col2:
+            st.write("**Orphaned Resources by Type:**")
+            for kind, count in sorted(orphaned_by_kind.items(), key=lambda x: x[1], reverse=True):
+                st.write(f"- **{kind}**: {count} resources")
+        
+        # Detailed orphaned resources table
+        st.subheader("📋 Detailed Orphaned Resources")
+        
+        orphaned_data = []
+        for resource in app_viewpoint.orphaned_resources:
+            # Check what labels they do have
+            existing_labels = resource.get('labels', {})
+            label_summary = ', '.join([f"{k}={v}" for k, v in list(existing_labels.items())[:3]])
+            if len(existing_labels) > 3:
+                label_summary += '...'
+            
+            orphaned_data.append({
+                'Resource Name': resource['name'],
+                'Namespace': resource.get('namespace', 'cluster-wide'),
+                'Kind': resource['kind'],
+                'Health': f"{'🟢' if resource['health_status'] == 'healthy' else '🟡' if resource['health_status'] == 'warning' else '🔴'} {resource['health_status'].title()}",
+                'Existing Labels': label_summary if label_summary else 'None',
+                'Labels Count': len(existing_labels)
+            })
+        
+        orphaned_df = pd.DataFrame(orphaned_data)
+        orphaned_df = orphaned_df.sort_values(['Namespace', 'Kind', 'Resource Name'])
+        
+        st.dataframe(orphaned_df, use_container_width=True, hide_index=True)
+        
+        # Recommendations for orphaned resources
+        st.subheader("💡 Labeling Recommendations")
+        
+        st.markdown("""
+        **To improve application identification, add these labels to your resources:**
+        
+        - `app.kubernetes.io/name`: The name of the application
+        - `app.kubernetes.io/version`: The current version of the application
+        - `app.kubernetes.io/component`: The component within the architecture
+        - `app.kubernetes.io/part-of`: The name of a higher level application this one is part of
+        - `app.kubernetes.io/managed-by`: The tool being used to manage the operation of an application
+        
+        **Example:**
+        ```yaml
+        metadata:
+          labels:
+            app.kubernetes.io/name: my-app
+            app.kubernetes.io/version: "1.2.3"
+            app.kubernetes.io/component: frontend
+            app.kubernetes.io/part-of: ecommerce-platform
+            app.kubernetes.io/managed-by: helm
+        ```
+        """)
+        
+    else:
+        st.success("✅ Excellent! All resources have application labels.")
+    
+    # Detailed Applications Table
+    st.subheader("📱 Application Details")
+    
+    if app_viewpoint.applications:
+        # Create detailed application table
+        app_details_data = []
+        for app in app_viewpoint.applications:
+            app_name = app['name']
+            health_icon = '🟢' if app['health'] == 'healthy' else '🟡' if app['health'] == 'warning' else '🔴'
+            
+            app_details_data.append({
+                'Application': app_name,
+                'Health': f"{health_icon} {app['health'].title()}",
+                'Resources': app['resource_count'],
+                'Namespaces': ', '.join(app['namespaces']),
+                'Component Types': ', '.join(app['component_types']),
+                'Version': app_viewpoint.application_versions.get(app_name, 'Not specified'),
+                'Components': ', '.join(app_viewpoint.application_components.get(app_name, ['Not specified']))
+            })
+        
+        app_details_df = pd.DataFrame(app_details_data)
+        app_details_df = app_details_df.sort_values('Resources', ascending=False)
+        
+        st.dataframe(app_details_df, use_container_width=True, hide_index=True)
+        
+        # Application deep dive
+        st.subheader("🔍 Application Deep Dive")
+        
+        selected_app = st.selectbox(
+            "Select an application for detailed analysis",
+            ['Select an application...'] + [app['name'] for app in app_viewpoint.applications]
+        )
+        
+        if selected_app and selected_app != 'Select an application...':
+            app_resources = app_viewpoint.application_resources.get(selected_app, [])
+            
+            if app_resources:
+                st.write(f"**Application: {selected_app}**")
+                
+                # Application metrics
+                col1, col2, col3, col4 = st.columns(4)
+                
+                with col1:
+                    st.metric("Resources", len(app_resources))
+                
+                with col2:
+                    namespaces = set(r['namespace'] for r in app_resources)
+                    st.metric("Namespaces", len(namespaces))
+                
+                with col3:
+                    kinds = set(r['kind'] for r in app_resources)
+                    st.metric("Resource Types", len(kinds))
+                
+                with col4:
+                    health_status = app_viewpoint.application_health.get(selected_app, 'unknown')
+                    health_icon = '🟢' if health_status == 'healthy' else '🟡' if health_status == 'warning' else '🔴'
+                    st.metric("Health", f"{health_icon} {health_status.title()}")
+                
+                # Resource breakdown for selected application
+                resource_details = []
+                for resource in app_resources:
+                    resource_details.append({
+                        'Resource Name': resource['name'],
+                        'Namespace': resource['namespace'],
+                        'Kind': resource['kind'],
+                        'Health': f"{'🟢' if resource['health_status'] == 'healthy' else '🟡' if resource['health_status'] == 'warning' else '🔴'} {resource['health_status'].title()}",
+                        'Labels Count': len(resource.get('labels', {}))
+                    })
+                
+                resource_details_df = pd.DataFrame(resource_details)
+                resource_details_df = resource_details_df.sort_values(['Namespace', 'Kind', 'Resource Name'])
+                
+                st.dataframe(resource_details_df, use_container_width=True, hide_index=True)
+    else:
+        st.info("No applications detected. Consider adding application labels to your resources.")
+    
+    # Export functionality
+    st.subheader("📤 Export Application Data")
+    
+    if st.button("📄 Generate Application Report"):
+        # Create comprehensive export data
+        export_data = {
+            'summary': {
+                'total_applications': app_viewpoint.total_applications,
+                'total_application_resources': sum(len(resources) for resources in app_viewpoint.application_resources.values()),
+                'orphaned_resources_count': len(app_viewpoint.orphaned_resources),
+                'analysis_timestamp': datetime.now().isoformat()
+            },
+            'applications': app_viewpoint.applications,
+            'application_health': app_viewpoint.application_health,
+            'application_versions': app_viewpoint.application_versions,
+            'application_components': app_viewpoint.application_components,
+            'orphaned_resources': app_viewpoint.orphaned_resources,
+            'all_labels_summary': {
+                label_key: {
+                    'unique_values': len(values),
+                    'sample_values': sorted(values)[:10]
+                }
+                for label_key, values in all_labels.items()
+            }
+        }
+        
+        st.download_button(
+            label="📊 Download Application Report (JSON)",
+            data=json.dumps(export_data, indent=2, default=str),
+            file_name=f"application_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+            mime="application/json"
+        )
 
 
 def render_environment_view(db_client: DatabaseClient, filters: Dict[str, Any]):
