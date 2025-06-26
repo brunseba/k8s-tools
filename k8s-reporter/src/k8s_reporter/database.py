@@ -1165,3 +1165,518 @@ class DatabaseClient:
                 resource_coverage_percentage=resource_coverage_percentage,
                 total_pods_analyzed=total_pods_analyzed
             )
+    
+    def get_label_analysis(self) -> 'LabelAnalysis':
+        """Get analysis of resource labeling patterns."""
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            
+            # Total resources with and without labels
+            cursor.execute("""
+                SELECT 
+                    COUNT(CASE WHEN labels IS NOT NULL AND labels != '{}' THEN 1 END) as labeled,
+                    COUNT(CASE WHEN labels IS NULL OR labels = '{}' THEN 1 END) as unlabeled,
+                    COUNT(*) as total
+                FROM resources
+            """)
+            result = cursor.fetchone()
+            total_labeled = result[0]
+            total_unlabeled = result[1]
+            total_resources = result[2]
+            
+            coverage_percentage = (total_labeled / total_resources * 100) if total_resources > 0 else 0
+            
+            # Extract common labels
+            cursor.execute("SELECT labels FROM resources WHERE labels IS NOT NULL AND labels != '{}'")
+            common_labels = {}
+            label_values_distribution = {}
+            resources_by_label = {}
+            
+            for row in cursor.fetchall():
+                try:
+                    labels = json.loads(row[0])
+                    for key, value in labels.items():
+                        # Count label occurrences
+                        common_labels[key] = common_labels.get(key, 0) + 1
+                        
+                        # Track value distributions
+                        if key not in label_values_distribution:
+                            label_values_distribution[key] = {}
+                        label_values_distribution[key][value] = label_values_distribution[key].get(value, 0) + 1
+                except json.JSONDecodeError:
+                    continue
+            
+            # Get resources grouped by common organizational labels
+            organizational_labels = ['app.kubernetes.io/name', 'app', 'team', 'owner', 'environment', 'cost-center']
+            cursor.execute("""
+                SELECT name, namespace, kind, labels, health_status
+                FROM resources
+                WHERE labels IS NOT NULL AND labels != '{}'
+            """)
+            
+            for row in cursor.fetchall():
+                try:
+                    labels = json.loads(row[3])
+                    resource = {
+                        'name': row[0],
+                        'namespace': row[1],
+                        'kind': row[2],
+                        'health_status': row[4],
+                        'labels': labels
+                    }
+                    
+                    for org_label in organizational_labels:
+                        if org_label in labels:
+                            if org_label not in resources_by_label:
+                                resources_by_label[org_label] = []
+                            resources_by_label[org_label].append(resource)
+                except json.JSONDecodeError:
+                    continue
+            
+            # Find orphaned resources (missing organizational labels)
+            cursor.execute("""
+                SELECT name, namespace, kind, labels, health_status
+                FROM resources
+                WHERE labels IS NULL OR labels = '{}'
+            """)
+            
+            orphaned_resources = []
+            for row in cursor.fetchall():
+                orphaned_resources.append({
+                    'name': row[0],
+                    'namespace': row[1],
+                    'kind': row[2],
+                    'health_status': row[4],
+                    'reason': 'No labels'
+                })
+            
+            # Calculate label quality score (based on coverage of organizational labels)
+            quality_scores = []
+            for label in organizational_labels:
+                if label in common_labels:
+                    score = (common_labels[label] / total_resources) * 100
+                    quality_scores.append(score)
+            
+            label_quality_score = sum(quality_scores) / len(quality_scores) if quality_scores else 0
+            
+            # Import here to avoid circular imports
+            from k8s_reporter.models import LabelAnalysis
+            
+            return LabelAnalysis(
+                total_labeled_resources=total_labeled,
+                total_unlabeled_resources=total_unlabeled,
+                label_coverage_percentage=coverage_percentage,
+                common_labels=common_labels,
+                label_values_distribution=label_values_distribution,
+                resources_by_label=resources_by_label,
+                orphaned_resources=orphaned_resources,
+                label_quality_score=label_quality_score
+            )
+    
+    def get_application_viewpoint(self) -> 'ApplicationViewpoint':
+        """Get application-centric view based on app.kubernetes.io labels."""
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            
+            # Get all resources with app labels
+            cursor.execute("""
+                SELECT name, namespace, kind, labels, health_status
+                FROM resources
+                WHERE labels IS NOT NULL AND labels != '{}'
+            """)
+            
+            applications = {}
+            application_resources = {}
+            application_health = {}
+            application_versions = {}
+            application_components = {}
+            orphaned_resources = []
+            multi_app_resources = []
+            
+            app_labels = ['app.kubernetes.io/name', 'app', 'application']
+            
+            for row in cursor.fetchall():
+                try:
+                    labels = json.loads(row[3])
+                    resource = {
+                        'name': row[0],
+                        'namespace': row[1],
+                        'kind': row[2],
+                        'health_status': row[4],
+                        'labels': labels
+                    }
+                    
+                    # Find app label
+                    app_name = None
+                    for app_label in app_labels:
+                        if app_label in labels:
+                            app_name = labels[app_label]
+                            break
+                    
+                    if app_name:
+                        # Initialize app data if not exists
+                        if app_name not in applications:
+                            applications[app_name] = {
+                                'name': app_name,
+                                'namespaces': set(),
+                                'resource_count': 0,
+                                'component_types': set()
+                            }
+                            application_resources[app_name] = []
+                            application_components[app_name] = []
+                        
+                        # Update app data
+                        applications[app_name]['namespaces'].add(row[1])
+                        applications[app_name]['resource_count'] += 1
+                        applications[app_name]['component_types'].add(row[2])
+                        application_resources[app_name].append(resource)
+                        
+                        # Track versions
+                        if 'app.kubernetes.io/version' in labels:
+                            application_versions[app_name] = labels['app.kubernetes.io/version']
+                        
+                        # Track components
+                        if 'app.kubernetes.io/component' in labels:
+                            component = labels['app.kubernetes.io/component']
+                            if app_name not in application_components:
+                                application_components[app_name] = []
+                            if component not in application_components[app_name]:
+                                application_components[app_name].append(component)
+                    else:
+                        orphaned_resources.append(resource)
+                        
+                except json.JSONDecodeError:
+                    continue
+            
+            # Calculate application health
+            for app_name, resources in application_resources.items():
+                health_counts = {'healthy': 0, 'warning': 0, 'error': 0}
+                for resource in resources:
+                    status = resource['health_status']
+                    if status in health_counts:
+                        health_counts[status] += 1
+                
+                # Determine overall app health
+                if health_counts['error'] > 0:
+                    application_health[app_name] = 'error'
+                elif health_counts['warning'] > 0:
+                    application_health[app_name] = 'warning'
+                else:
+                    application_health[app_name] = 'healthy'
+            
+            # Convert sets to lists for JSON serialization
+            apps_list = []
+            for app_name, app_data in applications.items():
+                app_info = {
+                    'name': app_name,
+                    'namespaces': list(app_data['namespaces']),
+                    'resource_count': app_data['resource_count'],
+                    'component_types': list(app_data['component_types']),
+                    'health': application_health.get(app_name, 'unknown')
+                }
+                apps_list.append(app_info)
+            
+            # Import here to avoid circular imports
+            from k8s_reporter.models import ApplicationViewpoint
+            
+            return ApplicationViewpoint(
+                total_applications=len(applications),
+                applications=apps_list,
+                application_health=application_health,
+                application_resources=application_resources,
+                application_versions=application_versions,
+                application_components=application_components,
+                orphaned_resources=orphaned_resources,
+                multi_app_resources=multi_app_resources
+            )
+    
+    def get_environment_viewpoint(self) -> 'EnvironmentViewpoint':
+        """Get environment-based view using environment labels."""
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            
+            cursor.execute("""
+                SELECT name, namespace, kind, labels, health_status
+                FROM resources
+                WHERE labels IS NOT NULL AND labels != '{}'
+            """)
+            
+            environments = set()
+            resources_by_environment = {}
+            environment_health = {}
+            environment_namespaces = {}
+            environment_applications = {}
+            untagged_resources = []
+            
+            env_labels = ['environment', 'env', 'stage', 'tier']
+            
+            for row in cursor.fetchall():
+                try:
+                    labels = json.loads(row[3])
+                    resource = {
+                        'name': row[0],
+                        'namespace': row[1],
+                        'kind': row[2],
+                        'health_status': row[4],
+                        'labels': labels
+                    }
+                    
+                    # Find environment label
+                    env_name = None
+                    for env_label in env_labels:
+                        if env_label in labels:
+                            env_name = labels[env_label]
+                            break
+                    
+                    if env_name:
+                        environments.add(env_name)
+                        
+                        # Count resources by environment
+                        resources_by_environment[env_name] = resources_by_environment.get(env_name, 0) + 1
+                        
+                        # Track health by environment
+                        if env_name not in environment_health:
+                            environment_health[env_name] = {'healthy': 0, 'warning': 0, 'error': 0}
+                        
+                        health_status = resource['health_status']
+                        if health_status in environment_health[env_name]:
+                            environment_health[env_name][health_status] += 1
+                        
+                        # Track namespaces by environment
+                        if env_name not in environment_namespaces:
+                            environment_namespaces[env_name] = set()
+                        environment_namespaces[env_name].add(row[1])
+                        
+                        # Track applications by environment
+                        app_labels = ['app.kubernetes.io/name', 'app', 'application']
+                        for app_label in app_labels:
+                            if app_label in labels:
+                                app_name = labels[app_label]
+                                if env_name not in environment_applications:
+                                    environment_applications[env_name] = set()
+                                environment_applications[env_name].add(app_name)
+                                break
+                    else:
+                        untagged_resources.append(resource)
+                        
+                except json.JSONDecodeError:
+                    continue
+            
+            # Convert sets to lists
+            for env in environment_namespaces:
+                environment_namespaces[env] = list(environment_namespaces[env])
+            for env in environment_applications:
+                environment_applications[env] = list(environment_applications[env])
+            
+            # Calculate compliance (percentage of resources properly tagged)
+            cursor.execute("SELECT COUNT(*) FROM resources")
+            total_resources = cursor.fetchone()[0]
+            environment_compliance = {}
+            for env in environments:
+                tagged_count = resources_by_environment.get(env, 0)
+                environment_compliance[env] = (tagged_count / total_resources * 100) if total_resources > 0 else 0
+            
+            # Import here to avoid circular imports
+            from k8s_reporter.models import EnvironmentViewpoint
+            
+            return EnvironmentViewpoint(
+                environments=list(environments),
+                resources_by_environment=resources_by_environment,
+                environment_health=environment_health,
+                environment_namespaces=environment_namespaces,
+                environment_applications=environment_applications,
+                untagged_resources=untagged_resources,
+                environment_compliance=environment_compliance
+            )
+    
+    def get_team_ownership_viewpoint(self) -> 'TeamOwnershipViewpoint':
+        """Get team/ownership view based on ownership labels."""
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            
+            cursor.execute("""
+                SELECT name, namespace, kind, labels, health_status
+                FROM resources
+                WHERE labels IS NOT NULL AND labels != '{}'
+            """)
+            
+            teams = set()
+            team_resources = {}
+            team_namespaces = {}
+            team_applications = {}
+            unowned_resources = []
+            team_health_status = {}
+            
+            ownership_labels = ['team', 'owner', 'maintainer', 'squad']
+            
+            for row in cursor.fetchall():
+                try:
+                    labels = json.loads(row[3])
+                    resource = {
+                        'name': row[0],
+                        'namespace': row[1],
+                        'kind': row[2],
+                        'health_status': row[4],
+                        'labels': labels
+                    }
+                    
+                    # Find team/owner label
+                    team_name = None
+                    for owner_label in ownership_labels:
+                        if owner_label in labels:
+                            team_name = labels[owner_label]
+                            break
+                    
+                    if team_name:
+                        teams.add(team_name)
+                        
+                        # Count resources by team
+                        team_resources[team_name] = team_resources.get(team_name, 0) + 1
+                        
+                        # Track namespaces by team
+                        if team_name not in team_namespaces:
+                            team_namespaces[team_name] = set()
+                        team_namespaces[team_name].add(row[1])
+                        
+                        # Track applications by team
+                        app_labels = ['app.kubernetes.io/name', 'app', 'application']
+                        for app_label in app_labels:
+                            if app_label in labels:
+                                app_name = labels[app_label]
+                                if team_name not in team_applications:
+                                    team_applications[team_name] = set()
+                                team_applications[team_name].add(app_name)
+                                break
+                        
+                        # Track health by team
+                        if team_name not in team_health_status:
+                            team_health_status[team_name] = {'healthy': 0, 'warning': 0, 'error': 0}
+                        
+                        health_status = resource['health_status']
+                        if health_status in team_health_status[team_name]:
+                            team_health_status[team_name][health_status] += 1
+                    else:
+                        unowned_resources.append(resource)
+                        
+                except json.JSONDecodeError:
+                    continue
+            
+            # Convert sets to lists
+            for team in team_namespaces:
+                team_namespaces[team] = list(team_namespaces[team])
+            for team in team_applications:
+                team_applications[team] = list(team_applications[team])
+            
+            # Calculate ownership coverage
+            cursor.execute("SELECT COUNT(*) FROM resources")
+            total_resources = cursor.fetchone()[0]
+            owned_resources = sum(team_resources.values())
+            ownership_coverage = (owned_resources / total_resources * 100) if total_resources > 0 else 0
+            
+            # Find cross-team dependencies (placeholder - would need relationship data)
+            cross_team_dependencies = []
+            
+            # Import here to avoid circular imports
+            from k8s_reporter.models import TeamOwnershipViewpoint
+            
+            return TeamOwnershipViewpoint(
+                teams=list(teams),
+                team_resources=team_resources,
+                team_namespaces=team_namespaces,
+                team_applications=team_applications,
+                unowned_resources=unowned_resources,
+                team_health_status=team_health_status,
+                cross_team_dependencies=cross_team_dependencies,
+                ownership_coverage=ownership_coverage
+            )
+    
+    def get_cost_optimization_viewpoint(self) -> 'CostOptimizationViewpoint':
+        """Get cost optimization view based on cost-related labels."""
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            
+            cursor.execute("""
+                SELECT name, namespace, kind, labels, health_status
+                FROM resources
+                WHERE labels IS NOT NULL AND labels != '{}'
+            """)
+            
+            cost_centers = set()
+            cost_center_resources = {}
+            cost_center_storage = {}
+            cost_center_namespaces = {}
+            untagged_for_billing = []
+            cost_optimization_opportunities = []
+            
+            cost_labels = ['cost-center', 'billing-code', 'project', 'budget']
+            
+            for row in cursor.fetchall():
+                try:
+                    labels = json.loads(row[3])
+                    resource = {
+                        'name': row[0],
+                        'namespace': row[1],
+                        'kind': row[2],
+                        'health_status': row[4],
+                        'labels': labels
+                    }
+                    
+                    # Find cost/billing label
+                    cost_center = None
+                    for cost_label in cost_labels:
+                        if cost_label in labels:
+                            cost_center = labels[cost_label]
+                            break
+                    
+                    if cost_center:
+                        cost_centers.add(cost_center)
+                        
+                        # Count resources by cost center
+                        cost_center_resources[cost_center] = cost_center_resources.get(cost_center, 0) + 1
+                        
+                        # Track namespaces by cost center
+                        if cost_center not in cost_center_namespaces:
+                            cost_center_namespaces[cost_center] = set()
+                        cost_center_namespaces[cost_center].add(row[1])
+                        
+                        # Estimate storage for cost center (simplified)
+                        if row[2] in ['PersistentVolumeClaim', 'PersistentVolume']:
+                            if cost_center not in cost_center_storage:
+                                cost_center_storage[cost_center] = 0.0
+                            cost_center_storage[cost_center] += 1.0  # Placeholder: 1GB per PV/PVC
+                    else:
+                        untagged_for_billing.append(resource)
+                        
+                        # Identify optimization opportunities
+                        if row[2] in ['Pod', 'Deployment', 'StatefulSet', 'DaemonSet']:
+                            cost_optimization_opportunities.append({
+                                'resource': resource,
+                                'opportunity': 'Missing cost/billing labels for proper cost allocation',
+                                'impact': 'medium'
+                            })
+                        
+                except json.JSONDecodeError:
+                    continue
+            
+            # Convert sets to lists
+            for cost_center in cost_center_namespaces:
+                cost_center_namespaces[cost_center] = list(cost_center_namespaces[cost_center])
+            
+            # Calculate billing coverage
+            cursor.execute("SELECT COUNT(*) FROM resources")
+            total_resources = cursor.fetchone()[0]
+            tagged_resources = sum(cost_center_resources.values())
+            billing_coverage = (tagged_resources / total_resources * 100) if total_resources > 0 else 0
+            
+            # Import here to avoid circular imports
+            from k8s_reporter.models import CostOptimizationViewpoint
+            
+            return CostOptimizationViewpoint(
+                cost_centers=list(cost_centers),
+                cost_center_resources=cost_center_resources,
+                cost_center_storage=cost_center_storage,
+                cost_center_namespaces=cost_center_namespaces,
+                untagged_for_billing=untagged_for_billing,
+                cost_optimization_opportunities=cost_optimization_opportunities,
+                billing_coverage=billing_coverage
+            )
