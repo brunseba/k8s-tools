@@ -38,6 +38,14 @@ K8s Reporter provides an intuitive web-based dashboard for visualizing and analy
 - Interactive relationship matrix
 - Search and filter capabilities
 
+### 🏷️ **Label Analysis & Application View**
+- Comprehensive label coverage analysis and quality scoring
+- Application identification using standard Kubernetes labels
+- Orphaned resource detection and labeling recommendations
+- Multi-label resource analysis with statistical insights
+- Application health and resource breakdowns
+- Interactive label filtering and search capabilities
+
 ### 📊 **Interactive Visualizations**
 - Pie charts, bar charts, and line graphs
 - Interactive data tables
@@ -143,6 +151,23 @@ Understand resource dependencies:
 - Dependency visualization
 - Relationship type analysis
 - Search and filtering
+
+### **Label Analysis & Governance**
+Analyze and improve resource labeling:
+- Label coverage metrics and quality scoring
+- Common labels identification and usage patterns
+- Orphaned resource detection without proper labels
+- Application grouping using standard Kubernetes labels
+- Multi-label resource analysis with statistical insights
+- Export functionality for governance reports
+
+### **Application View**
+Application-centric cluster analysis:
+- Automatic application discovery via labels
+- Application health status and resource breakdowns
+- Component identification and relationships
+- Labeling recommendations following Kubernetes best practices
+- Detailed per-application resource inventory
 
 ## 🛠️ Advanced Features
 
