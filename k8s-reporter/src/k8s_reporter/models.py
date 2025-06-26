@@ -212,6 +212,69 @@ class TemporalAnalysis(BaseModel):
     resource_lifecycle_stats: Dict[str, Dict[str, float]]  # Avg age by type
 
 
+class LabelAnalysis(BaseModel):
+    """Analysis of resources grouped by metadata labels."""
+    
+    total_labeled_resources: int
+    total_unlabeled_resources: int
+    label_coverage_percentage: float
+    common_labels: Dict[str, int]  # label key -> count of resources with this label
+    label_values_distribution: Dict[str, Dict[str, int]]  # label key -> {value -> count}
+    resources_by_label: Dict[str, List[Dict[str, Any]]]  # label key -> list of resources
+    orphaned_resources: List[Dict[str, Any]]  # resources without common organizational labels
+    label_quality_score: float  # Overall labeling quality percentage
+
+
+class ApplicationViewpoint(BaseModel):
+    """Application-centric view based on app.kubernetes.io labels."""
+    
+    total_applications: int
+    applications: List[Dict[str, Any]]  # app name -> details
+    application_health: Dict[str, str]  # app name -> health status
+    application_resources: Dict[str, List[Dict[str, Any]]]  # app name -> resources
+    application_versions: Dict[str, str]  # app name -> version
+    application_components: Dict[str, List[str]]  # app name -> component types
+    orphaned_resources: List[Dict[str, Any]]  # resources without app labels
+    multi_app_resources: List[Dict[str, Any]]  # resources belonging to multiple apps
+
+
+class EnvironmentViewpoint(BaseModel):
+    """Environment-based view using environment labels."""
+    
+    environments: List[str]  # detected environments (prod, staging, dev, etc.)
+    resources_by_environment: Dict[str, int]  # env -> resource count
+    environment_health: Dict[str, Dict[str, int]]  # env -> {health_status -> count}
+    environment_namespaces: Dict[str, List[str]]  # env -> namespaces
+    environment_applications: Dict[str, List[str]]  # env -> applications
+    untagged_resources: List[Dict[str, Any]]  # resources without environment labels
+    environment_compliance: Dict[str, float]  # env -> compliance percentage
+
+
+class TeamOwnershipViewpoint(BaseModel):
+    """Team/ownership view based on ownership labels."""
+    
+    teams: List[str]  # detected teams
+    team_resources: Dict[str, int]  # team -> resource count
+    team_namespaces: Dict[str, List[str]]  # team -> namespaces they own
+    team_applications: Dict[str, List[str]]  # team -> applications they own
+    unowned_resources: List[Dict[str, Any]]  # resources without ownership labels
+    team_health_status: Dict[str, Dict[str, int]]  # team -> {health_status -> count}
+    cross_team_dependencies: List[Dict[str, Any]]  # relationships across teams
+    ownership_coverage: float  # percentage of resources with ownership labels
+
+
+class CostOptimizationViewpoint(BaseModel):
+    """Cost optimization view based on cost-related labels."""
+    
+    cost_centers: List[str]  # detected cost centers
+    cost_center_resources: Dict[str, int]  # cost center -> resource count
+    cost_center_storage: Dict[str, float]  # cost center -> storage consumption (GB)
+    cost_center_namespaces: Dict[str, List[str]]  # cost center -> namespaces
+    untagged_for_billing: List[Dict[str, Any]]  # resources missing cost/billing labels
+    cost_optimization_opportunities: List[Dict[str, Any]]  # resources that could be optimized
+    billing_coverage: float  # percentage of resources with cost/billing labels
+
+
 @dataclass
 class ViewConfig:
     """Configuration for different analysis views."""
@@ -329,6 +392,46 @@ ANALYSIS_VIEWS = {
             description="Resource lifecycle and creation patterns over time",
             icon="⏰",
             supports_time_range=True,
+        )
+    ),
+    "labels": AnalysisView(
+        "labels",
+        ViewConfig(
+            title="Label Analysis",
+            description="Resource organization and labeling patterns",
+            icon="🏷️",
+        )
+    ),
+    "applications": AnalysisView(
+        "applications",
+        ViewConfig(
+            title="Application View",
+            description="Application-centric analysis based on app.kubernetes.io labels",
+            icon="🚀",
+        )
+    ),
+    "environments": AnalysisView(
+        "environments",
+        ViewConfig(
+            title="Environment View",
+            description="Environment-based resource organization and health",
+            icon="🌍",
+        )
+    ),
+    "team_ownership": AnalysisView(
+        "team_ownership",
+        ViewConfig(
+            title="Team Ownership",
+            description="Team-based resource ownership and responsibilities",
+            icon="👥",
+        )
+    ),
+    "cost_optimization": AnalysisView(
+        "cost_optimization",
+        ViewConfig(
+            title="Cost Optimization",
+            description="Cost center analysis and optimization opportunities",
+            icon="💰",
         )
     ),
 }

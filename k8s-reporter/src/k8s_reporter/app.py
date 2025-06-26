@@ -25,6 +25,11 @@ from k8s_reporter.views import (
     render_storage_analysis,
     render_temporal_analysis,
     render_resource_efficiency,
+    render_label_analysis,
+    render_application_view,
+    render_environment_view,
+    render_team_ownership_view,
+    render_cost_optimization_view,
 )
 
 
@@ -232,6 +237,16 @@ def main():
             render_temporal_analysis(db_client, filters)
         elif selected_view == 'efficiency':
             render_resource_efficiency(db_client, filters)
+        elif selected_view == 'labels':
+            render_label_analysis(db_client, filters)
+        elif selected_view == 'applications':
+            render_application_view(db_client, filters)
+        elif selected_view == 'environments':
+            render_environment_view(db_client, filters)
+        elif selected_view == 'team_ownership':
+            render_team_ownership_view(db_client, filters)
+        elif selected_view == 'cost_optimization':
+            render_cost_optimization_view(db_client, filters)
         elif selected_view == 'compliance':
             render_compliance_report(db_client, filters)
         elif selected_view == 'trends':
