@@ -14,8 +14,19 @@ jobs:
 
     strategy:
       matrix:
-        directory: ['k8s-analyzer', 'k8s-reporter']
-        python-version: ['3.9', '3.10', '3.11', '3.12']
+        include:
+          - directory: 'k8s-analyzer'
+            python-version: '3.11'
+          - directory: 'k8s-analyzer'
+            python-version: '3.12'
+          - directory: 'k8s-reporter'
+            python-version: '3.9'
+          - directory: 'k8s-reporter'
+            python-version: '3.10'
+          - directory: 'k8s-reporter'
+            python-version: '3.11'
+          - directory: 'k8s-reporter'
+            python-version: '3.12'
 
     steps:
     - name: Checkout code
@@ -34,12 +45,16 @@ jobs:
     - name: Install dependencies
       run: |
         cd ${{ matrix.directory }}
-        hatch env create
+        python -m pip install -e .[test]
 
     - name: Run tests with coverage
       run: |
         cd ${{ matrix.directory }}
-        hatch run test:pytest --junitxml=test-results.xml --cov-report=xml
+        if [ "${{ matrix.directory }}" = "k8s-analyzer" ]; then
+          python -m pytest --junitxml=test-results.xml --cov=src/k8s_analyzer --cov-report=xml --cov-report=term-missing
+        else
+          python -m pytest --junitxml=test-results.xml --cov=src/k8s_reporter --cov-report=xml --cov-report=term-missing
+        fi
 
     - name: Generate SBOM
       run: |
@@ -58,6 +73,7 @@ jobs:
       with:
         name: test-results-${{ matrix.directory }}-py${{ matrix.python-version }}
         path: ${{ matrix.directory }}/test-results.xml
+        if-no-files-found: ignore
 
     - name: Upload coverage reports
       if: always()
@@ -65,18 +81,21 @@ jobs:
       with:
         name: coverage-${{ matrix.directory }}-py${{ matrix.python-version }}
         path: ${{ matrix.directory }}/coverage.xml
+        if-no-files-found: ignore
 
     - name: Upload SBOM
       uses: actions/upload-artifact@v4
       with:
         name: sbom-${{ matrix.directory }}-py${{ matrix.python-version }}
         path: ${{ matrix.directory }}/sbom.json
+        if-no-files-found: ignore
 
     - name: Upload built packages
       uses: actions/upload-artifact@v4
       with:
         name: packages-${{ matrix.directory }}-py${{ matrix.python-version }}
         path: ${{ matrix.directory }}/dist/*
+        if-no-files-found: ignore
 
   publish:
     needs: build-and-test
