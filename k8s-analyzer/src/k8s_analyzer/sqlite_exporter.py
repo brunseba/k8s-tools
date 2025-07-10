@@ -14,6 +14,10 @@ from typing import Any, Dict, List, Optional, Union
 
 from .models import ClusterState, KubernetesResource, ResourceRelationship, RelationshipType, ResourceStatus
 
+# Register datetime adapters for SQLite to avoid deprecation warnings
+sqlite3.register_adapter(datetime, lambda dt: dt.isoformat())
+sqlite3.register_converter("timestamp", lambda b: datetime.fromisoformat(b.decode()))
+
 logger = logging.getLogger(__name__)
 
 
@@ -171,7 +175,7 @@ class SQLiteExporter:
         if replace_existing:
             self._clear_existing_data()
             
-        self._export_resources(cluster_state.resources)
+        self._export_resources(cluster_state.resources, replace_existing)
         self._export_relationships(cluster_state.relationships)
         self._export_cluster_info(cluster_state.cluster_info, cluster_state.analysis_timestamp)
         self._export_analysis_summary(cluster_state)
@@ -189,7 +193,7 @@ class SQLiteExporter:
             
         logger.info("Existing data cleared from database")
         
-    def _export_resources(self, resources: List[KubernetesResource]) -> None:
+    def _export_resources(self, resources: List[KubernetesResource], replace_existing: bool = True) -> None:
         """Export resources to database."""
         cursor = self.connection.cursor()
         
@@ -201,13 +205,22 @@ class SQLiteExporter:
             status_json = json.dumps(resource.status) if resource.status else None
             issues_json = json.dumps(resource.issues) if resource.issues else None
             
-            cursor.execute("""
+            # Use INSERT OR REPLACE for replace mode, INSERT OR IGNORE for append mode
+            insert_sql = """
                 INSERT OR REPLACE INTO resources (
                     uid, name, namespace, kind, api_version, creation_timestamp,
                     deletion_timestamp, resource_version, generation, health_status,
                     labels, annotations, spec, status, issues, updated_at
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (
+            """ if replace_existing else """
+                INSERT OR IGNORE INTO resources (
+                    uid, name, namespace, kind, api_version, creation_timestamp,
+                    deletion_timestamp, resource_version, generation, health_status,
+                    labels, annotations, spec, status, issues, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """
+            
+            cursor.execute(insert_sql, (
                 resource.metadata.uid,
                 resource.metadata.name,
                 resource.metadata.namespace,

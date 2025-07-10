@@ -13,6 +13,10 @@ from typing import Dict, List, Optional, Any, Tuple
 
 import pandas as pd
 
+# Register datetime adapters for SQLite to avoid deprecation warnings
+sqlite3.register_adapter(datetime, lambda dt: dt.isoformat())
+sqlite3.register_converter("timestamp", lambda b: datetime.fromisoformat(b.decode()))
+
 from k8s_reporter.models import (
     ClusterOverview,
     ResourceSummary,

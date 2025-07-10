@@ -68,7 +68,7 @@ class ResourceReference(BaseModel):
     def __str__(self) -> str:
         """String representation of the resource reference."""
         if self.namespace:
-            return f"{self.kind}/{self.namespace}/{self.name}"
+            return f"{self.kind}/{self.name}/{self.namespace}"
         return f"{self.kind}/{self.name}"
     
     def __hash__(self) -> int:
@@ -117,7 +117,7 @@ class KubernetesResource(BaseModel):
     def full_name(self) -> str:
         """Get full resource name with namespace."""
         if self.metadata.namespace:
-            return f"{self.kind}/{self.metadata.namespace}/{self.metadata.name}"
+            return f"{self.kind}/{self.metadata.name}/{self.metadata.namespace}"
         return f"{self.kind}/{self.metadata.name}"
     
     def add_relationship(
