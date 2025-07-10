@@ -1,0 +1,39 @@
+name: Simple Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: List directory structure
+      run: |
+        ls -la
+        echo "--- k8s-analyzer ---"
+        ls -la k8s-analyzer/
+        echo "--- k8s-reporter ---"
+        ls -la k8s-reporter/
+    
+    - name: Test k8s-analyzer dependencies
+      run: |
+        cd k8s-analyzer
+        python -m pip install --upgrade pip
+        python -m pip install -e .[test]
+        
+    - name: Test k8s-analyzer tests
+      run: |
+        cd k8s-analyzer
+        python -m pytest --version
+        python -m pytest tests/ -v
