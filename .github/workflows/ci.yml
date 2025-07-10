@@ -8,6 +8,12 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+  packages: write
+  issues: read
+  pull-requests: read
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -129,11 +135,37 @@ jobs:
         cd ${{ matrix.directory }}
         hatch build
 
-    - name: Publish to PyPI
-      env:
-        HATCH_INDEX_USER: ${{ secrets.PYPI_USERNAME }}
-        HATCH_INDEX_AUTH: ${{ secrets.PYPI_PASSWORD }}
+    - name: Get package version
+      id: get_version
       run: |
         cd ${{ matrix.directory }}
-        hatch publish
+        pip install toml
+        VERSION=$(python -c "import toml; print(toml.load('pyproject.toml')['project']['version'])")
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "package_name=${{ matrix.directory }}" >> $GITHUB_OUTPUT
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: "${{ steps.get_version.outputs.package_name }}-v${{ steps.get_version.outputs.version }}"
+        name: "${{ steps.get_version.outputs.package_name }} v${{ steps.get_version.outputs.version }}"
+        files: |
+          ${{ matrix.directory }}/dist/*.whl
+          ${{ matrix.directory }}/dist/*.tar.gz
+          ${{ matrix.directory }}/sbom.json
+        generate_release_notes: true
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload packages as artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-packages-${{ steps.get_version.outputs.package_name }}-v${{ steps.get_version.outputs.version }}
+        path: |
+          ${{ matrix.directory }}/dist/*.whl
+          ${{ matrix.directory }}/dist/*.tar.gz
+          ${{ matrix.directory }}/sbom.json
+        retention-days: 90
 
