@@ -45,7 +45,12 @@ jobs:
     - name: Install dependencies
       run: |
         cd ${{ matrix.directory }}
-        python -m pip install -e .[test]
+        if [ "${{ matrix.directory }}" = "k8s-analyzer" ]; then
+          python -m pip install -e .[test]
+        else
+          python -m pip install -e .[dev]
+        fi
+        python -m pip install cyclonedx-bom
 
     - name: Run tests with coverage
       run: |
@@ -59,8 +64,7 @@ jobs:
     - name: Generate SBOM
       run: |
         cd ${{ matrix.directory }}
-        pip install cyclonedx-bom
-        cyclonedx-bom -o sbom.json
+        cyclonedx-py environment -o sbom.json
 
     - name: Build wheel and sdist
       run: |
