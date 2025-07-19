@@ -1604,28 +1604,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#setting-up-custom-dashboards" class="md-nav__link">
+  <a href="#getting-started-with-k8s-reporter" class="md-nav__link">
     <span class="md-ellipsis">
-      Setting Up Custom Dashboards
+      Getting Started with k8s-reporter
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Setting Up Custom Dashboards">
+    <nav class="md-nav" aria-label="Getting Started with k8s-reporter">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#integrate-with-grafana" class="md-nav__link">
+  <a href="#basic-dashboard-launch" class="md-nav__link">
     <span class="md-ellipsis">
-      Integrate with Grafana
+      Basic Dashboard Launch
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#customize-dashboards" class="md-nav__link">
+  <a href="#custom-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Customize Dashboards
+      Custom Configuration
     </span>
   </a>
   
@@ -2078,28 +2078,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#setting-up-custom-dashboards" class="md-nav__link">
+  <a href="#getting-started-with-k8s-reporter" class="md-nav__link">
     <span class="md-ellipsis">
-      Setting Up Custom Dashboards
+      Getting Started with k8s-reporter
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Setting Up Custom Dashboards">
+    <nav class="md-nav" aria-label="Getting Started with k8s-reporter">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#integrate-with-grafana" class="md-nav__link">
+  <a href="#basic-dashboard-launch" class="md-nav__link">
     <span class="md-ellipsis">
-      Integrate with Grafana
+      Basic Dashboard Launch
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#customize-dashboards" class="md-nav__link">
+  <a href="#custom-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Customize Dashboards
+      Custom Configuration
     </span>
   </a>
   
@@ -2245,77 +2245,58 @@
 
 
 <h1 id="custom-dashboards">Custom Dashboards</h1>
-<p>This guide provides instructions to create custom dashboards using K8s Tools. We'll look at integrating with visualization tools and extending features with plugins.</p>
+<p>This guide shows how to use k8s-reporter's Streamlit-based web dashboard for visualizing Kubernetes cluster analysis data from k8s-analyzer.</p>
 <h2 id="overview">Overview</h2>
-<p>Custom dashboards enhance analysis visualization and interaction:</p>
+<p>k8s-reporter provides:</p>
 <ul>
-<li><strong>Interactive Views</strong>: Offers real-time cluster status dashboards</li>
-<li><strong>Custom Metrics</strong>: Support for user-defined metrics</li>
-<li><strong>Plugin Extensions</strong>: Extensible with third-party visualization tools</li>
+<li><strong>Interactive Web UI</strong>: Streamlit-based dashboard for exploring analysis results</li>
+<li><strong>Database Integration</strong>: Direct connection to SQLite databases from k8s-analyzer</li>
+<li><strong>Multiple Views</strong>: Various visualization options for different data aspects</li>
+<li><strong>Export Capabilities</strong>: Download results and generate reports</li>
 </ul>
-<h2 id="setting-up-custom-dashboards">Setting Up Custom Dashboards</h2>
-<h3 id="integrate-with-grafana">Integrate with Grafana</h3>
-<ol>
-<li><strong>Add Data Source</strong>: Configure Prometheus as Grafana's data source.</li>
-<li><strong>Import Templates</strong>: Use pre-built templates or create new ones.</li>
-</ol>
-<p>Example dashboard JSON:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;K8s Custom Dashboard&quot;</span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">&quot;panels&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;graph&quot;</span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CPU Usage&quot;</span><span class="p">,</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span><span class="p">{</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(rate(container_cpu_usage_seconds_total[5m])) by (node)&quot;</span><span class="p">,</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">          </span><span class="nt">&quot;interval&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5s&quot;</span><span class="p">,</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">          </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{{node}}&quot;</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">        </span><span class="p">}</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">      </span><span class="p">]</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="p">},</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;table&quot;</span><span class="p">,</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">      </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Node Status&quot;</span><span class="p">,</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">      </span><span class="nt">&quot;targets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">        </span><span class="p">{</span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">          </span><span class="nt">&quot;expr&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sum(kube_node_status_condition{condition=&#39;Ready&#39;,status=&#39;true&#39;}) by (node)&quot;</span><span class="p">,</span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">          </span><span class="nt">&quot;interval&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5m&quot;</span><span class="p">,</span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">          </span><span class="nt">&quot;legendFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{{node}}&quot;</span>
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">        </span><span class="p">}</span>
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">      </span><span class="p">]</span>
-</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">  </span><span class="p">]</span>
-</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="p">}</span>
+<h2 id="getting-started-with-k8s-reporter">Getting Started with k8s-reporter</h2>
+<h3 id="basic-dashboard-launch">Basic Dashboard Launch</h3>
+<p>Start the web dashboard with a pre-analyzed database:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># First, create a database with k8s-analyzer</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>k8s-analyzer<span class="w"> </span>export-sqlite<span class="w"> </span>cluster-export.yaml<span class="w"> </span>cluster.db
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Launch k8s-reporter dashboard</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>k8s-reporter<span class="w"> </span>--database<span class="w"> </span>cluster.db
 </span></code></pre></div>
-<h3 id="customize-dashboards">Customize Dashboards</h3>
-<ul>
-<li><strong>Modify existing panels</strong>: Adjust queries for custom data</li>
-<li><strong>Create new visualizations</strong>: Use raw Kubernetes metrics</li>
-<li><strong>Set alerts</strong>: Add threshold alerts to monitor critical metrics</li>
-</ul>
+<p>The dashboard will be available at <code>http://localhost:8501</code> by default.</p>
+<h3 id="custom-configuration">Custom Configuration</h3>
+<p>Launch with custom settings:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Custom port and host</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>k8s-reporter<span class="w"> </span>--database<span class="w"> </span>cluster.db<span class="w"> </span>--port<span class="w"> </span><span class="m">8080</span><span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Headless mode (no auto-open browser)</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>k8s-reporter<span class="w"> </span>--database<span class="w"> </span>cluster.db<span class="w"> </span>--headless
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Debug mode for development</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>k8s-reporter<span class="w"> </span>--database<span class="w"> </span>cluster.db<span class="w"> </span>--debug
+</span></code></pre></div>
 <h2 id="extending-with-plugins">Extending with Plugins</h2>
 <h3 id="developing-plugins">Developing Plugins</h3>
 <p>Write plugins to capture specific cluster views and data:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">k8s_tools.plugins</span><span class="w"> </span><span class="kn">import</span> <span class="n">PluginBase</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyDashboardPlugin</span><span class="p">(</span><span class="n">PluginBase</span><span class="p">):</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">registry</span><span class="p">):</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        <span class="n">registry</span><span class="o">.</span><span class="n">add_view</span><span class="p">(</span><span class="s1">&#39;custom-view&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_view</span><span class="p">)</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">custom_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        <span class="c1"># Implement custom data logic</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        <span class="k">return</span> <span class="s2">&quot;Custom View Results&quot;</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">k8s_tools.plugins</span><span class="w"> </span><span class="kn">import</span> <span class="n">PluginBase</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyDashboardPlugin</span><span class="p">(</span><span class="n">PluginBase</span><span class="p">):</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">registry</span><span class="p">):</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="n">registry</span><span class="o">.</span><span class="n">add_view</span><span class="p">(</span><span class="s1">&#39;custom-view&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_view</span><span class="p">)</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">custom_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>        <span class="c1"># Implement custom data logic</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>        <span class="k">return</span> <span class="s2">&quot;Custom View Results&quot;</span>
 </span></code></pre></div>
 <h3 id="deploying-plugins">Deploying Plugins</h3>
 <p>Include plugins in the K8s Tools configuration:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># plugins.yaml</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">plugins</span><span class="p">:</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/plugin1.py</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/plugin2.py</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># plugins.yaml</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">plugins</span><span class="p">:</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/plugin1.py</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/plugin2.py</span>
 </span></code></pre></div>
 <p>Activate plugins with K8s Tools:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>k8s-analyzer<span class="w"> </span>analyze<span class="w"> </span>--config<span class="w"> </span>my-config.yaml<span class="w"> </span>--plugins<span class="w"> </span>plugins.yaml
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>k8s-analyzer<span class="w"> </span>analyze<span class="w"> </span>--config<span class="w"> </span>my-config.yaml<span class="w"> </span>--plugins<span class="w"> </span>plugins.yaml
 </span></code></pre></div>
 <h2 id="performance-optimization">Performance Optimization</h2>
 <ol>
@@ -2368,7 +2349,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 19, 2025 07:50:53 UTC">July 19, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 19, 2025 08:12:27 UTC">July 19, 2025</span>
   </span>
 
     
@@ -2378,7 +2359,7 @@
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 19, 2025 07:50:53 UTC">July 19, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 19, 2025 08:12:27 UTC">July 19, 2025</span>
   </span>
 
     
