@@ -1,0 +1,648 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: retail-sales
+    labels:
+      application: retail
+      tier: sales
+      environment: production
+      team: sales-team
+      compliance: pcidss
+    annotations:
+      description: "Sales services for retail application"
+      owner: "sales-team@retail.com"
+      compliance-requirements: "PCI DSS"
+    creationTimestamp: "2025-04-01T08:00:00Z"
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: retail-inventory
+    labels:
+      application: retail
+      tier: inventory
+      environment: production
+      team: inventory-team
+      compliance: pcidss
+    annotations:
+      description: "Inventory management services for retail application"
+      owner: "inventory-team@retail.com"
+      compliance-requirements: "PCI DSS"
+    creationTimestamp: "2025-04-01T08:05:00Z"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: pos-system
+    namespace: retail-sales
+    labels:
+      app: pos-system
+      component: pos-terminal
+      tier: sales
+      application: retail
+      team: sales-team
+      version: v1.0.0
+      compliance: pcidss
+    annotations:
+      description: "Point of Sale system for in-store transactions"
+    creationTimestamp: "2025-04-01T09:00:00Z"
+  spec:
+    replicas: 10
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 20%
+        maxSurge: 25%
+    selector:
+      matchLabels:
+        app: pos-system
+        tier: sales
+    template:
+      metadata:
+        labels:
+          app: pos-system
+          component: pos-terminal
+          tier: sales
+          application: retail
+          team: sales-team
+          version: v1.0.0
+          compliance: pcidss
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "8080"
+          prometheus.io/path: "/metrics"
+      spec:
+        serviceAccountName: retail-sales-sa
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 2000
+          runAsGroup: 3000
+          fsGroup: 2000
+        containers:
+        - name: pos-system
+          image: retail/pos-system:1.0.0
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+          resources:
+            limits:
+              cpu: "1500m"
+              memory: "4Gi"
+              ephemeral-storage: "10Gi"
+            requests:
+              cpu: "750m"
+              memory: "2Gi"
+              ephemeral-storage: "5Gi"
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 8443
+            name: https
+            protocol: TCP
+          env:
+          - name: NODE_ENV
+            value: "production"
+          - name: API_BASE_URL
+            value: "https://api.retail.com"
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: retail-database-credentials
+                key: pos-db-url
+          - name: REDIS_URL
+            value: "redis://retail-redis-cluster:6379"
+          - name: PAYMENT_GATEWAY_URL
+            value: "https://payments.retail.com"
+          - name: SSL_CERTIFICATE_PATH
+            value: "/etc/ssl/certs/tls.crt"
+          - name: SSL_PRIVATE_KEY_PATH
+            value: "/etc/ssl/private/tls.key"
+          - name: LOG_LEVEL
+            value: "info"
+          - name: METRICS_ENABLED
+            value: "true"
+          volumeMounts:
+          - name: config-volume
+            mountPath: /app/config
+            readOnly: true
+          - name: ssl-certs
+            mountPath: /etc/ssl/certs
+            readOnly: true
+          - name: ssl-private
+            mountPath: /etc/ssl/private
+            readOnly: true
+          - name: temp-storage
+            mountPath: /tmp
+        volumes:
+        - name: config-volume
+          configMap:
+            name: pos-system-config
+            defaultMode: 0644
+        - name: ssl-certs
+          secret:
+            secretName: retail-ssl-certificates
+            defaultMode: 0644
+        - name: ssl-private
+          secret:
+            secretName: retail-ssl-certificates
+            defaultMode: 0600
+        - name: temp-storage
+          emptyDir:
+            sizeLimit: 1Gi
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: inventory-service
+    namespace: retail-inventory
+    labels:
+      app: inventory-service
+      component: inventory-management
+      tier: inventory
+      application: retail
+      team: inventory-team
+      version: v2.5.0
+      compliance: pcidss
+    annotations:
+      description: "Inventory management service for retail processing"
+    creationTimestamp: "2025-04-01T09:30:00Z"
+  spec:
+    replicas: 12
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 20%
+        maxSurge: 25%
+    selector:
+      matchLabels:
+        app: inventory-service
+        tier: inventory
+    template:
+      metadata:
+        labels:
+          app: inventory-service
+          component: inventory-management
+          tier: inventory
+          application: retail
+          team: inventory-team
+          version: v2.5.0
+          compliance: pcidss
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "8080"
+          prometheus.io/path: "/metrics"
+      spec:
+        serviceAccountName: retail-inventory-sa
+        containers:
+        - name: inventory-service
+          image: retail/inventory-service:2.5.0
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: "2000m"
+              memory: "6Gi"
+              ephemeral-storage: "15Gi"
+            requests:
+              cpu: "1000m"
+              memory: "3Gi"
+              ephemeral-storage: "7.5Gi"
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 9090
+            name: metrics
+            protocol: TCP
+          env:
+          - name: NODE_ENV
+            value: "production"
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: retail-database-credentials
+                key: inventory-db-url
+          - name: REDIS_URL
+            value: "redis://retail-redis-cluster:6379"
+          - name: LOG_LEVEL
+            value: "info"
+          - name: METRICS_ENABLED
+            value: "true"
+          volumeMounts:
+          - name: config-volume
+            mountPath: /app/config
+            readOnly: true
+          - name: temp-storage
+            mountPath: /tmp
+        volumes:
+        - name: config-volume
+          configMap:
+            name: inventory-service-config
+            defaultMode: 0644
+        - name: temp-storage
+          emptyDir:
+            sizeLimit: 1Gi
+- apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: retail-postgresql
+    namespace: retail-inventory
+    labels:
+      app: postgresql
+      component: database
+      tier: database
+      role: primary
+      version: v13.3
+      application: retail
+      team: data-team
+      environment: production
+      compliance: pcidss
+    annotations:
+      description: "Primary PostgreSQL database for retail applications"
+    creationTimestamp: "2025-04-01T10:00:00Z"
+  spec:
+    serviceName: retail-postgresql-headless
+    replicas: 1
+    selector:
+      matchLabels:
+        app: postgresql
+        role: primary
+        tier: database
+    template:
+      metadata:
+        labels:
+          app: postgresql
+          component: database
+          tier: database
+          role: primary
+          version: v13.3
+          application: retail
+          compliance: pcidss
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "9187"
+          prometheus.io/path: "/metrics"
+      spec:
+        serviceAccountName: retail-data-sa
+        containers:
+        - name: postgresql
+          image: postgres:13.3
+          resources:
+            limits:
+              cpu: "6000m"
+              memory: "16Gi"
+            requests:
+              cpu: "3000m"
+              memory: "8Gi"
+          ports:
+          - containerPort: 5432
+            name: postgresql
+          env:
+          - name: POSTGRES_DB
+            value: "retail"
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: retail-postgresql-credentials
+                key: username
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: retail-postgresql-credentials
+                key: password
+          - name: POSTGRES_REPLICATION_USER
+            valueFrom:
+              secretKeyRef:
+                name: retail-postgresql-credentials
+                key: replication-username
+          - name: POSTGRES_REPLICATION_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: retail-postgresql-credentials
+                key: replication-password
+          - name: PGDATA
+            value: "/var/lib/postgresql/data/pgdata"
+          volumeMounts:
+          - name: data
+            mountPath: /var/lib/postgresql/data
+          - name: config
+            mountPath: /etc/postgresql/postgresql.conf
+            subPath: postgresql.conf
+          - name: init-scripts
+            mountPath: /docker-entrypoint-initdb.d
+          livenessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+        - name: postgres-exporter
+          image: prometheuscommunity/postgres-exporter:v0.11.0
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+          ports:
+          - containerPort: 9187
+            name: metrics
+          env:
+          - name: DATA_SOURCE_NAME
+            valueFrom:
+              secretKeyRef:
+                name: retail-postgresql-credentials
+                key: exporter-data-source-name
+        volumes:
+        - name: config
+          configMap:
+            name: retail-postgresql-config
+        - name: init-scripts
+          configMap:
+            name: retail-postgresql-init-scripts
+    volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          app: postgresql
+          tier: database
+          compliance: pcidss
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "standard-ssd"
+        resources:
+          requests:
+            storage: 2000Gi
+            
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: pos-system-config
+    namespace: retail-sales
+    labels:
+      app: pos-system
+      component: configuration
+      tier: sales
+      application: retail
+      compliance: pcidss
+    creationTimestamp: "2025-04-01T08:15:00Z"
+  data:
+    app.json: |
+      {
+        "timeout": 30000,
+        "maxRetries": 3,
+        "retryDelay": 1000,
+        "features": {
+          "digitalReceipts": true,
+          "contactlessPayment": true,
+          "loyaltyProgram": true,
+          "multiLanguageSupport": true,
+          "crossStoreCredit": true,
+          "bopis": true
+        },
+        "security": {
+          "sessionTimeout": 1800,
+          "idleTimeout": 900,
+          "maxLoginAttempts": 5,
+          "lockoutDuration": 300,
+          "passwordComplexity": "high",
+          "twoFactorAuth": true,
+          "auditLogging": true
+        },
+        "ui": {
+          "theme": "modern",
+          "language": "en-US",
+          "currencyFormat": "USD",
+          "timezone": "America/New_York"
+        },
+        "compliance": {
+          "pcidss": true,
+          "auditTrail": true,
+          "dataEncryption": true,
+          "accessLogging": true
+        }
+      }
+    nginx.conf: |
+      user nginx;
+      worker_processes auto;
+      error_log /var/log/nginx/error.log warn;
+      pid /var/run/nginx.pid;
+      
+      events {
+          worker_connections 1024;
+          use epoll;
+      }
+      
+      http {
+          include /etc/nginx/mime.types;
+          default_type application/octet-stream;
+          
+          log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                          '$status $body_bytes_sent "$http_referer" '
+                          '"$http_user_agent" "$http_x_forwarded_for"';
+          
+          access_log /var/log/nginx/access.log main;
+          
+          sendfile on;
+          tcp_nopush on;
+          tcp_nodelay on;
+          keepalive_timeout 65;
+          types_hash_max_size 2048;
+          client_max_body_size 10M;
+          
+          gzip on;
+          gzip_vary on;
+          gzip_proxied any;
+          gzip_comp_level 6;
+          gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+          
+          upstream backend {
+              server inventory-service.retail-inventory.svc.cluster.local:8080;
+              server pos-system.retail-sales.svc.cluster.local:8080;
+          }
+          
+          server {
+              listen 8080;
+              server_name retail.example.com;
+              
+              location / {
+                  proxy_pass http://backend;
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
+              }
+              
+              location /health {
+                  access_log off;
+                  return 200 "healthy\n";
+                  add_header Content-Type text/plain;
+              }
+          }
+      }
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: inventory-service-config
+    namespace: retail-inventory
+    labels:
+      app: inventory-service
+      component: configuration
+      tier: inventory
+      application: retail
+      compliance: pcidss
+    creationTimestamp: "2025-04-01T09:20:00Z"
+  data:
+    application.yml: |
+      server:
+        port: 8080
+        servlet:
+          context-path: /inventory-api
+        compression:
+          enabled: true
+      
+      management:
+        endpoints:
+          web:
+            exposure:
+              include: health,metrics,prometheus,info
+        endpoint:
+          health:
+            show-details: always
+        metrics:
+          export:
+            prometheus:
+              enabled: true
+      
+      spring:
+        datasource:
+          hikari:
+            maximum-pool-size: 50
+            minimum-idle: 10
+            connection-timeout: 30000
+            idle-timeout: 600000
+            max-lifetime: 1800000
+        jpa:
+          hibernate:
+            ddl-auto: validate
+          show-sql: true
+          properties:
+            hibernate:
+              dialect: org.hibernate.dialect.PostgreSQLDialect
+              format_sql: true
+        redis:
+          timeout: 2000ms
+          lettuce:
+            pool:
+              max-active: 50
+              max-idle: 20
+              min-idle: 5
+      
+      logging:
+        level:
+          com.retail.inventory: INFO
+          org.springframework.web: DEBUG
+        pattern:
+          console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+      
+      app:
+        inventory:
+          cache:
+            ttl: 600
+            max-size: 10000
+          search:
+            max-results: 200
+          stock:
+            auto-replenish: true
+          notifications:
+            email-enabled: true
+            sms-enabled: true
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: retail-database-credentials
+    namespace: retail-sales
+    labels:
+      app: retail
+      component: credentials
+      purpose: database-access
+      application: retail
+      compliance: pcidss
+    creationTimestamp: "2025-04-01T08:10:00Z"
+  type: Opaque
+  data:
+    pos-db-url: cG9zdGdyZXNxbDovL3Bvc3RncmVzcWwtcmV0YWlsOjU0MzIvcG9z  # postgresql://postgresql-retail:5432/pos
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: retail-database-credentials
+    namespace: retail-inventory
+    labels:
+      app: retail
+      component: credentials
+      purpose: database-access
+      application: retail
+      compliance: pcidss
+    creationTimestamp: "2025-04-01T08:10:00Z"
+  type: Opaque
+  data:
+    inventory-db-url: cG9zdGdyZXNxbDovL3Bvc3RncmVzcWwtcmV0YWlsOjU0MzIvaW52ZW50b3J5  # postgresql://postgresql-retail:5432/inventory
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: retail-sales-sa
+    namespace: retail-sales
+    labels:
+      app: retail
+      component: service-account
+      tier: sales
+      application: retail
+      compliance: pcidss
+    creationTimestamp: "2025-04-01T08:20:00Z"
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: retail-inventory-sa
+    namespace: retail-inventory
+    labels:
+      app: retail
+      component: service-account
+      tier: inventory
+      application: retail
+      compliance: pcidss
+    creationTimestamp: "2025-04-01T08:25:00Z"
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: retail-data-sa
+    namespace: retail-inventory
+    labels:
+      app: retail
+      component: service-account
+      tier: database
+      application: retail
+      compliance: pcidss
+    creationTimestamp: "2025-04-01T08:30:00Z"
+

@@ -1,0 +1,170 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: production-east
+    labels:
+      environment: production
+      region: east
+      cluster: east-cluster
+    annotations:
+      cluster.location: "us-east-1"
+    creationTimestamp: "2024-01-10T08:00:00Z"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: web-frontend-east
+    namespace: production-east
+    labels:
+      app: web-frontend
+      tier: frontend
+      environment: production
+      region: east
+    creationTimestamp: "2024-01-10T09:00:00Z"
+  spec:
+    replicas: 8
+    selector:
+      matchLabels:
+        app: web-frontend
+        region: east
+    template:
+      metadata:
+        labels:
+          app: web-frontend
+          tier: frontend
+          region: east
+      spec:
+        containers:
+        - name: nginx
+          image: nginx:1.21
+          resources:
+            limits:
+              cpu: "2"
+              memory: "512Mi"
+            requests:
+              cpu: "1"
+              memory: "256Mi"
+          ports:
+          - containerPort: 80
+          env:
+          - name: REGION
+            value: "east"
+          - name: CLUSTER_NAME
+            value: "east-cluster"
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: web-frontend-service
+    namespace: production-east
+    labels:
+      app: web-frontend
+      region: east
+    creationTimestamp: "2024-01-10T09:05:00Z"
+  spec:
+    selector:
+      app: web-frontend
+      region: east
+    ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+    type: LoadBalancer
+    loadBalancerSourceRanges:
+    - 10.0.0.0/8
+    - 172.16.0.0/12
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: api-backend-east
+    namespace: production-east
+    labels:
+      app: api-backend
+      tier: backend
+      environment: production
+      region: east
+    creationTimestamp: "2024-01-10T09:30:00Z"
+  spec:
+    replicas: 6
+    selector:
+      matchLabels:
+        app: api-backend
+        region: east
+    template:
+      metadata:
+        labels:
+          app: api-backend
+          tier: backend
+          region: east
+      spec:
+        containers:
+        - name: api-server
+          image: mycompany/api-server:v2.1.0
+          resources:
+            limits:
+              cpu: "3"
+              memory: "2Gi"
+            requests:
+              cpu: "1.5"
+              memory: "1Gi"
+          ports:
+          - containerPort: 8080
+          env:
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: database-credentials-east
+                key: connection-string
+          - name: REGION
+            value: "east"
+          - name: REPLICA_REGION
+            value: "west"
+- apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: redis-east
+    namespace: production-east
+    labels:
+      app: redis
+      tier: cache
+      region: east
+    creationTimestamp: "2024-01-10T10:00:00Z"
+  spec:
+    replicas: 3
+    serviceName: redis-service-east
+    selector:
+      matchLabels:
+        app: redis
+        region: east
+    template:
+      metadata:
+        labels:
+          app: redis
+          tier: cache
+          region: east
+      spec:
+        containers:
+        - name: redis
+          image: redis:6.2-alpine
+          resources:
+            limits:
+              cpu: "2"
+              memory: "2Gi"
+            requests:
+              cpu: "1"
+              memory: "1Gi"
+          ports:
+          - containerPort: 6379
+          env:
+          - name: REDIS_CLUSTER_MODE
+            value: "enabled"
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: database-credentials-east
+    namespace: production-east
+    creationTimestamp: "2024-01-10T08:30:00Z"
+  type: Opaque
+  data:
+    connection-string: cG9zdGdyZXNxbDovL3VzZXI6cGFzc3dvcmRAZGItZWFzdC5teWNvbXBhbnkuY29tOjU0MzIvbXlkYg==

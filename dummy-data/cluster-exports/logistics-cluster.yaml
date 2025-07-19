@@ -1,0 +1,242 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: logistics
+    labels:
+      department: logistics
+      environment: production
+    creationTimestamp: "2025-01-18T08:00:00Z"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: inventory-management
+    namespace: logistics
+    labels:
+      app: inventory-management
+      tier: backend
+      department: logistics
+    creationTimestamp: "2025-01-18T09:00:00Z"
+  spec:
+    replicas: 10
+    selector:
+      matchLabels:
+        app: inventory-management
+    template:
+      metadata:
+        labels:
+          app: inventory-management
+          department: logistics
+      spec:
+        containers:
+        - name: inventory-service
+          image: logisticscorp/inventory-service:latest
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "2Gi"
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+          ports:
+          - containerPort: 8080
+          env:
+          - name: DATABASE_URL
+            value: "jdbc:postgresql://db-service:5432/inventory"
+          - name: INVENTORY_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: api-secrets
+                key: inventory-api-key
+          volumeMounts:
+          - name: config
+            mountPath: /etc/inventory/config
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 15
+        volumes:
+        - name: config
+          configMap:
+            name: inventory-config
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: inventory-management-service
+    namespace: logistics
+    labels:
+      app: inventory-management
+      service: api
+      department: logistics
+    creationTimestamp: "2025-01-18T09:05:00Z"
+  spec:
+    type: LoadBalancer
+    selector:
+      app: inventory-management
+    ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: delivery-tracking
+    namespace: logistics
+    labels:
+      app: delivery-tracking
+      department: logistics
+      environment: production
+    creationTimestamp: "2025-01-18T09:30:00Z"
+  spec:
+    replicas: 8
+    selector:
+      matchLabels:
+        app: delivery-tracking
+    template:
+      metadata:
+        labels:
+          app: delivery-tracking
+          tier: backend
+      spec:
+        containers:
+        - name: tracking-api
+          image: logisticscorp/tracking-api:latest
+          resources:
+            limits:
+              cpu: "1200m"
+              memory: "2.5Gi"
+            requests:
+              cpu: "600m"
+              memory: "1.25Gi"
+          ports:
+          - containerPort: 9090
+          env:
+          - name: DATABASE_URL
+            value: "jdbc:mysql://db-service:3306/tracking"
+          - name: TRACKING_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: api-secrets
+                key: tracking-api-key
+          volumeMounts:
+          - name: config
+            mountPath: /etc/tracking/config
+          livenessProbe:
+            tcpSocket:
+              port: 9090
+            initialDelaySeconds: 20
+            periodSeconds: 5
+          readinessProbe:
+            tcpSocket:
+              port: 9090
+            initialDelaySeconds: 10
+            periodSeconds: 5
+        volumes:
+        - name: config
+          configMap:
+            name: tracking-config
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: inventory-config
+    namespace: logistics
+    labels:
+      app: inventory-management
+      purpose: configuration
+    creationTimestamp: "2025-01-18T08:45:00Z"
+  data:
+    LOG_LEVEL: "info"
+    RETENTION_PERIOD: "30"
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: tracking-config
+    namespace: logistics
+    labels:
+      app: delivery-tracking
+      purpose: configuration
+    creationTimestamp: "2025-01-18T09:45:00Z"
+  data:
+    LOG_LEVEL: "info"
+    RETENTION_PERIOD: "30"
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: api-secrets
+    namespace: logistics
+    labels:
+      app: logistics
+      purpose: credentials
+    creationTimestamp: "2025-01-18T08:50:00Z"
+  type: Opaque
+  data:
+    inventory-api-key: aW52ZW50b3J5LWFwaS1rZXk=  # inventory-api-key
+    tracking-api-key: dHJhY2tpbmctYXBpLWtleQ==  # tracking-api-key
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: logistics-pvc
+    namespace: logistics
+    labels:
+      department: logistics
+    creationTimestamp: "2025-01-18T09:40:00Z"
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 750Gi
+    storageClassName: "premium-ssd"
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    name: inventory-sync
+    namespace: logistics
+    labels:
+      app: inventory-sync
+      department: logistics
+    creationTimestamp: "2025-01-18T10:00:00Z"
+  spec:
+    template:
+      spec:
+        containers:
+        - name: sync-inventory
+          image: logisticscorp/inventory-sync:latest
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+          env:
+          - name: SYNC_STORAGE_URL
+            value: "s3://logistics-reports/inventory"
+          volumeMounts:
+          - name: sync
+            mountPath: /sync
+        restartPolicy: OnFailure
+        volumes:
+        - name: sync
+          persistentVolumeClaim:
+            claimName: logistics-pvc
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: logistics-service-account
+    namespace: logistics
+    labels:
+      app: logistics-tools
+      role: service-account
+    creationTimestamp: "2025-01-18T08:30:00Z"
+

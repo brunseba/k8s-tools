@@ -1,0 +1,1176 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: ecommerce-frontend
+    labels:
+      application: ecommerce
+      tier: frontend
+      environment: production
+      team: frontend-team
+      cost-center: "1001"
+    annotations:
+      description: "Frontend microservices for e-commerce platform"
+      owner: "frontend-team@company.com"
+    creationTimestamp: "2024-02-01T08:00:00Z"
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: ecommerce-backend
+    labels:
+      application: ecommerce
+      tier: backend
+      environment: production
+      team: backend-team
+      cost-center: "1002"
+    annotations:
+      description: "Backend microservices for e-commerce platform"
+      owner: "backend-team@company.com"
+    creationTimestamp: "2024-02-01T08:05:00Z"
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: ecommerce-data
+    labels:
+      application: ecommerce
+      tier: database
+      environment: production
+      team: data-team
+      cost-center: "1003"
+    annotations:
+      description: "Database and data services for e-commerce platform"
+      owner: "data-team@company.com"
+    creationTimestamp: "2024-02-01T08:10:00Z"
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: ecommerce-search
+    labels:
+      application: ecommerce
+      tier: search
+      environment: production
+      team: search-team
+      cost-center: "1004"
+    annotations:
+      description: "Search and analytics services for e-commerce"
+      owner: "search-team@company.com"
+    creationTimestamp: "2024-02-01T08:15:00Z"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: web-storefront
+    namespace: ecommerce-frontend
+    labels:
+      app: web-storefront
+      component: storefront
+      tier: frontend
+      version: v2.3.1
+      application: ecommerce
+      team: frontend-team
+      environment: production
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      description: "Main web storefront application"
+    creationTimestamp: "2024-02-01T09:00:00Z"
+  spec:
+    replicas: 20
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 25%
+        maxSurge: 25%
+    selector:
+      matchLabels:
+        app: web-storefront
+        tier: frontend
+    template:
+      metadata:
+        labels:
+          app: web-storefront
+          component: storefront
+          tier: frontend
+          version: v2.3.1
+          application: ecommerce
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "8080"
+          prometheus.io/path: "/metrics"
+      spec:
+        serviceAccountName: frontend-service-account
+        containers:
+        - name: storefront
+          image: ecommerce/web-storefront:2.3.1
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: "2000m"
+              memory: "4Gi"
+              ephemeral-storage: "10Gi"
+            requests:
+              cpu: "1000m"
+              memory: "2Gi"
+              ephemeral-storage: "5Gi"
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 9090
+            name: metrics
+            protocol: TCP
+          env:
+          - name: NODE_ENV
+            value: "production"
+          - name: API_BASE_URL
+            value: "https://api.ecommerce.internal"
+          - name: REDIS_URL
+            value: "redis://redis-cluster:6379"
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: database-credentials
+                key: storefront-db-url
+          - name: SESSION_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: session-secret
+          - name: JWT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: jwt-secret
+          - name: PAYMENT_GATEWAY_URL
+            value: "https://payments.ecommerce.internal"
+          - name: CDN_BASE_URL
+            value: "https://cdn.ecommerce.com"
+          - name: FEATURE_RECOMMENDATIONS
+            value: "true"
+          - name: FEATURE_WISHLIST
+            value: "true"
+          - name: FEATURE_REVIEWS
+            value: "true"
+          - name: LOG_LEVEL
+            value: "info"
+          - name: METRICS_ENABLED
+            value: "true"
+          volumeMounts:
+          - name: config-volume
+            mountPath: /app/config
+            readOnly: true
+          - name: static-assets
+            mountPath: /app/public/assets
+            readOnly: true
+          - name: temp-storage
+            mountPath: /tmp
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+              httpHeaders:
+              - name: X-Health-Check
+                value: "liveness"
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+              httpHeaders:
+              - name: X-Health-Check
+                value: "readiness"
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /startup
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 30
+        volumes:
+        - name: config-volume
+          configMap:
+            name: storefront-config
+            defaultMode: 0644
+        - name: static-assets
+          persistentVolumeClaim:
+            claimName: static-assets-pvc
+        - name: temp-storage
+          emptyDir:
+            sizeLimit: 1Gi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 3000
+          fsGroup: 2000
+        affinity:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                    - web-storefront
+                topologyKey: kubernetes.io/hostname
+        tolerations:
+        - key: "node-type"
+          operator: "Equal"
+          value: "frontend"
+          effect: "NoSchedule"
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: web-storefront-service
+    namespace: ecommerce-frontend
+    labels:
+      app: web-storefront
+      component: storefront
+      tier: frontend
+      service-type: web
+      application: ecommerce
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-west-2:123456789:certificate/12345"
+    creationTimestamp: "2024-02-01T09:05:00Z"
+  spec:
+    type: LoadBalancer
+    sessionAffinity: ClientIP
+    sessionAffinityConfig:
+      clientIP:
+        timeoutSeconds: 300
+    selector:
+      app: web-storefront
+      tier: frontend
+    ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 8080
+    - name: metrics
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: product-catalog-api
+    namespace: ecommerce-backend
+    labels:
+      app: product-catalog-api
+      component: catalog
+      tier: backend
+      version: v1.8.2
+      application: ecommerce
+      team: backend-team
+      environment: production
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      description: "Product catalog management API"
+    creationTimestamp: "2024-02-01T09:30:00Z"
+  spec:
+    replicas: 15
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 20%
+        maxSurge: 30%
+    selector:
+      matchLabels:
+        app: product-catalog-api
+        tier: backend
+    template:
+      metadata:
+        labels:
+          app: product-catalog-api
+          component: catalog
+          tier: backend
+          version: v1.8.2
+          application: ecommerce
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "8080"
+          prometheus.io/path: "/metrics"
+      spec:
+        serviceAccountName: backend-service-account
+        containers:
+        - name: catalog-api
+          image: ecommerce/product-catalog-api:1.8.2
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: "3000m"
+              memory: "6Gi"
+              ephemeral-storage: "20Gi"
+            requests:
+              cpu: "1500m"
+              memory: "3Gi"
+              ephemeral-storage: "10Gi"
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 9090
+            name: metrics
+            protocol: TCP
+          - containerPort: 8081
+            name: admin
+            protocol: TCP
+          env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: "production"
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: database-credentials
+                key: catalog-db-url
+          - name: DATABASE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: database-credentials
+                key: catalog-db-username
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: database-credentials
+                key: catalog-db-password
+          - name: REDIS_URL
+            value: "redis://redis-cluster:6379"
+          - name: ELASTICSEARCH_URL
+            value: "http://elasticsearch-cluster:9200"
+          - name: ELASTICSEARCH_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: elasticsearch-credentials
+                key: username
+          - name: ELASTICSEARCH_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: elasticsearch-credentials
+                key: password
+          - name: S3_BUCKET_NAME
+            value: "ecommerce-product-images"
+          - name: S3_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: aws-credentials
+                key: access-key
+          - name: S3_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: aws-credentials
+                key: secret-key
+          - name: JWT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: jwt-secret
+          - name: API_RATE_LIMIT_ENABLED
+            value: "true"
+          - name: API_RATE_LIMIT_REQUESTS_PER_MINUTE
+            value: "1000"
+          - name: CACHE_TTL_SECONDS
+            value: "3600"
+          - name: LOG_LEVEL
+            value: "info"
+          - name: METRICS_ENABLED
+            value: "true"
+          - name: TRACING_ENABLED
+            value: "true"
+          - name: JAEGER_AGENT_HOST
+            value: "jaeger-agent"
+          - name: JAEGER_AGENT_PORT
+            value: "6831"
+          volumeMounts:
+          - name: config-volume
+            mountPath: /app/config
+            readOnly: true
+          - name: image-cache
+            mountPath: /app/cache/images
+          - name: logs
+            mountPath: /app/logs
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8081
+            initialDelaySeconds: 90
+            periodSeconds: 30
+            timeoutSeconds: 15
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8081
+            initialDelaySeconds: 45
+            periodSeconds: 10
+            timeoutSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8081
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 30
+        volumes:
+        - name: config-volume
+          configMap:
+            name: catalog-api-config
+        - name: image-cache
+          persistentVolumeClaim:
+            claimName: image-cache-pvc
+        - name: logs
+          emptyDir:
+            sizeLimit: 5Gi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1001
+          runAsGroup: 3000
+          fsGroup: 2000
+        affinity:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                    - product-catalog-api
+                topologyKey: kubernetes.io/hostname
+        tolerations:
+        - key: "node-type"
+          operator: "Equal"
+          value: "backend"
+          effect: "NoSchedule"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: order-management-api
+    namespace: ecommerce-backend
+    labels:
+      app: order-management-api
+      component: orders
+      tier: backend
+      version: v2.1.0
+      application: ecommerce
+      team: backend-team
+      environment: production
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      description: "Order processing and management API"
+    creationTimestamp: "2024-02-01T10:00:00Z"
+  spec:
+    replicas: 12
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 25%
+        maxSurge: 25%
+    selector:
+      matchLabels:
+        app: order-management-api
+        tier: backend
+    template:
+      metadata:
+        labels:
+          app: order-management-api
+          component: orders
+          tier: backend
+          version: v2.1.0
+          application: ecommerce
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "8080"
+          prometheus.io/path: "/metrics"
+      spec:
+        serviceAccountName: backend-service-account
+        containers:
+        - name: orders-api
+          image: ecommerce/order-management-api:2.1.0
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: "2500m"
+              memory: "5Gi"
+              ephemeral-storage: "15Gi"
+            requests:
+              cpu: "1250m"
+              memory: "2.5Gi"
+              ephemeral-storage: "7.5Gi"
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 9090
+            name: metrics
+            protocol: TCP
+          - containerPort: 8081
+            name: admin
+            protocol: TCP
+          env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: "production"
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: database-credentials
+                key: orders-db-url
+          - name: DATABASE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: database-credentials
+                key: orders-db-username
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: database-credentials
+                key: orders-db-password
+          - name: RABBITMQ_HOST
+            value: "rabbitmq-cluster"
+          - name: RABBITMQ_PORT
+            value: "5672"
+          - name: RABBITMQ_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: rabbitmq-credentials
+                key: username
+          - name: RABBITMQ_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: rabbitmq-credentials
+                key: password
+          - name: PAYMENT_SERVICE_URL
+            value: "http://payment-processor-service:8080"
+          - name: INVENTORY_SERVICE_URL
+            value: "http://inventory-service:8080"
+          - name: NOTIFICATION_SERVICE_URL
+            value: "http://notification-service:8080"
+          - name: JWT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: jwt-secret
+          - name: ENCRYPTION_KEY
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: encryption-key
+          - name: ORDER_TIMEOUT_MINUTES
+            value: "30"
+          - name: MAX_ITEMS_PER_ORDER
+            value: "100"
+          - name: LOG_LEVEL
+            value: "info"
+          - name: METRICS_ENABLED
+            value: "true"
+          - name: AUDIT_ENABLED
+            value: "true"
+          volumeMounts:
+          - name: config-volume
+            mountPath: /app/config
+            readOnly: true
+          - name: order-files
+            mountPath: /app/files/orders
+          - name: audit-logs
+            mountPath: /app/logs/audit
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8081
+            initialDelaySeconds: 90
+            periodSeconds: 30
+            timeoutSeconds: 15
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8081
+            initialDelaySeconds: 45
+            periodSeconds: 10
+            timeoutSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+        volumes:
+        - name: config-volume
+          configMap:
+            name: orders-api-config
+        - name: order-files
+          persistentVolumeClaim:
+            claimName: order-files-pvc
+        - name: audit-logs
+          persistentVolumeClaim:
+            claimName: audit-logs-pvc
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1002
+          runAsGroup: 3000
+          fsGroup: 2000
+- apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: elasticsearch-cluster
+    namespace: ecommerce-search
+    labels:
+      app: elasticsearch
+      component: search-engine
+      tier: search
+      version: v7.17.0
+      application: ecommerce
+      team: search-team
+      environment: production
+    annotations:
+      description: "Elasticsearch cluster for product search and analytics"
+    creationTimestamp: "2024-02-01T10:30:00Z"
+  spec:
+    serviceName: elasticsearch-headless
+    replicas: 6
+    selector:
+      matchLabels:
+        app: elasticsearch
+        tier: search
+    template:
+      metadata:
+        labels:
+          app: elasticsearch
+          component: search-engine
+          tier: search
+          version: v7.17.0
+          application: ecommerce
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "9200"
+          prometheus.io/path: "/_prometheus/metrics"
+      spec:
+        serviceAccountName: search-service-account
+        initContainers:
+        - name: increase-vm-max-map
+          image: busybox:1.35
+          command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
+          securityContext:
+            privileged: true
+        - name: increase-fd-ulimit
+          image: busybox:1.35
+          command: ['sh', '-c', 'ulimit -n 65536']
+          securityContext:
+            privileged: true
+        containers:
+        - name: elasticsearch
+          image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+          resources:
+            limits:
+              cpu: "4000m"
+              memory: "8Gi"
+            requests:
+              cpu: "2000m"
+              memory: "4Gi"
+          ports:
+          - containerPort: 9200
+            name: http
+          - containerPort: 9300
+            name: transport
+          env:
+          - name: cluster.name
+            value: "ecommerce-search-cluster"
+          - name: node.name
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: discovery.seed_hosts
+            value: "elasticsearch-headless"
+          - name: cluster.initial_master_nodes
+            value: "elasticsearch-cluster-0,elasticsearch-cluster-1,elasticsearch-cluster-2"
+          - name: ES_JAVA_OPTS
+            value: "-Xms4g -Xmx4g"
+          - name: xpack.security.enabled
+            value: "true"
+          - name: xpack.security.transport.ssl.enabled
+            value: "true"
+          - name: xpack.security.http.ssl.enabled
+            value: "true"
+          - name: ELASTIC_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: elasticsearch-credentials
+                key: password
+          volumeMounts:
+          - name: data
+            mountPath: /usr/share/elasticsearch/data
+          - name: config
+            mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+            subPath: elasticsearch.yml
+          - name: certs
+            mountPath: /usr/share/elasticsearch/config/certs
+        volumes:
+        - name: config
+          configMap:
+            name: elasticsearch-config
+        - name: certs
+          secret:
+            secretName: elasticsearch-certs
+        securityContext:
+          runAsUser: 1000
+          fsGroup: 1000
+    volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          app: elasticsearch
+          tier: search
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "fast-ssd"
+        resources:
+          requests:
+            storage: 500Gi
+- apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: postgresql-primary
+    namespace: ecommerce-data
+    labels:
+      app: postgresql
+      component: database
+      tier: database
+      role: primary
+      version: v14.5
+      application: ecommerce
+      team: data-team
+      environment: production
+    annotations:
+      description: "PostgreSQL primary database for e-commerce data"
+    creationTimestamp: "2024-02-01T11:00:00Z"
+  spec:
+    serviceName: postgresql-primary-headless
+    replicas: 1
+    selector:
+      matchLabels:
+        app: postgresql
+        role: primary
+        tier: database
+    template:
+      metadata:
+        labels:
+          app: postgresql
+          component: database
+          tier: database
+          role: primary
+          version: v14.5
+          application: ecommerce
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "9187"
+          prometheus.io/path: "/metrics"
+      spec:
+        serviceAccountName: data-service-account
+        containers:
+        - name: postgresql
+          image: postgres:14.5
+          resources:
+            limits:
+              cpu: "8000m"
+              memory: "16Gi"
+            requests:
+              cpu: "4000m"
+              memory: "8Gi"
+          ports:
+          - containerPort: 5432
+            name: postgresql
+          env:
+          - name: POSTGRES_DB
+            value: "ecommerce"
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-credentials
+                key: username
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-credentials
+                key: password
+          - name: POSTGRES_REPLICATION_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-credentials
+                key: replication-username
+          - name: POSTGRES_REPLICATION_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-credentials
+                key: replication-password
+          - name: PGDATA
+            value: "/var/lib/postgresql/data/pgdata"
+          volumeMounts:
+          - name: data
+            mountPath: /var/lib/postgresql/data
+          - name: config
+            mountPath: /etc/postgresql/postgresql.conf
+            subPath: postgresql.conf
+          - name: init-scripts
+            mountPath: /docker-entrypoint-initdb.d
+          livenessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+        - name: postgres-exporter
+          image: prometheuscommunity/postgres-exporter:v0.11.1
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+          ports:
+          - containerPort: 9187
+            name: metrics
+          env:
+          - name: DATA_SOURCE_NAME
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-credentials
+                key: exporter-data-source-name
+        volumes:
+        - name: config
+          configMap:
+            name: postgresql-config
+        - name: init-scripts
+          configMap:
+            name: postgresql-init-scripts
+        securityContext:
+          runAsUser: 999
+          runAsGroup: 999
+          fsGroup: 999
+    volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          app: postgresql
+          tier: database
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "high-iops-ssd"
+        resources:
+          requests:
+            storage: 1000Gi
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: storefront-config
+    namespace: ecommerce-frontend
+    labels:
+      app: web-storefront
+      component: configuration
+      tier: frontend
+      application: ecommerce
+    creationTimestamp: "2024-02-01T08:45:00Z"
+  data:
+    app.json: |
+      {
+        "apiTimeout": 30000,
+        "maxRetries": 3,
+        "cacheEnabled": true,
+        "cacheTTL": 300,
+        "features": {
+          "recommendations": true,
+          "wishlist": true,
+          "reviews": true,
+          "socialLogin": true,
+          "guestCheckout": true
+        },
+        "ui": {
+          "theme": "modern",
+          "itemsPerPage": 24,
+          "maxImageSize": "2MB",
+          "supportedFormats": ["jpg", "png", "webp"]
+        }
+      }
+    nginx.conf: |
+      user nginx;
+      worker_processes auto;
+      error_log /var/log/nginx/error.log warn;
+      pid /var/run/nginx.pid;
+      
+      events {
+          worker_connections 1024;
+      }
+      
+      http {
+          include /etc/nginx/mime.types;
+          default_type application/octet-stream;
+          
+          log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                          '$status $body_bytes_sent "$http_referer" '
+                          '"$http_user_agent" "$http_x_forwarded_for"';
+          
+          access_log /var/log/nginx/access.log main;
+          
+          sendfile on;
+          tcp_nopush on;
+          tcp_nodelay on;
+          keepalive_timeout 65;
+          types_hash_max_size 2048;
+          
+          gzip on;
+          gzip_vary on;
+          gzip_proxied any;
+          gzip_comp_level 6;
+          gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+          
+          upstream backend {
+              server product-catalog-api.ecommerce-backend.svc.cluster.local:8080;
+              server order-management-api.ecommerce-backend.svc.cluster.local:8080;
+          }
+          
+          server {
+              listen 8080;
+              server_name _;
+              
+              location /api/ {
+                  proxy_pass http://backend;
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
+              }
+              
+              location /health {
+                  access_log off;
+                  return 200 "healthy\n";
+                  add_header Content-Type text/plain;
+              }
+              
+              location /ready {
+                  access_log off;
+                  return 200 "ready\n";
+                  add_header Content-Type text/plain;
+              }
+              
+              location / {
+                  root /usr/share/nginx/html;
+                  try_files $uri $uri/ /index.html;
+              }
+          }
+      }
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: catalog-api-config
+    namespace: ecommerce-backend
+    labels:
+      app: product-catalog-api
+      component: configuration
+      tier: backend
+      application: ecommerce
+    creationTimestamp: "2024-02-01T09:15:00Z"
+  data:
+    application.yml: |
+      server:
+        port: 8080
+        servlet:
+          context-path: /catalog-api
+        compression:
+          enabled: true
+      
+      management:
+        endpoints:
+          web:
+            exposure:
+              include: health,metrics,prometheus,info
+        endpoint:
+          health:
+            show-details: always
+        metrics:
+          export:
+            prometheus:
+              enabled: true
+      
+      spring:
+        datasource:
+          hikari:
+            maximum-pool-size: 50
+            minimum-idle: 10
+            connection-timeout: 30000
+            idle-timeout: 600000
+            max-lifetime: 1800000
+        jpa:
+          hibernate:
+            ddl-auto: validate
+          show-sql: false
+          properties:
+            hibernate:
+              dialect: org.hibernate.dialect.PostgreSQLDialect
+              format_sql: true
+        redis:
+          timeout: 2000ms
+          lettuce:
+            pool:
+              max-active: 50
+              max-idle: 20
+              min-idle: 5
+      
+      logging:
+        level:
+          com.ecommerce: INFO
+          org.springframework.web: DEBUG
+        pattern:
+          console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+      
+      app:
+        catalog:
+          cache:
+            ttl: 3600
+            max-size: 10000
+          search:
+            max-results: 1000
+          images:
+            max-size: 5242880  # 5MB
+            allowed-types: ["image/jpeg", "image/png", "image/webp"]
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: database-credentials
+    namespace: ecommerce-frontend
+    labels:
+      app: ecommerce
+      component: credentials
+      purpose: database-access
+      application: ecommerce
+    creationTimestamp: "2024-02-01T08:20:00Z"
+  type: Opaque
+  data:
+    storefront-db-url: cG9zdGdyZXNxbDovL3Bvc3RncmVzcWwtcHJpbWFyeTo1NDMyL3N0b3JlZnJvbnQ=  # postgresql://postgresql-primary:5432/storefront
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: database-credentials
+    namespace: ecommerce-backend
+    labels:
+      app: ecommerce
+      component: credentials
+      purpose: database-access
+      application: ecommerce
+    creationTimestamp: "2024-02-01T08:25:00Z"
+  type: Opaque
+  data:
+    catalog-db-url: cG9zdGdyZXNxbDovL3Bvc3RncmVzcWwtcHJpbWFyeTo1NDMyL2NhdGFsb2c=  # postgresql://postgresql-primary:5432/catalog
+    catalog-db-username: Y2F0YWxvZ191c2Vy  # catalog_user
+    catalog-db-password: Y2F0YWxvZ19wYXNzd29yZDEyMw==  # catalog_password123
+    orders-db-url: cG9zdGdyZXNxbDovL3Bvc3RncmVzcWwtcHJpbWFyeTo1NDMyL29yZGVycw==  # postgresql://postgresql-primary:5432/orders
+    orders-db-username: b3JkZXJzX3VzZXI=  # orders_user
+    orders-db-password: b3JkZXJzX3Bhc3N3b3JkMTIz  # orders_password123
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: app-secrets
+    namespace: ecommerce-frontend
+    labels:
+      app: ecommerce
+      component: credentials
+      purpose: application-secrets
+      application: ecommerce
+    creationTimestamp: "2024-02-01T08:30:00Z"
+  type: Opaque
+  data:
+    session-secret: c2Vzc2lvbl9zZWNyZXRfa2V5XzEyMzQ1Njc4OTA=  # session_secret_key_1234567890
+    jwt-secret: and0X3NlY3JldF9rZXlfZm9yX2Vjb21tZXJjZV9hcHBfMjAyNA==  # jwt_secret_key_for_ecommerce_app_2024
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: app-secrets
+    namespace: ecommerce-backend
+    labels:
+      app: ecommerce
+      component: credentials
+      purpose: application-secrets
+      application: ecommerce
+    creationTimestamp: "2024-02-01T08:35:00Z"
+  type: Opaque
+  data:
+    jwt-secret: and0X3NlY3JldF9rZXlfZm9yX2Vjb21tZXJjZV9hcHBfMjAyNA==  # jwt_secret_key_for_ecommerce_app_2024
+    encryption-key: ZW5jcnlwdGlvbl9rZXlfZm9yX29yZGVyX2RhdGFfMjAyNA==  # encryption_key_for_order_data_2024
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: frontend-service-account
+    namespace: ecommerce-frontend
+    labels:
+      app: ecommerce
+      component: service-account
+      tier: frontend
+      application: ecommerce
+    creationTimestamp: "2024-02-01T08:40:00Z"
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: backend-service-account
+    namespace: ecommerce-backend
+    labels:
+      app: ecommerce
+      component: service-account
+      tier: backend
+      application: ecommerce
+    creationTimestamp: "2024-02-01T08:45:00Z"
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: search-service-account
+    namespace: ecommerce-search
+    labels:
+      app: ecommerce
+      component: service-account
+      tier: search
+      application: ecommerce
+    creationTimestamp: "2024-02-01T08:50:00Z"
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: data-service-account
+    namespace: ecommerce-data
+    labels:
+      app: ecommerce
+      component: service-account
+      tier: database
+      application: ecommerce
+    creationTimestamp: "2024-02-01T08:55:00Z"

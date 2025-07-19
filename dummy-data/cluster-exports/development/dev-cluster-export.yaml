@@ -1,0 +1,146 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: development
+    labels:
+      environment: development
+    creationTimestamp: "2024-01-20T08:00:00Z"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: web-frontend
+    namespace: development
+    labels:
+      app: web-frontend
+      tier: frontend
+      environment: development
+    creationTimestamp: "2024-01-20T09:00:00Z"
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: web-frontend
+    template:
+      metadata:
+        labels:
+          app: web-frontend
+          tier: frontend
+      spec:
+        containers:
+        - name: nginx
+          image: nginx:1.21
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "64Mi"
+            requests:
+              cpu: "100m"
+              memory: "32Mi"
+          ports:
+          - containerPort: 80
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: web-frontend-service
+    namespace: development
+    creationTimestamp: "2024-01-20T09:05:00Z"
+  spec:
+    selector:
+      app: web-frontend
+    ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+    type: NodePort
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: api-backend
+    namespace: development
+    labels:
+      app: api-backend
+      tier: backend
+      environment: development
+    creationTimestamp: "2024-01-20T09:30:00Z"
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: api-backend
+    template:
+      metadata:
+        labels:
+          app: api-backend
+          tier: backend
+      spec:
+        containers:
+        - name: api-server
+          image: mycompany/api-server:dev-latest
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+            requests:
+              cpu: "200m"
+              memory: "128Mi"
+          ports:
+          - containerPort: 8080
+          env:
+          - name: DATABASE_URL
+            value: "sqlite:///tmp/dev.db"
+          - name: LOG_LEVEL
+            value: "debug"
+          - name: ENABLE_DEBUG
+            value: "true"
+          - name: HOT_RELOAD
+            value: "true"
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: api-backend-service
+    namespace: development
+    creationTimestamp: "2024-01-20T09:35:00Z"
+  spec:
+    selector:
+      app: api-backend
+    ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+    type: ClusterIP
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    name: debug-pod
+    namespace: development
+    labels:
+      app: debug-utils
+      tier: tools
+    creationTimestamp: "2024-01-20T10:00:00Z"
+  spec:
+    containers:
+    - name: debug-tools
+      image: nicolaka/netshoot
+      resources:
+        limits:
+          cpu: "100m"
+          memory: "64Mi"
+        requests:
+          cpu: "50m"
+          memory: "32Mi"
+      command: ["sleep", "86400"]  # Keep running for 24 hours
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: dev-config
+    namespace: development
+    creationTimestamp: "2024-01-20T08:30:00Z"
+  data:
+    database_url: "sqlite:///tmp/dev.db"
+    log_level: "debug"
+    feature_flags: "all_features=true,debug_mode=true"
+    dev_mode: "true"
+    auto_reload: "true"

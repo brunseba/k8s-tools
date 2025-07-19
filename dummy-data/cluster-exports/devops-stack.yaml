@@ -1,0 +1,266 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: devops
+    labels:
+      environment: devops
+    creationTimestamp: "2024-01-13T08:00:00Z"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: jenkins
+    namespace: devops
+    labels:
+      app: jenkins
+      tier: ci-cd
+    creationTimestamp: "2024-01-13T09:00:00Z"
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: jenkins
+    template:
+      metadata:
+        labels:
+          app: jenkins
+          tier: ci-cd
+      spec:
+        containers:
+        - name: jenkins
+          image: jenkins/jenkins:lts
+          resources:
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+            requests:
+              cpu: "1"
+              memory: "2Gi"
+          ports:
+          - containerPort: 8080
+          - containerPort: 50000
+          env:
+          - name: JENKINS_OPTS
+            value: "--httpPort=8080"
+          - name: JAVA_OPTS
+            value: "-Xms2g -Xmx4g"
+          volumeMounts:
+          - name: jenkins-home
+            mountPath: /var/jenkins_home
+        volumes:
+        - name: jenkins-home
+          persistentVolumeClaim:
+            claimName: jenkins-pvc
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: jenkins-service
+    namespace: devops
+    creationTimestamp: "2024-01-13T09:05:00Z"
+  spec:
+    selector:
+      app: jenkins
+    ports:
+    - name: web
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    - name: agent
+      protocol: TCP
+      port: 50000
+      targetPort: 50000
+    type: LoadBalancer
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: nexus
+    namespace: devops
+    labels:
+      app: nexus
+      tier: artifact-repository
+    creationTimestamp: "2024-01-13T09:30:00Z"
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: nexus
+    template:
+      metadata:
+        labels:
+          app: nexus
+          tier: artifact-repository
+      spec:
+        containers:
+        - name: nexus
+          image: sonatype/nexus3:3.41.1
+          resources:
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+            requests:
+              cpu: "1"
+              memory: "2Gi"
+          ports:
+          - containerPort: 8081
+          volumeMounts:
+          - name: nexus-data
+            mountPath: /nexus-data
+        volumes:
+        - name: nexus-data
+          persistentVolumeClaim:
+            claimName: nexus-pvc
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: sonarqube
+    namespace: devops
+    labels:
+      app: sonarqube
+      tier: code-quality
+    creationTimestamp: "2024-01-13T10:00:00Z"
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: sonarqube
+    template:
+      metadata:
+        labels:
+          app: sonarqube
+          tier: code-quality
+      spec:
+        containers:
+        - name: sonarqube
+          image: sonarqube:9.9-community
+          resources:
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+            requests:
+              cpu: "1"
+              memory: "2Gi"
+          ports:
+          - containerPort: 9000
+          env:
+          - name: SONAR_JDBC_URL
+            value: "jdbc:postgresql://postgres-service:5432/sonarqube"
+          - name: SONAR_JDBC_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: sonarqube-credentials
+                key: db-user
+          - name: SONAR_JDBC_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: sonarqube-credentials
+                key: db-password
+          volumeMounts:
+          - name: sonarqube-data
+            mountPath: /opt/sonarqube/data
+          - name: sonarqube-logs
+            mountPath: /opt/sonarqube/logs
+          - name: sonarqube-extensions
+            mountPath: /opt/sonarqube/extensions
+        volumes:
+        - name: sonarqube-data
+          persistentVolumeClaim:
+            claimName: sonarqube-data-pvc
+        - name: sonarqube-logs
+          persistentVolumeClaim:
+            claimName: sonarqube-logs-pvc
+        - name: sonarqube-extensions
+          persistentVolumeClaim:
+            claimName: sonarqube-extensions-pvc
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: gitlab-runner
+    namespace: devops
+    labels:
+      app: gitlab-runner
+      tier: ci-cd
+    creationTimestamp: "2024-01-13T10:30:00Z"
+  spec:
+    replicas: 3
+    selector:
+      matchLabels:
+        app: gitlab-runner
+    template:
+      metadata:
+        labels:
+          app: gitlab-runner
+          tier: ci-cd
+      spec:
+        containers:
+        - name: gitlab-runner
+          image: gitlab/gitlab-runner:alpine
+          resources:
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+          volumeMounts:
+          - name: gitlab-runner-config
+            mountPath: /etc/gitlab-runner
+          - name: docker-socket
+            mountPath: /var/run/docker.sock
+        volumes:
+        - name: gitlab-runner-config
+          configMap:
+            name: gitlab-runner-config
+        - name: docker-socket
+          hostPath:
+            path: /var/run/docker.sock
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: jenkins-pvc
+    namespace: devops
+    creationTimestamp: "2024-01-13T08:30:00Z"
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 50Gi
+    storageClassName: "fast-ssd"
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: nexus-pvc
+    namespace: devops
+    creationTimestamp: "2024-01-13T08:35:00Z"
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 100Gi
+    storageClassName: "standard"
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: sonarqube-data-pvc
+    namespace: devops
+    creationTimestamp: "2024-01-13T08:40:00Z"
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 20Gi
+    storageClassName: "standard"
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: sonarqube-credentials
+    namespace: devops
+    creationTimestamp: "2024-01-13T08:20:00Z"
+  type: Opaque
+  data:
+    db-user: c29uYXJxdWJl  # sonarqube
+    db-password: c29uYXJwYXNz  # sonarpass

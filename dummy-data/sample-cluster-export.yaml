@@ -1,0 +1,226 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    name: web-server-pod-1
+    namespace: default
+    labels:
+      app: web-server
+      tier: frontend
+    creationTimestamp: "2024-01-15T10:30:00Z"
+  status:
+    phase: Running
+  spec:
+    containers:
+    - name: nginx
+      image: nginx:1.21
+      resources:
+        limits:
+          cpu: "500m"
+          memory: "128Mi"
+        requests:
+          cpu: "250m"
+          memory: "64Mi"
+      ports:
+      - containerPort: 80
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    name: web-server-pod-2
+    namespace: default
+    labels:
+      app: web-server
+      tier: frontend
+    creationTimestamp: "2024-01-15T10:35:00Z"
+  status:
+    phase: Running
+  spec:
+    containers:
+    - name: nginx
+      image: nginx:1.21
+      resources:
+        limits:
+          cpu: "500m"
+          memory: "128Mi"
+        requests:
+          cpu: "250m"
+          memory: "64Mi"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: web-server-deployment
+    namespace: default
+    creationTimestamp: "2024-01-15T10:00:00Z"
+  spec:
+    replicas: 3
+    selector:
+      matchLabels:
+        app: web-server
+    template:
+      metadata:
+        labels:
+          app: web-server
+          tier: frontend
+      spec:
+        containers:
+        - name: nginx
+          image: nginx:1.21
+          resources:
+            limits:
+              cpu: "1"
+              memory: "256Mi"
+            requests:
+              cpu: "500m"
+              memory: "128Mi"
+          ports:
+          - containerPort: 80
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: web-server-service
+    namespace: default
+    creationTimestamp: "2024-01-15T10:05:00Z"
+  spec:
+    selector:
+      app: web-server
+    ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+    type: ClusterIP
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: api-backend
+    namespace: api
+    creationTimestamp: "2024-01-15T09:00:00Z"
+  spec:
+    replicas: 2
+    selector:
+      matchLabels:
+        app: api-backend
+    template:
+      metadata:
+        labels:
+          app: api-backend
+          tier: backend
+      spec:
+        containers:
+        - name: api-server
+          image: node:16-alpine
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+            requests:
+              cpu: "500m"
+              memory: "256Mi"
+          ports:
+          - containerPort: 3000
+          env:
+          - name: DB_HOST
+            value: "postgres-service"
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: api-service
+    namespace: api
+    creationTimestamp: "2024-01-15T09:05:00Z"
+  spec:
+    selector:
+      app: api-backend
+    ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+    type: LoadBalancer
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: api
+    creationTimestamp: "2024-01-15T08:00:00Z"
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: monitoring
+    creationTimestamp: "2024-01-15T08:30:00Z"
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: app-config
+    namespace: default
+    creationTimestamp: "2024-01-15T09:30:00Z"
+  data:
+    database_url: "postgres://localhost:5432/myapp"
+    redis_url: "redis://localhost:6379"
+    log_level: "info"
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: db-credentials
+    namespace: api
+    creationTimestamp: "2024-01-15T09:15:00Z"
+  type: Opaque
+  data:
+    username: cG9zdGdyZXM=  # postgres (base64)
+    password: cGFzc3dvcmQ=  # password (base64)
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: postgres-pvc
+    namespace: api
+    creationTimestamp: "2024-01-15T08:45:00Z"
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 10Gi
+- apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: postgres
+    namespace: api
+    creationTimestamp: "2024-01-15T08:50:00Z"
+  spec:
+    replicas: 1
+    serviceName: postgres-service
+    selector:
+      matchLabels:
+        app: postgres
+    template:
+      metadata:
+        labels:
+          app: postgres
+          tier: database
+      spec:
+        containers:
+        - name: postgres
+          image: postgres:13
+          resources:
+            limits:
+              cpu: "2"
+              memory: "1Gi"
+            requests:
+              cpu: "1"
+              memory: "512Mi"
+          env:
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: db-credentials
+                key: username
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: db-credentials
+                key: password
+          volumeMounts:
+          - name: postgres-storage
+            mountPath: /var/lib/postgresql/data
+        volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc

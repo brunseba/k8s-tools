@@ -1,0 +1,200 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: production-west
+    labels:
+      environment: production
+      region: west
+      cluster: west-cluster
+    annotations:
+      cluster.location: "us-west-2"
+    creationTimestamp: "2024-01-10T08:00:00Z"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: web-frontend-west
+    namespace: production-west
+    labels:
+      app: web-frontend
+      tier: frontend
+      environment: production
+      region: west
+    creationTimestamp: "2024-01-10T09:00:00Z"
+  spec:
+    replicas: 5
+    selector:
+      matchLabels:
+        app: web-frontend
+        region: west
+    template:
+      metadata:
+        labels:
+          app: web-frontend
+          tier: frontend
+          region: west
+      spec:
+        containers:
+        - name: nginx
+          image: nginx:1.21
+          resources:
+            limits:
+              cpu: "2"
+              memory: "512Mi"
+            requests:
+              cpu: "1"
+              memory: "256Mi"
+          ports:
+          - containerPort: 80
+          env:
+          - name: REGION
+            value: "west"
+          - name: CLUSTER_NAME
+            value: "west-cluster"
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: web-frontend-service
+    namespace: production-west
+    labels:
+      app: web-frontend
+      region: west
+    creationTimestamp: "2024-01-10T09:05:00Z"
+  spec:
+    selector:
+      app: web-frontend
+      region: west
+    ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+    type: LoadBalancer
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: api-backend-west
+    namespace: production-west
+    labels:
+      app: api-backend
+      tier: backend
+      environment: production
+      region: west
+    creationTimestamp: "2024-01-10T09:30:00Z"
+  spec:
+    replicas: 4
+    selector:
+      matchLabels:
+        app: api-backend
+        region: west
+    template:
+      metadata:
+        labels:
+          app: api-backend
+          tier: backend
+          region: west
+      spec:
+        containers:
+        - name: api-server
+          image: mycompany/api-server:v2.1.0
+          resources:
+            limits:
+              cpu: "3"
+              memory: "2Gi"
+            requests:
+              cpu: "1.5"
+              memory: "1Gi"
+          ports:
+          - containerPort: 8080
+          env:
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: database-credentials-west
+                key: connection-string
+          - name: REGION
+            value: "west"
+          - name: REPLICA_REGION
+            value: "east"
+- apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: redis-west
+    namespace: production-west
+    labels:
+      app: redis
+      tier: cache
+      region: west
+    creationTimestamp: "2024-01-10T10:00:00Z"
+  spec:
+    replicas: 3
+    serviceName: redis-service-west
+    selector:
+      matchLabels:
+        app: redis
+        region: west
+    template:
+      metadata:
+        labels:
+          app: redis
+          tier: cache
+          region: west
+      spec:
+        containers:
+        - name: redis
+          image: redis:6.2-alpine
+          resources:
+            limits:
+              cpu: "2"
+              memory: "2Gi"
+            requests:
+              cpu: "1"
+              memory: "1Gi"
+          ports:
+          - containerPort: 6379
+          env:
+          - name: REDIS_CLUSTER_MODE
+            value: "enabled"
+- apiVersion: batch/v1
+  kind: CronJob
+  metadata:
+    name: backup-job-west
+    namespace: production-west
+    labels:
+      app: backup
+      tier: maintenance
+      region: west
+    creationTimestamp: "2024-01-10T11:00:00Z"
+  spec:
+    schedule: "0 2 * * *"  # Daily at 2 AM
+    jobTemplate:
+      spec:
+        template:
+          spec:
+            containers:
+            - name: backup
+              image: mycompany/backup-tool:v1.0.0
+              resources:
+                limits:
+                  cpu: "1"
+                  memory: "512Mi"
+                requests:
+                  cpu: "500m"
+                  memory: "256Mi"
+              env:
+              - name: BACKUP_TARGET
+                value: "s3://backups-west/daily"
+              - name: REGION
+                value: "west"
+            restartPolicy: OnFailure
+    concurrencyPolicy: Forbid
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: database-credentials-west
+    namespace: production-west
+    creationTimestamp: "2024-01-10T08:30:00Z"
+  type: Opaque
+  data:
+    connection-string: cG9zdGdyZXNxbDovL3VzZXI6cGFzc3dvcmRAZGItd2VzdC5teWNvbXBhbnkuY29tOjU0MzIvbXlkYg==

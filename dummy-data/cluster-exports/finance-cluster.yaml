@@ -1,0 +1,248 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: finance
+    labels:
+      department: finance
+      environment: test
+    creationTimestamp: "2024-01-18T08:00:00Z"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: payment-gateway
+    namespace: finance
+    labels:
+      app: payment-gateway
+      department: finance
+      environment: test
+    creationTimestamp: "2024-01-18T09:00:00Z"
+  spec:
+    replicas: 10
+    selector:
+      matchLabels:
+        app: payment-gateway
+    template:
+      metadata:
+        labels:
+          app: payment-gateway
+          tier: backend
+      spec:
+        containers:
+        - name: payment-api
+          image: financialcorp/payment-api:latest
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "2Gi"
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+          ports:
+          - containerPort: 443
+          env:
+          - name: DATABASE_URL
+            value: "jdbc:postgresql://db-service:5432/payment"
+          - name: PAYMENT_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: api-secrets
+                key: payment-api-key
+          volumeMounts:
+          - name: certs
+            mountPath: /etc/ssl/certs
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 443
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 443
+            initialDelaySeconds: 30
+            periodSeconds: 15
+        volumes:
+        - name: certs
+          secret:
+            secretName: payment-certificates
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: payment-gateway-service
+    namespace: finance
+    labels:
+      app: payment-gateway
+      service: api
+      environment: test
+    creationTimestamp: "2024-01-18T09:05:00Z"
+  spec:
+    type: LoadBalancer
+    selector:
+      app: payment-gateway
+    ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 443
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: billing-engine
+    namespace: finance
+    labels:
+      app: billing-engine
+      department: finance
+      environment: test
+    creationTimestamp: "2024-01-18T09:30:00Z"
+  spec:
+    replicas: 10
+    selector:
+      matchLabels:
+        app: billing-engine
+    template:
+      metadata:
+        labels:
+          app: billing-engine
+          tier: backend
+      spec:
+        containers:
+        - name: billing-api
+          image: financialcorp/billing-api:latest
+          resources:
+            limits:
+              cpu: "1500m"
+              memory: "3Gi"
+            requests:
+              cpu: "750m"
+              memory: "1.5Gi"
+          ports:
+          - containerPort: 8080
+          env:
+          - name: DATABASE_URL
+            value: "jdbc:mysql://db-service:3306/billing"
+          - name: BILLING_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: api-secrets
+                key: billing-api-key
+          volumeMounts:
+          - name: config
+            mountPath: /etc/billing/config
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 5
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+        volumes:
+        - name: config
+          configMap:
+            name: billing-config
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: billing-config
+    namespace: finance
+    labels:
+      app: billing-engine
+      purpose: configuration
+    creationTimestamp: "2024-01-18T08:45:00Z"
+  data:
+    LOG_LEVEL: "debug"
+    RETENTION_PERIOD: "30"
+    ENABLE_FEATURE_X: "true"
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: api-secrets
+    namespace: finance
+    labels:
+      app: payment-gateway
+      purpose: credentials
+    creationTimestamp: "2024-01-18T08:50:00Z"
+  type: Opaque
+  data:
+    payment-api-key: cGF5bWVudC1hcGkta2V5  # payment-api-key
+    billing-api-key: YmlsbGluZy1hcGkta2V5  # billing-api-key
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: payment-certificates
+    namespace: finance
+    labels:
+      app: payment-gateway
+      purpose: ssl
+    creationTimestamp: "2024-01-18T08:55:00Z"
+  type: Opaque
+  data:
+    tls.crt: "...base64-encoded-certificate..."
+    tls.key: "...base64-encoded-key..."
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: finance-pvc
+    namespace: finance
+    labels:
+      department: finance
+      app: billing-engine
+    creationTimestamp: "2024-01-18T09:40:00Z"
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 500Gi
+    storageClassName: "premium-ssd"
+- apiVersion: batch/v1
+  kind: CronJob
+  metadata:
+    name: daily-report-generator
+    namespace: finance
+    labels:
+      app: report-generator
+      department: finance
+    creationTimestamp: "2024-01-18T10:00:00Z"
+  spec:
+    schedule: "0 1 * * *"
+    jobTemplate:
+      spec:
+        template:
+          spec:
+            containers:
+            - name: report-generator
+              image: financialcorp/report-generator:latest
+              resources:
+                limits:
+                  cpu: "500m"
+                  memory: "1Gi"
+                requests:
+                  cpu: "250m"
+                  memory: "512Mi"
+              env:
+              - name: REPORT_STORAGE_URL
+                value: "s3://finance-reports/daily"
+              volumeMounts:
+              - name: reports
+                mountPath: /reports
+            restartPolicy: OnFailure
+            volumes:
+            - name: reports
+              persistentVolumeClaim:
+                claimName: finance-pvc
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: finance-service-account
+    namespace: finance
+  labels:
+    app: finance-tools
+    role: service-account
+  creationTimestamp: "2024-01-18T08:30:00Z"
+

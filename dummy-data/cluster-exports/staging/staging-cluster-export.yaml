@@ -1,0 +1,184 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: staging
+    labels:
+      environment: staging
+    creationTimestamp: "2024-01-15T08:00:00Z"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: web-frontend
+    namespace: staging
+    labels:
+      app: web-frontend
+      tier: frontend
+      environment: staging
+    creationTimestamp: "2024-01-15T09:00:00Z"
+  spec:
+    replicas: 2
+    selector:
+      matchLabels:
+        app: web-frontend
+    template:
+      metadata:
+        labels:
+          app: web-frontend
+          tier: frontend
+      spec:
+        containers:
+        - name: nginx
+          image: nginx:1.21
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "128Mi"
+            requests:
+              cpu: "250m"
+              memory: "64Mi"
+          ports:
+          - containerPort: 80
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: web-frontend-service
+    namespace: staging
+    creationTimestamp: "2024-01-15T09:05:00Z"
+  spec:
+    selector:
+      app: web-frontend
+    ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+    type: NodePort
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: api-backend
+    namespace: staging
+    labels:
+      app: api-backend
+      tier: backend
+      environment: staging
+    creationTimestamp: "2024-01-15T09:30:00Z"
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: api-backend
+    template:
+      metadata:
+        labels:
+          app: api-backend
+          tier: backend
+      spec:
+        containers:
+        - name: api-server
+          image: mycompany/api-server:v2.2.0-rc1
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+            requests:
+              cpu: "500m"
+              memory: "256Mi"
+          ports:
+          - containerPort: 8080
+          env:
+          - name: DATABASE_URL
+            value: "sqlite:///tmp/test.db"
+          - name: LOG_LEVEL
+            value: "debug"
+          - name: ENABLE_DEBUG
+            value: "true"
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: api-backend-service
+    namespace: staging
+    creationTimestamp: "2024-01-15T09:35:00Z"
+  spec:
+    selector:
+      app: api-backend
+    ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+    type: ClusterIP
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: test-runner
+    namespace: staging
+    labels:
+      app: test-runner
+      tier: testing
+    creationTimestamp: "2024-01-15T10:00:00Z"
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: test-runner
+    template:
+      metadata:
+        labels:
+          app: test-runner
+          tier: testing
+      spec:
+        containers:
+        - name: test-runner
+          image: mycompany/test-runner:latest
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+            requests:
+              cpu: "250m"
+              memory: "128Mi"
+          env:
+          - name: TARGET_API
+            value: "http://api-backend-service:8080"
+          - name: TEST_SUITE
+            value: "integration"
+          command: ["sleep", "3600"]  # Keep container running for manual tests
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: staging-config
+    namespace: staging
+    creationTimestamp: "2024-01-15T08:30:00Z"
+  data:
+    database_url: "sqlite:///tmp/staging.db"
+    log_level: "debug"
+    feature_flags: "new_ui=true,analytics=false,debug_mode=true"
+    test_mode: "true"
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    name: data-migration
+    namespace: staging
+    creationTimestamp: "2024-01-15T11:00:00Z"
+  spec:
+    template:
+      spec:
+        containers:
+        - name: migrator
+          image: mycompany/migrator:v1.2.0
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+          env:
+          - name: TARGET_ENV
+            value: "staging"
+          - name: MIGRATION_VERSION
+            value: "latest"
+        restartPolicy: OnFailure
+    backoffLimit: 3

@@ -1,0 +1,248 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: customer-reviews
+  namespace: ecommerce-reviews
+  labels:
+    app: customer-reviews
+    tier: backend
+    team: reviews-team
+  creationTimestamp: "2024-02-01T12:00:00Z"
+spec:
+  serviceName: customer-reviews-headless
+  replicas: 8
+  selector:
+    matchLabels:
+      app: customer-reviews
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: customer-reviews
+        tier: backend
+        version: v1.2.0
+        application: ecommerce
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8081"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: reviews-service-account
+      containers:
+      - name: reviews-api
+        image: ecommerce/customer-reviews-api:1.2.0
+        resources:
+          limits:
+            cpu: "2500m"
+            memory: "5Gi"
+          requests:
+            cpu: "1250m"
+            memory: "2.5Gi"
+        ports:
+        - containerPort: 8081
+          name: http
+          protocol: TCP
+        - containerPort: 9091
+          name: metrics
+          protocol: TCP
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: reviews-database-credentials
+              key: database-url
+        - name: DATABASE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: reviews-database-credentials
+              key: username
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: reviews-database-credentials
+              key: password
+        - name: REDIS_URL
+          value: "redis://reviews-redis:6379"
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: reviews-secrets
+              key: jwt-secret
+        - name: LOG_LEVEL
+          value: "debug"
+        - name: FEATURE_SENTIMENT_ANALYSIS
+          value: "true"
+        - name: REVIEW_MODERATION
+          value: "enabled"
+        - name: METRICS_ENABLED
+          value: "true"
+        volumeMounts:
+        - name: config-volume
+          mountPath: /app/config
+          readOnly: true
+        - name: review-images
+          mountPath: /app/images
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1003
+        runAsGroup: 3000
+        fsGroup: 2000
+      livenessProbe:
+        httpGet:
+          path: /actuator/health/liveness
+          port: 8081
+        initialDelaySeconds: 90
+        periodSeconds: 30
+        timeoutSeconds: 15
+        successThreshold: 1
+        failureThreshold: 3
+      readinessProbe:
+        httpGet:
+          path: /actuator/health/readiness
+          port: 8081
+        initialDelaySeconds: 45
+        periodSeconds: 10
+        timeoutSeconds: 10
+        successThreshold: 1
+        failureThreshold: 3
+  volumeClaimTemplates:
+  - metadata:
+      name: review-images
+      labels:
+        app: customer-reviews
+        tier: backend
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: "standard"
+      resources:
+        requests:
+          storage: 100Gi
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: reviews-database-credentials
+  namespace: ecommerce-reviews
+  labels:
+    app: customer-reviews
+    purpose: database
+  creationTimestamp: "2024-02-01T08:20:00Z"
+type: Opaque
+data:
+  database-url: cG9zdGdyZXNxbDovL2Vjb21tZXJjZS1yZXZpZXdzLXNlcnZlcjo1NDMyL3Jldmlld3M=  # postgresql://ecommerce-reviews-server:5432/reviews
+  username: cmV2aWV3c191c2Vy  # reviews_user
+  password: cmV2aWV3c19wYXNzd29yZA==  # reviews_password
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: reviews-secrets
+  namespace: ecommerce-reviews
+  labels:
+    app: customer-reviews
+    purpose: credentials
+  creationTimestamp: "2024-02-01T08:25:00Z"
+type: Opaque
+data:
+  jwt-secret: cmV2aWV3c19qd3Rfc2VjcmV0  # reviews_jwt_secret
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: reviews-service-account
+  namespace: ecommerce-reviews
+  labels:
+    app: customer-reviews
+    component: service-account
+    application: ecommerce
+  creationTimestamp: "2024-02-01T08:30:00Z"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-users
+  namespace: ecommerce-users
+  labels:
+    app: frontend-users
+    tier: frontend
+    version: v3.0.0
+    application: ecommerce
+  creationTimestamp: "2024-02-01T09:00:00Z"
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: frontend-users
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend-users
+        tier: frontend
+    spec:
+      serviceAccountName: users-service-account
+      containers:
+      - name: users-app
+        image: ecommerce/users-app:3.0.0
+        resources:
+          limits:
+            cpu: "3000m"
+            memory: "6Gi"
+          requests:
+            cpu: "1500m"
+            memory: "3Gi"
+        ports:
+        - containerPort: 8082
+          name: http
+          protocol: TCP
+        - containerPort: 9092
+          name: metrics
+          protocol: TCP
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: users-database-credentials
+              key: database-url
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: users-secrets
+              key: jwt-secret
+        - name: LOG_LEVEL
+          value: "info"
+        - name: FEATURE_SOCIAL_LOGIN
+          value: "true"
+        - name: METRICS_ENABLED
+          value: "true"
+        volumeMounts:
+        - name: users-config
+          mountPath: /app/config
+          readOnly: true
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: users-database-credentials
+  namespace: ecommerce-users
+  labels:
+    app: frontend-users
+    purpose: database
+  creationTimestamp: "2024-02-01T08:20:00Z"
+type: Opaque
+data:
+  database-url: cG9zdGdyZXNxbDovL2Vjb21tZXJjZS11c2Vycy1zZXJ2ZXI6NTQzMi91c2Vycw==  # postgresql://ecommerce-users-server:5432/users
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: users-secrets
+  namespace: ecommerce-users
+  labels:
+    app: frontend-users
+    purpose: credentials
+  creationTimestamp: "2024-02-01T08:25:00Z"
+type: Opaque
+data:
+  jwt-secret: dXNlcnNfan93dF9zZWNyZXQ=  # users_jwt_secret
+

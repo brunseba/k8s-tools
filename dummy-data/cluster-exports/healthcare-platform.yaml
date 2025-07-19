@@ -1,0 +1,1373 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: healthcare-frontend
+    labels:
+      application: healthcare
+      tier: frontend
+      environment: production
+      team: frontend-team
+      cost-center: "2001"
+      compliance: hipaa
+      data-classification: sensitive
+    annotations:
+      description: "Frontend services for healthcare management platform"
+      owner: "frontend-team@healthcare.com"
+      compliance-requirements: "HIPAA, SOC2"
+      security-level: "high"
+    creationTimestamp: "2024-03-01T08:00:00Z"
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: healthcare-backend
+    labels:
+      application: healthcare
+      tier: backend
+      environment: production
+      team: backend-team
+      cost-center: "2002"
+      compliance: hipaa
+      data-classification: sensitive
+    annotations:
+      description: "Backend services for healthcare management platform"
+      owner: "backend-team@healthcare.com"
+      compliance-requirements: "HIPAA, SOC2"
+      security-level: "high"
+    creationTimestamp: "2024-03-01T08:05:00Z"
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: healthcare-data
+    labels:
+      application: healthcare
+      tier: database
+      environment: production
+      team: data-team
+      cost-center: "2003"
+      compliance: hipaa
+      data-classification: sensitive
+    annotations:
+      description: "Database and data services for healthcare platform"
+      owner: "data-team@healthcare.com"
+      compliance-requirements: "HIPAA, SOC2"
+      security-level: "high"
+    creationTimestamp: "2024-03-01T08:10:00Z"
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: healthcare-analytics
+    labels:
+      application: healthcare
+      tier: analytics
+      environment: production
+      team: analytics-team
+      cost-center: "2004"
+      compliance: hipaa
+      data-classification: sensitive
+    annotations:
+      description: "Analytics and reporting services for healthcare"
+      owner: "analytics-team@healthcare.com"
+      compliance-requirements: "HIPAA, SOC2"
+      security-level: "high"
+    creationTimestamp: "2024-03-01T08:15:00Z"
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: healthcare-integration
+    labels:
+      application: healthcare
+      tier: integration
+      environment: production
+      team: integration-team
+      cost-center: "2005"
+      compliance: hipaa
+      data-classification: sensitive
+    annotations:
+      description: "Integration services for healthcare platform"
+      owner: "integration-team@healthcare.com"
+      compliance-requirements: "HIPAA, SOC2, HL7"
+      security-level: "high"
+    creationTimestamp: "2024-03-01T08:20:00Z"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: patient-portal
+    namespace: healthcare-frontend
+    labels:
+      app: patient-portal
+      component: web-portal
+      tier: frontend
+      version: v3.2.1
+      application: healthcare
+      team: frontend-team
+      environment: production
+      compliance: hipaa
+      data-classification: sensitive
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      description: "Patient portal web application"
+      compliance-notes: "Handles patient PHI data"
+    creationTimestamp: "2024-03-01T09:00:00Z"
+  spec:
+    replicas: 25
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 20%
+        maxSurge: 30%
+    selector:
+      matchLabels:
+        app: patient-portal
+        tier: frontend
+    template:
+      metadata:
+        labels:
+          app: patient-portal
+          component: web-portal
+          tier: frontend
+          version: v3.2.1
+          application: healthcare
+          compliance: hipaa
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "8080"
+          prometheus.io/path: "/metrics"
+          security.alpha.kubernetes.io/sysctls: "net.core.somaxconn=65535"
+      spec:
+        serviceAccountName: healthcare-frontend-sa
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 3000
+          fsGroup: 2000
+          seccompProfile:
+            type: RuntimeDefault
+        containers:
+        - name: patient-portal
+          image: healthcare/patient-portal:3.2.1
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+          resources:
+            limits:
+              cpu: "2500m"
+              memory: "6Gi"
+              ephemeral-storage: "15Gi"
+            requests:
+              cpu: "1250m"
+              memory: "3Gi"
+              ephemeral-storage: "7.5Gi"
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 9090
+            name: metrics
+            protocol: TCP
+          - containerPort: 8443
+            name: https
+            protocol: TCP
+          env:
+          - name: NODE_ENV
+            value: "production"
+          - name: API_BASE_URL
+            value: "https://api.healthcare.internal"
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-database-credentials
+                key: portal-db-url
+          - name: SESSION_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-app-secrets
+                key: session-secret
+          - name: JWT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-app-secrets
+                key: jwt-secret
+          - name: ENCRYPTION_KEY
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-app-secrets
+                key: encryption-key
+          - name: REDIS_URL
+            value: "redis://healthcare-redis-cluster:6379"
+          - name: PATIENT_API_URL
+            value: "http://patient-service:8080"
+          - name: APPOINTMENT_API_URL
+            value: "http://appointment-service:8080"
+          - name: BILLING_API_URL
+            value: "http://billing-service:8080"
+          - name: NOTIFICATION_API_URL
+            value: "http://notification-service:8080"
+          - name: FEATURE_TELEHEALTH
+            value: "true"
+          - name: FEATURE_PRESCRIPTION_REFILL
+            value: "true"
+          - name: FEATURE_LAB_RESULTS
+            value: "true"
+          - name: FEATURE_APPOINTMENT_SCHEDULING
+            value: "true"
+          - name: HIPAA_AUDIT_ENABLED
+            value: "true"
+          - name: LOG_LEVEL
+            value: "info"
+          - name: METRICS_ENABLED
+            value: "true"
+          - name: AUDIT_LOG_ENABLED
+            value: "true"
+          - name: SSL_CERTIFICATE_PATH
+            value: "/etc/ssl/certs/tls.crt"
+          - name: SSL_PRIVATE_KEY_PATH
+            value: "/etc/ssl/private/tls.key"
+          volumeMounts:
+          - name: config-volume
+            mountPath: /app/config
+            readOnly: true
+          - name: ssl-certs
+            mountPath: /etc/ssl/certs
+            readOnly: true
+          - name: ssl-private
+            mountPath: /etc/ssl/private
+            readOnly: true
+          - name: audit-logs
+            mountPath: /app/logs/audit
+          - name: temp-storage
+            mountPath: /tmp
+          - name: cache-volume
+            mountPath: /app/cache
+          livenessProbe:
+            httpGet:
+              path: /health/liveness
+              port: 8080
+              httpHeaders:
+              - name: X-Health-Check
+                value: "liveness"
+            initialDelaySeconds: 90
+            periodSeconds: 30
+            timeoutSeconds: 15
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health/readiness
+              port: 8080
+              httpHeaders:
+              - name: X-Health-Check
+                value: "readiness"
+            initialDelaySeconds: 45
+            periodSeconds: 10
+            timeoutSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /health/startup
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 30
+        volumes:
+        - name: config-volume
+          configMap:
+            name: patient-portal-config
+            defaultMode: 0644
+        - name: ssl-certs
+          secret:
+            secretName: healthcare-ssl-certificates
+            defaultMode: 0644
+        - name: ssl-private
+          secret:
+            secretName: healthcare-ssl-certificates
+            defaultMode: 0600
+        - name: audit-logs
+          persistentVolumeClaim:
+            claimName: healthcare-audit-logs-pvc
+        - name: temp-storage
+          emptyDir:
+            sizeLimit: 2Gi
+        - name: cache-volume
+          emptyDir:
+            sizeLimit: 1Gi
+        affinity:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                    - patient-portal
+                topologyKey: kubernetes.io/hostname
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: node-type
+                  operator: In
+                  values:
+                  - frontend
+                  - general
+        tolerations:
+        - key: "dedicated"
+          operator: "Equal"
+          value: "frontend"
+          effect: "NoSchedule"
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: patient-portal-service
+    namespace: healthcare-frontend
+    labels:
+      app: patient-portal
+      component: web-portal
+      tier: frontend
+      service-type: web
+      application: healthcare
+      compliance: hipaa
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-1:123456789:certificate/healthcare-cert"
+      service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+      service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
+    creationTimestamp: "2024-03-01T09:05:00Z"
+  spec:
+    type: LoadBalancer
+    sessionAffinity: ClientIP
+    sessionAffinityConfig:
+      clientIP:
+        timeoutSeconds: 600
+    selector:
+      app: patient-portal
+      tier: frontend
+    ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 8443
+    - name: metrics
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: patient-service
+    namespace: healthcare-backend
+    labels:
+      app: patient-service
+      component: patient-management
+      tier: backend
+      version: v2.8.4
+      application: healthcare
+      team: backend-team
+      environment: production
+      compliance: hipaa
+      data-classification: sensitive
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      description: "Patient management and records service"
+      compliance-notes: "Handles patient PHI and medical records"
+    creationTimestamp: "2024-03-01T09:30:00Z"
+  spec:
+    replicas: 20
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 15%
+        maxSurge: 25%
+    selector:
+      matchLabels:
+        app: patient-service
+        tier: backend
+    template:
+      metadata:
+        labels:
+          app: patient-service
+          component: patient-management
+          tier: backend
+          version: v2.8.4
+          application: healthcare
+          compliance: hipaa
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "8080"
+          prometheus.io/path: "/actuator/prometheus"
+      spec:
+        serviceAccountName: healthcare-backend-sa
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1001
+          runAsGroup: 3000
+          fsGroup: 2000
+        containers:
+        - name: patient-service
+          image: healthcare/patient-service:2.8.4
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+          resources:
+            limits:
+              cpu: "4000m"
+              memory: "8Gi"
+              ephemeral-storage: "25Gi"
+            requests:
+              cpu: "2000m"
+              memory: "4Gi"
+              ephemeral-storage: "12.5Gi"
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 9090
+            name: metrics
+            protocol: TCP
+          - containerPort: 8081
+            name: management
+            protocol: TCP
+          env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: "production,healthcare"
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-database-credentials
+                key: patient-db-url
+          - name: DATABASE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-database-credentials
+                key: patient-db-username
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-database-credentials
+                key: patient-db-password
+          - name: READ_REPLICA_URL
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-database-credentials
+                key: patient-read-replica-url
+          - name: REDIS_URL
+            value: "redis://healthcare-redis-cluster:6379"
+          - name: ELASTICSEARCH_URL
+            value: "http://healthcare-elasticsearch:9200"
+          - name: ELASTICSEARCH_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-elasticsearch-credentials
+                key: username
+          - name: ELASTICSEARCH_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-elasticsearch-credentials
+                key: password
+          - name: KAFKA_BROKERS
+            value: "healthcare-kafka-0:9092,healthcare-kafka-1:9092,healthcare-kafka-2:9092"
+          - name: KAFKA_SECURITY_PROTOCOL
+            value: "SASL_SSL"
+          - name: KAFKA_SASL_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-kafka-credentials
+                key: username
+          - name: KAFKA_SASL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-kafka-credentials
+                key: password
+          - name: JWT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-app-secrets
+                key: jwt-secret
+          - name: ENCRYPTION_KEY
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-app-secrets
+                key: encryption-key
+          - name: S3_BUCKET_NAME
+            value: "healthcare-patient-documents"
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-aws-credentials
+                key: access-key-id
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-aws-credentials
+                key: secret-access-key
+          - name: FHIR_SERVER_URL
+            value: "https://fhir.healthcare.internal/R4"
+          - name: HL7_INTEGRATION_ENABLED
+            value: "true"
+          - name: HIPAA_AUDIT_ENABLED
+            value: "true"
+          - name: AUDIT_LOG_LEVEL
+            value: "detailed"
+          - name: API_RATE_LIMIT_ENABLED
+            value: "true"
+          - name: API_RATE_LIMIT_REQUESTS_PER_MINUTE
+            value: "500"
+          - name: CACHE_TTL_SECONDS
+            value: "1800"
+          - name: LOG_LEVEL
+            value: "info"
+          - name: METRICS_ENABLED
+            value: "true"
+          - name: TRACING_ENABLED
+            value: "true"
+          - name: JAEGER_AGENT_HOST
+            value: "healthcare-jaeger-agent"
+          - name: JAEGER_AGENT_PORT
+            value: "6831"
+          - name: PATIENT_MATCHING_ALGORITHM
+            value: "advanced"
+          - name: DUPLICATE_DETECTION_ENABLED
+            value: "true"
+          - name: DATA_RETENTION_DAYS
+            value: "2555"  # 7 years
+          volumeMounts:
+          - name: config-volume
+            mountPath: /app/config
+            readOnly: true
+          - name: patient-documents
+            mountPath: /app/documents
+          - name: audit-logs
+            mountPath: /app/logs/audit
+          - name: temp-storage
+            mountPath: /tmp
+          - name: cache-volume
+            mountPath: /app/cache
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8081
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            timeoutSeconds: 20
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8081
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 15
+            successThreshold: 1
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8081
+            initialDelaySeconds: 45
+            periodSeconds: 10
+            timeoutSeconds: 10
+            successThreshold: 1
+            failureThreshold: 45
+        volumes:
+        - name: config-volume
+          configMap:
+            name: patient-service-config
+        - name: patient-documents
+          persistentVolumeClaim:
+            claimName: patient-documents-pvc
+        - name: audit-logs
+          persistentVolumeClaim:
+            claimName: healthcare-audit-logs-pvc
+        - name: temp-storage
+          emptyDir:
+            sizeLimit: 3Gi
+        - name: cache-volume
+          emptyDir:
+            sizeLimit: 2Gi
+        affinity:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                    - patient-service
+                topologyKey: kubernetes.io/hostname
+        tolerations:
+        - key: "dedicated"
+          operator: "Equal"
+          value: "backend"
+          effect: "NoSchedule"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: appointment-service
+    namespace: healthcare-backend
+    labels:
+      app: appointment-service
+      component: appointment-scheduling
+      tier: backend
+      version: v1.9.2
+      application: healthcare
+      team: backend-team
+      environment: production
+      compliance: hipaa
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      description: "Appointment scheduling and management service"
+    creationTimestamp: "2024-03-01T10:00:00Z"
+  spec:
+    replicas: 15
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 20%
+        maxSurge: 25%
+    selector:
+      matchLabels:
+        app: appointment-service
+        tier: backend
+    template:
+      metadata:
+        labels:
+          app: appointment-service
+          component: appointment-scheduling
+          tier: backend
+          version: v1.9.2
+          application: healthcare
+          compliance: hipaa
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "8080"
+          prometheus.io/path: "/actuator/prometheus"
+      spec:
+        serviceAccountName: healthcare-backend-sa
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1002
+          runAsGroup: 3000
+          fsGroup: 2000
+        containers:
+        - name: appointment-service
+          image: healthcare/appointment-service:1.9.2
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: "3000m"
+              memory: "6Gi"
+              ephemeral-storage: "20Gi"
+            requests:
+              cpu: "1500m"
+              memory: "3Gi"
+              ephemeral-storage: "10Gi"
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 9090
+            name: metrics
+            protocol: TCP
+          - containerPort: 8081
+            name: management
+            protocol: TCP
+          env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: "production,healthcare"
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-database-credentials
+                key: appointment-db-url
+          - name: DATABASE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-database-credentials
+                key: appointment-db-username
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-database-credentials
+                key: appointment-db-password
+          - name: REDIS_URL
+            value: "redis://healthcare-redis-cluster:6379"
+          - name: KAFKA_BROKERS
+            value: "healthcare-kafka-0:9092,healthcare-kafka-1:9092,healthcare-kafka-2:9092"
+          - name: PATIENT_SERVICE_URL
+            value: "http://patient-service:8080"
+          - name: PROVIDER_SERVICE_URL
+            value: "http://provider-service:8080"
+          - name: NOTIFICATION_SERVICE_URL
+            value: "http://notification-service:8080"
+          - name: CALENDAR_INTEGRATION_ENABLED
+            value: "true"
+          - name: SMS_NOTIFICATIONS_ENABLED
+            value: "true"
+          - name: EMAIL_NOTIFICATIONS_ENABLED
+            value: "true"
+          - name: TELEHEALTH_INTEGRATION_ENABLED
+            value: "true"
+          - name: APPOINTMENT_REMINDER_HOURS
+            value: "24,2"
+          - name: MAX_ADVANCE_BOOKING_DAYS
+            value: "90"
+          - name: CANCELLATION_POLICY_HOURS
+            value: "24"
+          - name: WAITLIST_ENABLED
+            value: "true"
+          - name: LOG_LEVEL
+            value: "info"
+          volumeMounts:
+          - name: config-volume
+            mountPath: /app/config
+            readOnly: true
+          - name: temp-storage
+            mountPath: /tmp
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8081
+            initialDelaySeconds: 90
+            periodSeconds: 30
+            timeoutSeconds: 15
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8081
+            initialDelaySeconds: 45
+            periodSeconds: 10
+            timeoutSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+        volumes:
+        - name: config-volume
+          configMap:
+            name: appointment-service-config
+        - name: temp-storage
+          emptyDir:
+            sizeLimit: 2Gi
+- apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: healthcare-postgresql
+    namespace: healthcare-data
+    labels:
+      app: postgresql
+      component: database
+      tier: database
+      role: primary
+      version: v14.9
+      application: healthcare
+      team: data-team
+      environment: production
+      compliance: hipaa
+      data-classification: sensitive
+    annotations:
+      description: "PostgreSQL primary database for healthcare data"
+      compliance-notes: "Contains PHI data, encrypted at rest and in transit"
+    creationTimestamp: "2024-03-01T11:00:00Z"
+  spec:
+    serviceName: healthcare-postgresql-headless
+    replicas: 1
+    selector:
+      matchLabels:
+        app: postgresql
+        role: primary
+        tier: database
+    template:
+      metadata:
+        labels:
+          app: postgresql
+          component: database
+          tier: database
+          role: primary
+          version: v14.9
+          application: healthcare
+          compliance: hipaa
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "9187"
+          prometheus.io/path: "/metrics"
+      spec:
+        serviceAccountName: healthcare-data-sa
+        securityContext:
+          runAsUser: 999
+          runAsGroup: 999
+          fsGroup: 999
+        containers:
+        - name: postgresql
+          image: postgres:14.9
+          resources:
+            limits:
+              cpu: "8000m"
+              memory: "32Gi"
+            requests:
+              cpu: "4000m"
+              memory: "16Gi"
+          ports:
+          - containerPort: 5432
+            name: postgresql
+          env:
+          - name: POSTGRES_DB
+            value: "healthcare"
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-postgresql-credentials
+                key: username
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-postgresql-credentials
+                key: password
+          - name: POSTGRES_REPLICATION_USER
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-postgresql-credentials
+                key: replication-username
+          - name: POSTGRES_REPLICATION_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-postgresql-credentials
+                key: replication-password
+          - name: PGDATA
+            value: "/var/lib/postgresql/data/pgdata"
+          - name: POSTGRES_INITDB_ARGS
+            value: "--encoding=UTF8 --data-checksums"
+          volumeMounts:
+          - name: data
+            mountPath: /var/lib/postgresql/data
+          - name: config
+            mountPath: /etc/postgresql/postgresql.conf
+            subPath: postgresql.conf
+          - name: init-scripts
+            mountPath: /docker-entrypoint-initdb.d
+          livenessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+        - name: postgres-exporter
+          image: prometheuscommunity/postgres-exporter:v0.12.0
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+          ports:
+          - containerPort: 9187
+            name: metrics
+          env:
+          - name: DATA_SOURCE_NAME
+            valueFrom:
+              secretKeyRef:
+                name: healthcare-postgresql-credentials
+                key: exporter-data-source-name
+        volumes:
+        - name: config
+          configMap:
+            name: healthcare-postgresql-config
+        - name: init-scripts
+          configMap:
+            name: healthcare-postgresql-init-scripts
+    volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          app: postgresql
+          tier: database
+          compliance: hipaa
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "encrypted-high-iops-ssd"
+        resources:
+          requests:
+            storage: 2000Gi
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: patient-portal-config
+    namespace: healthcare-frontend
+    labels:
+      app: patient-portal
+      component: configuration
+      tier: frontend
+      application: healthcare
+      compliance: hipaa
+    creationTimestamp: "2024-03-01T08:45:00Z"
+  data:
+    app.json: |
+      {
+        "api": {
+          "timeout": 45000,
+          "maxRetries": 3,
+          "retryDelay": 1000
+        },
+        "cache": {
+          "enabled": true,
+          "ttl": 600,
+          "maxSize": 1000
+        },
+        "features": {
+          "telehealth": true,
+          "appointmentScheduling": true,
+          "prescriptionRefill": true,
+          "labResults": true,
+          "medicalRecords": true,
+          "billing": true,
+          "insurance": true,
+          "familyAccess": true,
+          "messaging": true,
+          "documentUpload": true
+        },
+        "security": {
+          "sessionTimeout": 1800,
+          "idleTimeout": 900,
+          "maxLoginAttempts": 3,
+          "lockoutDuration": 300,
+          "passwordComplexity": "high",
+          "twoFactorAuth": true,
+          "auditLogging": true
+        },
+        "ui": {
+          "theme": "healthcare-professional",
+          "accessibility": "wcag-aa",
+          "language": "en-US",
+          "timezone": "America/New_York"
+        },
+        "compliance": {
+          "hipaa": true,
+          "auditTrail": true,
+          "dataEncryption": true,
+          "accessLogging": true
+        }
+      }
+    nginx.conf: |
+      user nginx;
+      worker_processes auto;
+      error_log /var/log/nginx/error.log warn;
+      pid /var/run/nginx.pid;
+      
+      events {
+          worker_connections 2048;
+          use epoll;
+          multi_accept on;
+      }
+      
+      http {
+          include /etc/nginx/mime.types;
+          default_type application/octet-stream;
+          
+          log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                          '$status $body_bytes_sent "$http_referer" '
+                          '"$http_user_agent" "$http_x_forwarded_for" '
+                          'rt=$request_time uct="$upstream_connect_time" '
+                          'uht="$upstream_header_time" urt="$upstream_response_time"';
+          
+          access_log /var/log/nginx/access.log main;
+          
+          sendfile on;
+          tcp_nopush on;
+          tcp_nodelay on;
+          keepalive_timeout 65;
+          types_hash_max_size 2048;
+          client_max_body_size 50M;
+          
+          # Security headers
+          add_header X-Frame-Options "SAMEORIGIN" always;
+          add_header X-Content-Type-Options "nosniff" always;
+          add_header X-XSS-Protection "1; mode=block" always;
+          add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+          add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';" always;
+          
+          # Compression
+          gzip on;
+          gzip_vary on;
+          gzip_proxied any;
+          gzip_comp_level 6;
+          gzip_types 
+              text/plain
+              text/css
+              text/xml
+              text/javascript
+              application/json
+              application/javascript
+              application/xml+rss
+              application/atom+xml
+              image/svg+xml;
+          
+          # Rate limiting
+          limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;
+          limit_req_zone $binary_remote_addr zone=login:10m rate=1r/s;
+          
+          upstream backend {
+              least_conn;
+              server patient-service.healthcare-backend.svc.cluster.local:8080 max_fails=3 fail_timeout=30s;
+              server appointment-service.healthcare-backend.svc.cluster.local:8080 max_fails=3 fail_timeout=30s;
+              keepalive 32;
+          }
+          
+          server {
+              listen 8080;
+              listen 8443 ssl http2;
+              server_name healthcare.example.com;
+              
+              ssl_certificate /etc/ssl/certs/tls.crt;
+              ssl_certificate_key /etc/ssl/private/tls.key;
+              ssl_protocols TLSv1.2 TLSv1.3;
+              ssl_ciphers ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384;
+              ssl_prefer_server_ciphers off;
+              ssl_session_cache shared:SSL:10m;
+              ssl_session_timeout 10m;
+              
+              location /api/ {
+                  limit_req zone=api burst=20 nodelay;
+                  proxy_pass http://backend;
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
+                  proxy_connect_timeout 30s;
+                  proxy_send_timeout 30s;
+                  proxy_read_timeout 30s;
+              }
+              
+              location /login {
+                  limit_req zone=login burst=5 nodelay;
+                  root /usr/share/nginx/html;
+                  try_files $uri $uri/ /index.html;
+              }
+              
+              location /health {
+                  access_log off;
+                  return 200 "healthy\n";
+                  add_header Content-Type text/plain;
+              }
+              
+              location / {
+                  root /usr/share/nginx/html;
+                  try_files $uri $uri/ /index.html;
+                  expires 1d;
+                  add_header Cache-Control "public, immutable";
+              }
+          }
+      }
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: patient-service-config
+    namespace: healthcare-backend
+    labels:
+      app: patient-service
+      component: configuration
+      tier: backend
+      application: healthcare
+      compliance: hipaa
+    creationTimestamp: "2024-03-01T09:15:00Z"
+  data:
+    application.yml: |
+      server:
+        port: 8080
+        servlet:
+          context-path: /api/v1/patients
+        compression:
+          enabled: true
+        error:
+          include-stacktrace: never
+          include-message: never
+      
+      management:
+        endpoints:
+          web:
+            exposure:
+              include: health,metrics,prometheus,info,auditevents
+            base-path: /actuator
+        endpoint:
+          health:
+            show-details: when-authorized
+            probes:
+              enabled: true
+        metrics:
+          export:
+            prometheus:
+              enabled: true
+          tags:
+            application: healthcare
+            service: patient-service
+      
+      spring:
+        application:
+          name: patient-service
+        datasource:
+          hikari:
+            maximum-pool-size: 100
+            minimum-idle: 20
+            connection-timeout: 60000
+            idle-timeout: 900000
+            max-lifetime: 3600000
+            leak-detection-threshold: 60000
+        jpa:
+          hibernate:
+            ddl-auto: validate
+          show-sql: false
+          properties:
+            hibernate:
+              dialect: org.hibernate.dialect.PostgreSQLDialect
+              format_sql: false
+              jdbc:
+                batch_size: 25
+              order_inserts: true
+              order_updates: true
+              batch_versioned_data: true
+        redis:
+          timeout: 5000ms
+          lettuce:
+            pool:
+              max-active: 100
+              max-idle: 50
+              min-idle: 10
+              max-wait: 2000ms
+        kafka:
+          bootstrap-servers: healthcare-kafka-0:9092,healthcare-kafka-1:9092,healthcare-kafka-2:9092
+          producer:
+            retries: 3
+            batch-size: 16384
+            buffer-memory: 33554432
+            key-serializer: org.apache.kafka.common.serialization.StringSerializer
+            value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+          consumer:
+            group-id: patient-service
+            auto-offset-reset: latest
+            key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+            properties:
+              spring.json.trusted.packages: "com.healthcare.patient.model"
+      
+      logging:
+        level:
+          com.healthcare.patient: INFO
+          org.springframework.security: WARN
+          org.springframework.web: WARN
+          org.hibernate.SQL: WARN
+          org.hibernate.type.descriptor.sql.BasicBinder: WARN
+        pattern:
+          console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%X{traceId},%X{spanId}] %logger{36} - %msg%n"
+          file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%X{traceId},%X{spanId}] %logger{36} - %msg%n"
+        file:
+          name: /app/logs/patient-service.log
+      
+      app:
+        patient:
+          cache:
+            enabled: true
+            ttl: 1800
+            max-size: 10000
+          search:
+            max-results: 500
+            fuzzy-matching: true
+          documents:
+            max-size: 10485760  # 10MB
+            allowed-types: ["application/pdf", "image/jpeg", "image/png", "text/plain"]
+            virus-scan: true
+          audit:
+            enabled: true
+            level: detailed
+            retention-days: 2555  # 7 years
+          encryption:
+            algorithm: AES-256-GCM
+            key-rotation-days: 90
+          fhir:
+            version: R4
+            validation: true
+          matching:
+            algorithm: probabilistic
+            threshold: 0.85
+            auto-merge: false
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: healthcare-database-credentials
+    namespace: healthcare-frontend
+    labels:
+      app: healthcare
+      component: credentials
+      purpose: database-access
+      application: healthcare
+      compliance: hipaa
+    creationTimestamp: "2024-03-01T08:20:00Z"
+  type: Opaque
+  data:
+    portal-db-url: cG9zdGdyZXNxbDovL2hlYWx0aGNhcmUtcG9zdGdyZXNxbDo1NDMyL3BvcnRhbA==  # postgresql://healthcare-postgresql:5432/portal
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: healthcare-database-credentials
+    namespace: healthcare-backend
+    labels:
+      app: healthcare
+      component: credentials
+      purpose: database-access
+      application: healthcare
+      compliance: hipaa
+    creationTimestamp: "2024-03-01T08:25:00Z"
+  type: Opaque
+  data:
+    patient-db-url: cG9zdGdyZXNxbDovL2hlYWx0aGNhcmUtcG9zdGdyZXNxbDo1NDMyL3BhdGllbnRz  # postgresql://healthcare-postgresql:5432/patients
+    patient-db-username: cGF0aWVudF91c2Vy  # patient_user
+    patient-db-password: cGF0aWVudF9wYXNzd29yZDEyMw==  # patient_password123
+    patient-read-replica-url: cG9zdGdyZXNxbDovL2hlYWx0aGNhcmUtcG9zdGdyZXNxbC1yZWFkOjU0MzIvcGF0aWVudHM=  # postgresql://healthcare-postgresql-read:5432/patients
+    appointment-db-url: cG9zdGdyZXNxbDovL2hlYWx0aGNhcmUtcG9zdGdyZXNxbDo1NDMyL2FwcG9pbnRtZW50cw==  # postgresql://healthcare-postgresql:5432/appointments
+    appointment-db-username: YXBwb2ludG1lbnRfdXNlcg==  # appointment_user
+    appointment-db-password: YXBwb2ludG1lbnRfcGFzc3dvcmQxMjM=  # appointment_password123
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: healthcare-app-secrets
+    namespace: healthcare-frontend
+    labels:
+      app: healthcare
+      component: credentials
+      purpose: application-secrets
+      application: healthcare
+      compliance: hipaa
+    creationTimestamp: "2024-03-01T08:30:00Z"
+  type: Opaque
+  data:
+    session-secret: aGVhbHRoY2FyZV9zZXNzaW9uX3NlY3JldF9rZXlfMjAyNA==  # healthcare_session_secret_key_2024
+    jwt-secret: aGVhbHRoY2FyZV9qd3Rfc2VjcmV0X2tleV9mb3JfcGhpX2RhdGFfMjAyNA==  # healthcare_jwt_secret_key_for_phi_data_2024
+    encryption-key: aGVhbHRoY2FyZV9lbmNyeXB0aW9uX2tleV9mb3JfcGhpXzI0  # healthcare_encryption_key_for_phi_24
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: healthcare-app-secrets
+    namespace: healthcare-backend
+    labels:
+      app: healthcare
+      component: credentials
+      purpose: application-secrets
+      application: healthcare
+      compliance: hipaa
+    creationTimestamp: "2024-03-01T08:35:00Z"
+  type: Opaque
+  data:
+    jwt-secret: aGVhbHRoY2FyZV9qd3Rfc2VjcmV0X2tleV9mb3JfcGhpX2RhdGFfMjAyNA==  # healthcare_jwt_secret_key_for_phi_data_2024
+    encryption-key: aGVhbHRoY2FyZV9lbmNyeXB0aW9uX2tleV9mb3JfcGhpXzI0  # healthcare_encryption_key_for_phi_24
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: healthcare-frontend-sa
+    namespace: healthcare-frontend
+    labels:
+      app: healthcare
+      component: service-account
+      tier: frontend
+      application: healthcare
+      compliance: hipaa
+    creationTimestamp: "2024-03-01T08:40:00Z"
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: healthcare-backend-sa
+    namespace: healthcare-backend
+    labels:
+      app: healthcare
+      component: service-account
+      tier: backend
+      application: healthcare
+      compliance: hipaa
+    creationTimestamp: "2024-03-01T08:45:00Z"
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: healthcare-data-sa
+    namespace: healthcare-data
+    labels:
+      app: healthcare
+      component: service-account
+      tier: database
+      application: healthcare
+      compliance: hipaa
+    creationTimestamp: "2024-03-01T08:50:00Z"
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: healthcare-audit-logs-pvc
+    namespace: healthcare-frontend
+    labels:
+      app: healthcare
+      component: audit-logs
+      purpose: compliance
+      application: healthcare
+      compliance: hipaa
+    creationTimestamp: "2024-03-01T08:55:00Z"
+  spec:
+    accessModes:
+    - ReadWriteMany
+    resources:
+      requests:
+        storage: 500Gi
+    storageClassName: "encrypted-standard-ssd"
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: patient-documents-pvc
+    namespace: healthcare-backend
+    labels:
+      app: healthcare
+      component: patient-documents
+      purpose: document-storage
+      application: healthcare
+      compliance: hipaa
+    creationTimestamp: "2024-03-01T09:00:00Z"
+  spec:
+    accessModes:
+    - ReadWriteMany
+    resources:
+      requests:
+        storage: 2000Gi
+    storageClassName: "encrypted-high-performance-ssd"
