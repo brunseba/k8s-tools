@@ -12,13 +12,13 @@
         <meta name="author" content="K8s Tools Team">
       
       
-        <link rel="canonical" href="https://k8s-tools.github.io/k8s-tools/analysis-views/namespace-analysis/">
+        <link rel="canonical" href="https://k8s-tools.github.io/k8s-tools/examples/dummy-data/">
       
       
-        <link rel="prev" href="../temporal-analysis/">
+        <link rel="prev" href="../custom-dashboards/">
       
       
-        <link rel="next" href="../health-dashboard/">
+        <link rel="next" href="../../reference/cli-commands/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -26,7 +26,7 @@
     
     
       
-        <title>Namespace Analysis - K8s Tools Documentation</title>
+        <title>Dummy Data - K8s Tools Documentation</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#namespace-analysis" class="md-skip">
+        <a href="#dummy-data-for-kubernetes-analysis-tools" class="md-skip">
           Skip to content
         </a>
       
@@ -120,7 +120,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Namespace Analysis
+              Dummy Data
             
           </span>
         </div>
@@ -296,13 +296,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../overview/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../analysis-views/overview/" class="md-tabs__link">
           
   
   
@@ -358,11 +356,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../examples/basic-usage/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../basic-usage/" class="md-tabs__link">
           
   
   
@@ -855,31 +855,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -892,7 +889,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             Analysis Views
@@ -906,7 +903,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../overview/" class="md-nav__link">
+      <a href="../../analysis-views/overview/" class="md-nav__link">
         
   
   
@@ -929,7 +926,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cluster-overview/" class="md-nav__link">
+      <a href="../../analysis-views/cluster-overview/" class="md-nav__link">
         
   
   
@@ -952,7 +949,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../security-analysis/" class="md-nav__link">
+      <a href="../../analysis-views/security-analysis/" class="md-nav__link">
         
   
   
@@ -975,7 +972,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../resource-efficiency/" class="md-nav__link">
+      <a href="../../analysis-views/resource-efficiency/" class="md-nav__link">
         
   
   
@@ -998,7 +995,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../storage-analysis/" class="md-nav__link">
+      <a href="../../analysis-views/storage-analysis/" class="md-nav__link">
         
   
   
@@ -1021,7 +1018,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../temporal-analysis/" class="md-nav__link">
+      <a href="../../analysis-views/temporal-analysis/" class="md-nav__link">
         
   
   
@@ -1041,32 +1038,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Namespace Analysis
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../analysis-views/namespace-analysis/" class="md-nav__link">
         
   
   
@@ -1077,326 +1052,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      Overview
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#key-metrics" class="md-nav__link">
-    <span class="md-ellipsis">
-      Key Metrics
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Key Metrics">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#resource-usage-by-namespace" class="md-nav__link">
-    <span class="md-ellipsis">
-      Resource Usage by Namespace
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#workload-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      Workload Analysis
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#security-assessment" class="md-nav__link">
-    <span class="md-ellipsis">
-      Security Assessment
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#namespace-comparison" class="md-nav__link">
-    <span class="md-ellipsis">
-      Namespace Comparison
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Namespace Comparison">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#resource-efficiency-comparison" class="md-nav__link">
-    <span class="md-ellipsis">
-      Resource Efficiency Comparison
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cost-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      Cost Analysis
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#multi-tenant-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      Multi-Tenant Analysis
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Multi-Tenant Analysis">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#tenant-isolation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Tenant Isolation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#fair-share-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      Fair Share Analysis
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#usage-examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      Usage Examples
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#namespace-optimization" class="md-nav__link">
-    <span class="md-ellipsis">
-      Namespace Optimization
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Namespace Optimization">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#right-sizing-recommendations" class="md-nav__link">
-    <span class="md-ellipsis">
-      Right-sizing Recommendations
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#security-enhancements" class="md-nav__link">
-    <span class="md-ellipsis">
-      Security Enhancements
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#monitoring-and-alerting" class="md-nav__link">
-    <span class="md-ellipsis">
-      Monitoring and Alerting
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Monitoring and Alerting">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#key-performance-indicators" class="md-nav__link">
-    <span class="md-ellipsis">
-      Key Performance Indicators
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#automated-policies" class="md-nav__link">
-    <span class="md-ellipsis">
-      Automated Policies
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#governance-and-compliance" class="md-nav__link">
-    <span class="md-ellipsis">
-      Governance and Compliance
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Governance and Compliance">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#policy-enforcement" class="md-nav__link">
-    <span class="md-ellipsis">
-      Policy Enforcement
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#audit-trail" class="md-nav__link">
-    <span class="md-ellipsis">
-      Audit Trail
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#integration-points" class="md-nav__link">
-    <span class="md-ellipsis">
-      Integration Points
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Integration Points">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cost-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      Cost Management
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cicd-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      CI/CD Integration
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#troubleshooting" class="md-nav__link">
-    <span class="md-ellipsis">
-      Troubleshooting
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Troubleshooting">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      Common Issues
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#diagnostic-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      Diagnostic Commands
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-views" class="md-nav__link">
-    <span class="md-ellipsis">
-      Related Views
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1409,7 +1064,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../health-dashboard/" class="md-nav__link">
+      <a href="../../analysis-views/health-dashboard/" class="md-nav__link">
         
   
   
@@ -1432,7 +1087,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../relationship-analysis/" class="md-nav__link">
+      <a href="../../analysis-views/relationship-analysis/" class="md-nav__link">
         
   
   
@@ -1770,28 +1425,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
-        
-          
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
             
   
   
@@ -1804,7 +1462,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             Examples
@@ -1818,7 +1476,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/basic-usage/" class="md-nav__link">
+      <a href="../basic-usage/" class="md-nav__link">
         
   
   
@@ -1841,7 +1499,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/advanced-workflows/" class="md-nav__link">
+      <a href="../advanced-workflows/" class="md-nav__link">
         
   
   
@@ -1864,7 +1522,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/multi-cluster/" class="md-nav__link">
+      <a href="../multi-cluster/" class="md-nav__link">
         
   
   
@@ -1887,7 +1545,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/custom-dashboards/" class="md-nav__link">
+      <a href="../custom-dashboards/" class="md-nav__link">
         
   
   
@@ -1907,10 +1565,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../examples/dummy-data/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Dummy Data
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1921,6 +1601,416 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Directory Structure
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#applications-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Applications Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes-resources-by-kind" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kubernetes Resources by Kind
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kubernetes Resources by Kind">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#namespaces-10-total" class="md-nav__link">
+    <span class="md-ellipsis">
+      Namespaces (10 total)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deployments-15-instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deployments (15+ instances)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#statefulsets-4-instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      StatefulSets (4 instances)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#services-12-instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      Services (12+ instances)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configmaps-8-instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      ConfigMaps (8+ instances)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ConfigMaps (8+ instances)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#application-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Application Configurations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrastructure-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Infrastructure Configurations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secrets-10-instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      Secrets (10+ instances)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Secrets (10+ instances)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#database-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database Credentials
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Application Secrets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ssltls-certificates" class="md-nav__link">
+    <span class="md-ellipsis">
+      SSL/TLS Certificates
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serviceaccounts-8-instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      ServiceAccounts (8 instances)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persistentvolumeclaims-6-instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      PersistentVolumeClaims (6+ instances)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PersistentVolumeClaims (6+ instances)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#healthcare-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Healthcare Storage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e-commerce-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      E-commerce Storage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jobs-and-cronjobs-3-instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      Jobs and CronJobs (3 instances)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compliance-and-security-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compliance and Security Features
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compliance and Security Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hipaa-compliance-healthcare" class="md-nav__link">
+    <span class="md-ellipsis">
+      HIPAA Compliance (Healthcare)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pci-dss-compliance-retailfinance" class="md-nav__link">
+    <span class="md-ellipsis">
+      PCI DSS Compliance (Retail/Finance)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Best Practices
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#label-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Label Strategy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Label Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#organizational-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      Organizational Labels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technical-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      Technical Labels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operational-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operational Labels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-label-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example Label Usage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-sizes-and-resource-counts" class="md-nav__link">
+    <span class="md-ellipsis">
+      File Sizes and Resource Counts
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="File Sizes and Resource Counts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#large-files-40kb" class="md-nav__link">
+    <span class="md-ellipsis">
+      Large Files (40KB+)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#medium-files-10-20kb" class="md-nav__link">
+    <span class="md-ellipsis">
+      Medium Files (10-20KB)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resource-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resource Distribution
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#analyze-healthcare-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Analyze Healthcare Resources
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate-retail-compliance-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generate Retail Compliance Report
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-application-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multi-Application Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resource-relationship-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resource Relationship Analysis
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing Scenarios
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2248,46 +2338,190 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#directory-structure" class="md-nav__link">
     <span class="md-ellipsis">
-      Overview
+      Directory Structure
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-metrics" class="md-nav__link">
+  <a href="#applications-overview" class="md-nav__link">
     <span class="md-ellipsis">
-      Key Metrics
+      Applications Overview
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Key Metrics">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes-resources-by-kind" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kubernetes Resources by Kind
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kubernetes Resources by Kind">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#resource-usage-by-namespace" class="md-nav__link">
+  <a href="#namespaces-10-total" class="md-nav__link">
     <span class="md-ellipsis">
-      Resource Usage by Namespace
+      Namespaces (10 total)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#workload-analysis" class="md-nav__link">
+  <a href="#deployments-15-instances" class="md-nav__link">
     <span class="md-ellipsis">
-      Workload Analysis
+      Deployments (15+ instances)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#security-assessment" class="md-nav__link">
+  <a href="#statefulsets-4-instances" class="md-nav__link">
     <span class="md-ellipsis">
-      Security Assessment
+      StatefulSets (4 instances)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#services-12-instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      Services (12+ instances)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configmaps-8-instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      ConfigMaps (8+ instances)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ConfigMaps (8+ instances)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#application-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Application Configurations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrastructure-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Infrastructure Configurations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secrets-10-instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      Secrets (10+ instances)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Secrets (10+ instances)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#database-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database Credentials
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Application Secrets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ssltls-certificates" class="md-nav__link">
+    <span class="md-ellipsis">
+      SSL/TLS Certificates
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serviceaccounts-8-instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      ServiceAccounts (8 instances)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persistentvolumeclaims-6-instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      PersistentVolumeClaims (6+ instances)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PersistentVolumeClaims (6+ instances)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#healthcare-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Healthcare Storage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e-commerce-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      E-commerce Storage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jobs-and-cronjobs-3-instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      Jobs and CronJobs (3 instances)
     </span>
   </a>
   
@@ -2299,28 +2533,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#namespace-comparison" class="md-nav__link">
+  <a href="#compliance-and-security-features" class="md-nav__link">
     <span class="md-ellipsis">
-      Namespace Comparison
+      Compliance and Security Features
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Namespace Comparison">
+    <nav class="md-nav" aria-label="Compliance and Security Features">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#resource-efficiency-comparison" class="md-nav__link">
+  <a href="#hipaa-compliance-healthcare" class="md-nav__link">
     <span class="md-ellipsis">
-      Resource Efficiency Comparison
+      HIPAA Compliance (Healthcare)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#cost-analysis" class="md-nav__link">
+  <a href="#pci-dss-compliance-retailfinance" class="md-nav__link">
     <span class="md-ellipsis">
-      Cost Analysis
+      PCI DSS Compliance (Retail/Finance)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Best Practices
     </span>
   </a>
   
@@ -2332,28 +2575,88 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#multi-tenant-analysis" class="md-nav__link">
+  <a href="#label-strategy" class="md-nav__link">
     <span class="md-ellipsis">
-      Multi-Tenant Analysis
+      Label Strategy
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Multi-Tenant Analysis">
+    <nav class="md-nav" aria-label="Label Strategy">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#tenant-isolation" class="md-nav__link">
+  <a href="#organizational-labels" class="md-nav__link">
     <span class="md-ellipsis">
-      Tenant Isolation
+      Organizational Labels
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#fair-share-analysis" class="md-nav__link">
+  <a href="#technical-labels" class="md-nav__link">
     <span class="md-ellipsis">
-      Fair Share Analysis
+      Technical Labels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operational-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operational Labels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-label-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example Label Usage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-sizes-and-resource-counts" class="md-nav__link">
+    <span class="md-ellipsis">
+      File Sizes and Resource Counts
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="File Sizes and Resource Counts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#large-files-40kb" class="md-nav__link">
+    <span class="md-ellipsis">
+      Large Files (40KB+)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#medium-files-10-20kb" class="md-nav__link">
+    <span class="md-ellipsis">
+      Medium Files (10-20KB)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resource-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resource Distribution
     </span>
   </a>
   
@@ -2371,31 +2674,40 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#namespace-optimization" class="md-nav__link">
-    <span class="md-ellipsis">
-      Namespace Optimization
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Namespace Optimization">
+    <nav class="md-nav" aria-label="Usage Examples">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#right-sizing-recommendations" class="md-nav__link">
+  <a href="#analyze-healthcare-resources" class="md-nav__link">
     <span class="md-ellipsis">
-      Right-sizing Recommendations
+      Analyze Healthcare Resources
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#security-enhancements" class="md-nav__link">
+  <a href="#generate-retail-compliance-report" class="md-nav__link">
     <span class="md-ellipsis">
-      Security Enhancements
+      Generate Retail Compliance Report
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-application-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multi-Application Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resource-relationship-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resource Relationship Analysis
     </span>
   </a>
   
@@ -2407,141 +2719,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#monitoring-and-alerting" class="md-nav__link">
+  <a href="#testing-scenarios" class="md-nav__link">
     <span class="md-ellipsis">
-      Monitoring and Alerting
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Monitoring and Alerting">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#key-performance-indicators" class="md-nav__link">
-    <span class="md-ellipsis">
-      Key Performance Indicators
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#automated-policies" class="md-nav__link">
-    <span class="md-ellipsis">
-      Automated Policies
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#governance-and-compliance" class="md-nav__link">
-    <span class="md-ellipsis">
-      Governance and Compliance
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Governance and Compliance">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#policy-enforcement" class="md-nav__link">
-    <span class="md-ellipsis">
-      Policy Enforcement
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#audit-trail" class="md-nav__link">
-    <span class="md-ellipsis">
-      Audit Trail
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#integration-points" class="md-nav__link">
-    <span class="md-ellipsis">
-      Integration Points
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Integration Points">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cost-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      Cost Management
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cicd-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      CI/CD Integration
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#troubleshooting" class="md-nav__link">
-    <span class="md-ellipsis">
-      Troubleshooting
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Troubleshooting">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      Common Issues
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#diagnostic-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      Diagnostic Commands
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-views" class="md-nav__link">
-    <span class="md-ellipsis">
-      Related Views
+      Testing Scenarios
     </span>
   </a>
   
@@ -2563,7 +2743,7 @@
 
 
   
-    <a href="https://github.com/k8s-tools/k8s-tools/edit/main/docs/analysis-views/namespace-analysis.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/k8s-tools/k8s-tools/edit/main/docs/examples/dummy-data.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -2572,185 +2752,282 @@
     
       
     
-    <a href="https://github.com/k8s-tools/k8s-tools/raw/main/docs/analysis-views/namespace-analysis.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/k8s-tools/k8s-tools/raw/main/docs/examples/dummy-data.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
     </a>
   
 
 
-<h1 id="namespace-analysis">Namespace Analysis</h1>
-<p>The Namespace Analysis view provides detailed insights into individual namespaces within your Kubernetes cluster, helping you understand resource usage, security, and organization at the namespace level.</p>
-<h2 id="overview">Overview</h2>
-<p>This analysis examines:</p>
-<ul>
-<li><strong>Resource Utilization</strong>: Per-namespace resource consumption</li>
-<li><strong>Workload Distribution</strong>: Applications and services within each namespace</li>
-<li><strong>Security Posture</strong>: Namespace-specific security configurations</li>
-<li><strong>Cost Allocation</strong>: Resource costs attributed to each namespace</li>
-<li><strong>Compliance Status</strong>: Policy adherence per namespace</li>
-</ul>
-<h2 id="key-metrics">Key Metrics</h2>
-<h3 id="resource-usage-by-namespace">Resource Usage by Namespace</h3>
-<ul>
-<li>CPU and memory consumption</li>
-<li>Storage utilization</li>
-<li>Network traffic</li>
-<li>Pod counts and density</li>
-</ul>
-<h3 id="workload-analysis">Workload Analysis</h3>
-<ul>
-<li>Deployment types and versions</li>
-<li>Service exposure patterns</li>
-<li>ConfigMap and Secret usage</li>
-<li>Persistent volume claims</li>
-</ul>
-<h3 id="security-assessment">Security Assessment</h3>
-<ul>
-<li>RBAC configurations</li>
-<li>Network policies</li>
-<li>Pod security standards</li>
-<li>Service account usage</li>
-</ul>
-<h2 id="namespace-comparison">Namespace Comparison</h2>
-<h3 id="resource-efficiency-comparison">Resource Efficiency Comparison</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Compare resource efficiency across namespaces</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>k8s-analyzer<span class="w"> </span>analyze<span class="w"> </span>--view<span class="w"> </span>namespace-analysis<span class="w"> </span>--compare-efficiency
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Example output format:</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Namespace<span class="w">     </span>CPU<span class="w"> </span>Usage<span class="w">    </span>Memory<span class="w"> </span>Usage<span class="w">    </span>Storage<span class="w">    </span>Efficiency<span class="w"> </span>Score
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>production<span class="w">    </span><span class="m">75</span>%<span class="w">          </span><span class="m">68</span>%<span class="w">             </span><span class="m">85</span>%<span class="w">        </span>B+
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>staging<span class="w">       </span><span class="m">45</span>%<span class="w">          </span><span class="m">52</span>%<span class="w">             </span><span class="m">60</span>%<span class="w">        </span>C+
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>development<span class="w">   </span><span class="m">25</span>%<span class="w">          </span><span class="m">30</span>%<span class="w">             </span><span class="m">40</span>%<span class="w">        </span>A-
+<h1 id="dummy-data-for-kubernetes-analysis-tools">Dummy Data for Kubernetes Analysis Tools</h1>
+<p>This directory contains comprehensive sample Kubernetes YAML files designed for testing and demonstrating the capabilities of k8s-analyzer and k8s-reporter tools. The data represents realistic enterprise-grade applications with proper labeling, security configurations, and compliance requirements.</p>
+<h2 id="directory-structure">Directory Structure</h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>dummy-data/
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── cluster-exports/          # Complete cluster exports
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── manifests/               # Individual resource manifests
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>├── multi-cluster/          # Multi-cluster deployment examples
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>└── README.md               # This file
 </span></code></pre></div>
-<h3 id="cost-analysis">Cost Analysis</h3>
+<h2 id="applications-overview">Applications Overview</h2>
+<p>The dummy data includes 5 different enterprise applications across 10 namespaces:</p>
+<ol>
+<li><strong>Healthcare Management System</strong> - Patient records, appointments, HIPAA compliance</li>
+<li><strong>E-commerce Platform</strong> - Online shopping, catalog, orders, payments</li>
+<li><strong>Retail Point-of-Sale</strong> - In-store transactions, inventory, PCI DSS compliance</li>
+<li><strong>Financial Services</strong> - Payment processing, billing, reporting</li>
+<li><strong>Logistics Management</strong> - Inventory tracking, delivery management</li>
+</ol>
+<h2 id="kubernetes-resources-by-kind">Kubernetes Resources by Kind</h2>
+<h3 id="namespaces-10-total">Namespaces (10 total)</h3>
 <ul>
-<li>Per-namespace cost breakdown</li>
-<li>Resource cost trends</li>
-<li>Cost optimization opportunities</li>
-<li>Budget allocation recommendations</li>
+<li><strong>healthcare-frontend</strong> - Frontend services for healthcare platform</li>
+<li><strong>healthcare-backend</strong> - Backend APIs and services for healthcare</li>
+<li><strong>healthcare-data</strong> - Database and data services for healthcare</li>
+<li><strong>healthcare-analytics</strong> - Analytics and reporting for healthcare</li>
+<li><strong>healthcare-integration</strong> - Integration services (HL7, FHIR)</li>
+<li><strong>retail-sales</strong> - Point-of-sale and sales management</li>
+<li><strong>retail-inventory</strong> - Inventory management and tracking</li>
+<li><strong>ecommerce-frontend</strong> - E-commerce web interfaces</li>
+<li><strong>ecommerce-backend</strong> - E-commerce backend services</li>
+<li><strong>finance</strong> - Financial processing and billing</li>
 </ul>
-<h2 id="multi-tenant-analysis">Multi-Tenant Analysis</h2>
-<h3 id="tenant-isolation">Tenant Isolation</h3>
+<p><strong>Labels Used:</strong>
+- <code>application</code>: Groups resources by business domain
+- <code>tier</code>: Technical layer (frontend, backend, database, analytics)
+- <code>environment</code>: Deployment environment (production, staging, development)
+- <code>team</code>: Owning team for operational responsibility
+- <code>compliance</code>: Regulatory requirements (hipaa, pcidss, sox)
+- <code>data-classification</code>: Data sensitivity level</p>
+<h3 id="deployments-15-instances">Deployments (15+ instances)</h3>
+<p>Comprehensive application deployments with:
+- <strong>Resource specifications</strong> - CPU, memory, storage limits and requests
+- <strong>Health probes</strong> - Liveness, readiness, and startup probes
+- <strong>Security contexts</strong> - Non-root users, capability drops, read-only filesystems
+- <strong>Environment variables</strong> - Configuration and secrets integration
+- <strong>Volume mounts</strong> - Config files, SSL certificates, persistent storage
+- <strong>Affinity rules</strong> - Pod anti-affinity for high availability
+- <strong>Tolerations</strong> - Node selection and scheduling preferences</p>
+<p><strong>Key Applications:</strong>
+- <code>patient-portal</code> - Healthcare patient interface (25 replicas)
+- <code>patient-service</code> - Patient management API (20 replicas)
+- <code>appointment-service</code> - Appointment scheduling (15 replicas)
+- <code>product-catalog-api</code> - E-commerce catalog service (15 replicas)
+- <code>order-management-api</code> - Order processing (12 replicas)
+- <code>pos-system</code> - Retail point-of-sale (10 replicas)
+- <code>inventory-service</code> - Inventory management (12 replicas)</p>
+<h3 id="statefulsets-4-instances">StatefulSets (4 instances)</h3>
+<p>Database and stateful services:
+- <strong>healthcare-postgresql</strong> - Primary healthcare database (PostgreSQL 14.9)
+- <strong>retail-postgresql</strong> - Retail application database (PostgreSQL 13.3)
+- <strong>elasticsearch-cluster</strong> - E-commerce search engine (6 replicas)
+- <strong>redis-cluster</strong> - Caching and session storage</p>
+<p><strong>Features:</strong>
+- Volume claim templates for persistent storage
+- Service discovery through headless services
+- Database initialization scripts
+- Monitoring exporters (Prometheus metrics)
+- Replication and backup configurations</p>
+<h3 id="services-12-instances">Services (12+ instances)</h3>
+<p>Load balancing and service discovery:
+- <strong>LoadBalancer services</strong> - External access with AWS NLB annotations
+- <strong>ClusterIP services</strong> - Internal service communication
+- <strong>NodePort services</strong> - Development and testing access
+- <strong>Headless services</strong> - StatefulSet service discovery</p>
+<p><strong>Service Types by Application:</strong>
+- Healthcare: Patient portal, API services, database connections
+- E-commerce: Web storefront, catalog API, search services
+- Retail: POS terminals, inventory APIs
+- Multi-port configurations for HTTP/HTTPS, metrics, management</p>
+<h3 id="configmaps-8-instances">ConfigMaps (8+ instances)</h3>
+<p>Application and infrastructure configuration:</p>
+<h4 id="application-configurations">Application Configurations</h4>
 <ul>
-<li>Resource quotas and limits</li>
+<li><strong>patient-portal-config</strong> - Healthcare portal settings, security, features</li>
+<li><strong>patient-service-config</strong> - Spring Boot configuration, database pools, Kafka</li>
+<li><strong>pos-system-config</strong> - Retail POS features, security, compliance</li>
+<li><strong>inventory-service-config</strong> - Inventory management, caching, notifications</li>
+</ul>
+<h4 id="infrastructure-configurations">Infrastructure Configurations</h4>
+<ul>
+<li><strong>nginx.conf</strong> - Reverse proxy, SSL termination, rate limiting, security headers</li>
+<li><strong>postgresql.conf</strong> - Database tuning, connection pools, performance settings</li>
+<li><strong>prometheus.yml</strong> - Monitoring configuration, scrape targets, alerting</li>
+<li><strong>elasticsearch.yml</strong> - Search cluster configuration, security, performance</li>
+</ul>
+<p><strong>Configuration Categories:</strong>
+- Security settings (timeouts, authentication, encryption)
+- Feature flags (toggles for functionality)
+- Performance tuning (connection pools, caching, timeouts)
+- Compliance controls (audit logging, data retention)
+- Integration endpoints (APIs, databases, message queues)</p>
+<h3 id="secrets-10-instances">Secrets (10+ instances)</h3>
+<p>Secure credential and certificate management:</p>
+<h4 id="database-credentials">Database Credentials</h4>
+<ul>
+<li><strong>healthcare-database-credentials</strong> - PostgreSQL connection strings, usernames, passwords</li>
+<li><strong>retail-database-credentials</strong> - Retail database access credentials</li>
+<li><strong>elasticsearch-credentials</strong> - Search cluster authentication</li>
+</ul>
+<h4 id="application-secrets">Application Secrets</h4>
+<ul>
+<li><strong>healthcare-app-secrets</strong> - JWT tokens, encryption keys, session secrets</li>
+<li><strong>retail-app-secrets</strong> - POS system encryption, payment processing keys</li>
+<li><strong>aws-credentials</strong> - Cloud storage and services access</li>
+</ul>
+<h4 id="ssltls-certificates">SSL/TLS Certificates</h4>
+<ul>
+<li><strong>healthcare-ssl-certificates</strong> - HTTPS certificates for healthcare services</li>
+<li><strong>retail-ssl-certificates</strong> - PCI DSS compliant certificates for retail</li>
+</ul>
+<p><strong>Security Features:</strong>
+- Base64 encoded values with comments showing plaintext
+- Separate secrets per namespace for isolation
+- Multi-purpose secrets (database + application + certificates)
+- Compliance-specific secrets (HIPAA, PCI DSS requirements)</p>
+<h3 id="serviceaccounts-8-instances">ServiceAccounts (8 instances)</h3>
+<p>RBAC and service authentication:
+- <strong>healthcare-frontend-sa</strong> - Frontend service permissions
+- <strong>healthcare-backend-sa</strong> - Backend API permissions<br />
+- <strong>healthcare-data-sa</strong> - Database access permissions
+- <strong>retail-sales-sa</strong> - Sales system permissions
+- <strong>retail-inventory-sa</strong> - Inventory management permissions
+- <strong>retail-data-sa</strong> - Retail database permissions</p>
+<p><strong>Features:</strong>
+- Namespace isolation for security
+- Application-specific permissions
+- Compliance labeling for audit trails</p>
+<h3 id="persistentvolumeclaims-6-instances">PersistentVolumeClaims (6+ instances)</h3>
+<p>Storage requirements for different use cases:</p>
+<h4 id="healthcare-storage">Healthcare Storage</h4>
+<ul>
+<li><strong>healthcare-audit-logs-pvc</strong> - HIPAA audit trail storage (500Gi, ReadWriteMany)</li>
+<li><strong>patient-documents-pvc</strong> - Medical records and documents (2000Gi, ReadWriteMany)</li>
+</ul>
+<h4 id="e-commerce-storage">E-commerce Storage</h4>
+<ul>
+<li><strong>static-assets-pvc</strong> - Web assets and media files</li>
+<li><strong>order-files-pvc</strong> - Order processing documents</li>
+<li><strong>image-cache-pvc</strong> - Product image caching</li>
+</ul>
+<p><strong>Storage Classes:</strong>
+- <code>encrypted-high-performance-ssd</code> - High IOPS for databases
+- <code>encrypted-standard-ssd</code> - General purpose encrypted storage
+- <code>standard</code> - Basic persistent storage
+- <code>fast-ssd</code> - Performance-optimized storage</p>
+<h3 id="jobs-and-cronjobs-3-instances">Jobs and CronJobs (3 instances)</h3>
+<p>Batch processing and scheduled tasks:
+- <strong>daily-report-generator</strong> - Financial reporting (daily at 1 AM)
+- <strong>inventory-sync</strong> - Inventory synchronization job
+- <strong>data-migration</strong> - Database migration tasks</p>
+<p><strong>Features:</strong>
+- Cron schedule expressions
+- Resource limits for batch operations
+- Persistent volume integration for output
+- Retry and failure policies</p>
+<h2 id="compliance-and-security-features">Compliance and Security Features</h2>
+<h3 id="hipaa-compliance-healthcare">HIPAA Compliance (Healthcare)</h3>
+<ul>
+<li>Audit logging enabled for all PHI access</li>
+<li>Data encryption at rest and in transit</li>
+<li>Access controls and authentication</li>
+<li>Data retention policies (7 years)</li>
+<li>Patient data isolation and security</li>
+</ul>
+<h3 id="pci-dss-compliance-retailfinance">PCI DSS Compliance (Retail/Finance)</h3>
+<ul>
+<li>Payment card data protection</li>
+<li>Secure payment processing</li>
 <li>Network segmentation</li>
-<li>RBAC isolation effectiveness</li>
-<li>Storage isolation</li>
+<li>Regular security monitoring</li>
+<li>Encrypted communication channels</li>
 </ul>
-<h3 id="fair-share-analysis">Fair Share Analysis</h3>
+<h3 id="security-best-practices">Security Best Practices</h3>
 <ul>
-<li>Resource allocation fairness</li>
-<li>Usage versus allocation ratios</li>
-<li>Over/under-utilized namespaces</li>
-<li>Capacity planning per tenant</li>
+<li>Non-root container execution</li>
+<li>Read-only root filesystems</li>
+<li>Capability dropping (ALL capabilities removed)</li>
+<li>Security contexts and seccomp profiles</li>
+<li>Network policies and service mesh integration</li>
+<li>Regular credential rotation</li>
+</ul>
+<h2 id="label-strategy">Label Strategy</h2>
+<h3 id="organizational-labels">Organizational Labels</h3>
+<ul>
+<li><code>application</code>: Business application grouping</li>
+<li><code>team</code>: Owning team for operations</li>
+<li><code>cost-center</code>: Financial tracking and chargeback</li>
+</ul>
+<h3 id="technical-labels">Technical Labels</h3>
+<ul>
+<li><code>tier</code>: Architecture layer classification</li>
+<li><code>component</code>: Specific functional component</li>
+<li><code>version</code>: Application version tracking</li>
+</ul>
+<h3 id="operational-labels">Operational Labels</h3>
+<ul>
+<li><code>environment</code>: Deployment stage</li>
+<li><code>compliance</code>: Regulatory requirements</li>
+<li><code>data-classification</code>: Data sensitivity level</li>
+</ul>
+<h3 id="example-label-usage">Example Label Usage</h3>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">labels</span><span class="p">:</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">application</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">healthcare</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">tier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">component</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">patient-management</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">team</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backend-team</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nt">compliance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hipaa</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="nt">data-classification</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sensitive</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v2.8.4</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="nt">cost-center</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2002&quot;</span>
+</span></code></pre></div>
+<h2 id="file-sizes-and-resource-counts">File Sizes and Resource Counts</h2>
+<h3 id="large-files-40kb">Large Files (40KB+)</h3>
+<ul>
+<li><code>healthcare-platform.yaml</code> - 42KB, 30+ resources</li>
+<li><code>ecommerce-platform.yaml</code> - 34KB, 25+ resources</li>
+</ul>
+<h3 id="medium-files-10-20kb">Medium Files (10-20KB)</h3>
+<ul>
+<li><code>retail-platform.yaml</code> - 18KB, 15+ resources</li>
+<li><code>finance-logistics-combined.yaml</code> - 12KB, 20+ resources</li>
+</ul>
+<h3 id="resource-distribution">Resource Distribution</h3>
+<ul>
+<li><strong>Total Resources</strong>: 100+ Kubernetes resources</li>
+<li><strong>Total Size</strong>: 150KB+ of YAML configuration</li>
+<li><strong>Namespaces</strong>: 10 across 5 applications</li>
+<li><strong>Deployments</strong>: 15+ with comprehensive configurations</li>
+<li><strong>StatefulSets</strong>: 4 database and storage systems</li>
+<li><strong>ConfigMaps</strong>: 8+ with detailed application settings</li>
+<li><strong>Secrets</strong>: 10+ covering all credential types</li>
 </ul>
 <h2 id="usage-examples">Usage Examples</h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Analyze all namespaces</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>k8s-analyzer<span class="w"> </span>analyze<span class="w"> </span>--view<span class="w"> </span>namespace-analysis
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Focus on specific namespace</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>k8s-analyzer<span class="w"> </span>analyze<span class="w"> </span>--view<span class="w"> </span>namespace-analysis<span class="w"> </span>--namespace<span class="w"> </span>production
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Compare multiple namespaces</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>k8s-analyzer<span class="w"> </span>analyze<span class="w"> </span>--view<span class="w"> </span>namespace-analysis<span class="w"> </span>--namespaces<span class="w"> </span>prod,staging,dev
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Generate namespace report</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>k8s-analyzer<span class="w"> </span>report<span class="w"> </span>--template<span class="w"> </span>namespace-summary<span class="w"> </span>--namespace<span class="w"> </span>production
+<h3 id="analyze-healthcare-resources">Analyze Healthcare Resources</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>k8s-analyzer<span class="w"> </span>parse<span class="w"> </span>dummy-data/cluster-exports/healthcare-platform.yaml<span class="w"> </span>--filter<span class="o">=</span><span class="s2">&quot;compliance=hipaa&quot;</span>
 </span></code></pre></div>
-<h2 id="namespace-optimization">Namespace Optimization</h2>
-<h3 id="right-sizing-recommendations">Right-sizing Recommendations</h3>
-<ul>
-<li>Resource quota adjustments</li>
-<li>Limit range optimizations</li>
-<li>Pod density improvements</li>
-<li>Storage allocation tuning</li>
-</ul>
-<h3 id="security-enhancements">Security Enhancements</h3>
-<ul>
-<li>RBAC tightening suggestions</li>
-<li>Network policy recommendations</li>
-<li>Security context improvements</li>
-<li>Secret management optimizations</li>
-</ul>
-<h2 id="monitoring-and-alerting">Monitoring and Alerting</h2>
-<h3 id="key-performance-indicators">Key Performance Indicators</h3>
-<ul>
-<li>Resource utilization thresholds</li>
-<li>Pod failure rates</li>
-<li>Service availability metrics</li>
-<li>Security violation counts</li>
-</ul>
-<h3 id="automated-policies">Automated Policies</h3>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Example namespace policy</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ResourceQuota</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nt">metadata</span><span class="p">:</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production-quota</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nt">spec</span><span class="p">:</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">hard</span><span class="p">:</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="nt">requests.cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;20&quot;</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="nt">requests.memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40Gi</span>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="nt">limits.cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;40&quot;</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="nt">limits.memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80Gi</span>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="nt">persistentvolumeclaims</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10&quot;</span>
+<h3 id="generate-retail-compliance-report">Generate Retail Compliance Report</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>k8s-reporter<span class="w"> </span>generate<span class="w"> </span>--input<span class="w"> </span>dummy-data/cluster-exports/retail-platform.yaml<span class="w"> </span>--output<span class="w"> </span>retail-report.html<span class="w"> </span>--filter<span class="o">=</span><span class="s2">&quot;compliance=pcidss&quot;</span>
 </span></code></pre></div>
-<h2 id="governance-and-compliance">Governance and Compliance</h2>
-<h3 id="policy-enforcement">Policy Enforcement</h3>
-<ul>
-<li>Resource governance policies</li>
-<li>Security compliance checks</li>
-<li>Naming convention adherence</li>
-<li>Label and annotation standards</li>
-</ul>
-<h3 id="audit-trail">Audit Trail</h3>
-<ul>
-<li>Namespace modification history</li>
-<li>Resource creation/deletion events</li>
-<li>Security event correlation</li>
-<li>Compliance status tracking</li>
-</ul>
-<h2 id="integration-points">Integration Points</h2>
-<h3 id="cost-management">Cost Management</h3>
-<ul>
-<li>Chargeback and showback reporting</li>
-<li>Budget tracking and alerts</li>
-<li>Cost center allocation</li>
-<li>Resource utilization billing</li>
-</ul>
-<h3 id="cicd-integration">CI/CD Integration</h3>
-<ul>
-<li>Namespace provisioning automation</li>
-<li>Resource quota management</li>
-<li>Security policy deployment</li>
-<li>Compliance validation</li>
-</ul>
-<h2 id="troubleshooting">Troubleshooting</h2>
-<h3 id="common-issues">Common Issues</h3>
-<ul>
-<li>Resource exhaustion symptoms</li>
-<li>Network connectivity problems</li>
-<li>Security policy conflicts</li>
-<li>Storage mounting issues</li>
-</ul>
-<h3 id="diagnostic-commands">Diagnostic Commands</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Namespace health check</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>k8s-analyzer<span class="w"> </span>diagnose<span class="w"> </span>--namespace<span class="w"> </span>production
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Resource bottleneck analysis</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>k8s-analyzer<span class="w"> </span>analyze<span class="w"> </span>--view<span class="w"> </span>namespace-analysis<span class="w"> </span>--bottlenecks
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Security audit</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>k8s-analyzer<span class="w"> </span>security-scan<span class="w"> </span>--namespace<span class="w"> </span>production
+<h3 id="multi-application-analysis">Multi-Application Analysis</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>k8s-analyzer<span class="w"> </span>batch<span class="w"> </span>--directory<span class="w"> </span>dummy-data/cluster-exports/<span class="w"> </span>--export-format<span class="w"> </span>sqlite<span class="w"> </span>--output<span class="w"> </span>analysis.db
 </span></code></pre></div>
-<h2 id="related-views">Related Views</h2>
-<ul>
-<li><a href="../cluster-overview/">Cluster Overview</a></li>
-<li><a href="../security-analysis/">Security Analysis</a></li>
-<li><a href="../resource-efficiency/">Resource Efficiency</a></li>
-<li><a href="../health-dashboard/">Health Dashboard</a></li>
-</ul>
+<h3 id="resource-relationship-analysis">Resource Relationship Analysis</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>k8s-analyzer<span class="w"> </span>relationships<span class="w"> </span>--input<span class="w"> </span>dummy-data/cluster-exports/ecommerce-platform.yaml<span class="w"> </span>--visualize<span class="w"> </span>--output<span class="w"> </span>ecommerce-graph.png
+</span></code></pre></div>
+<h2 id="testing-scenarios">Testing Scenarios</h2>
+<p>The dummy data supports various testing scenarios:</p>
+<ol>
+<li><strong>Single Application Analysis</strong> - Healthcare, e-commerce, retail platforms</li>
+<li><strong>Multi-Namespace Operations</strong> - Cross-namespace resource relationships</li>
+<li><strong>Compliance Reporting</strong> - HIPAA, PCI DSS, SOX compliance checks</li>
+<li><strong>Resource Optimization</strong> - CPU, memory, storage analysis</li>
+<li><strong>Security Assessment</strong> - Security context, RBAC, network policy analysis</li>
+<li><strong>Label-Based Filtering</strong> - Team, application, compliance-based queries</li>
+<li><strong>Performance Analysis</strong> - Resource utilization and scaling patterns</li>
+<li><strong>Cost Analysis</strong> - Resource allocation and cost center reporting</li>
+</ol>
+<p>This comprehensive dataset provides realistic enterprise scenarios for thorough testing of Kubernetes analysis and reporting tools.</p>
 
 
 
@@ -2773,7 +3050,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 19, 2025 08:18:38 UTC">July 19, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 19, 2025 10:27:46 UTC">July 19, 2025</span>
   </span>
 
     
@@ -2783,7 +3060,7 @@
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 19, 2025 08:18:38 UTC">July 19, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 19, 2025 10:27:46 UTC">July 19, 2025</span>
   </span>
 
     

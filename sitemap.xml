@@ -113,6 +113,10 @@
          <lastmod>2025-07-19</lastmod>
     </url>
     <url>
+         <loc>https://k8s-tools.github.io/k8s-tools/examples/dummy-data/</loc>
+         <lastmod>2025-07-19</lastmod>
+    </url>
+    <url>
          <loc>https://k8s-tools.github.io/k8s-tools/examples/multi-cluster/</loc>
          <lastmod>2025-07-19</lastmod>
     </url>
