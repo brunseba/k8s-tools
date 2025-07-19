@@ -140,6 +140,7 @@ nav:
     - Advanced Workflows: examples/advanced-workflows.md
     - Multi-cluster Analysis: examples/multi-cluster.md
     - Custom Dashboards: examples/custom-dashboards.md
+    - Dummy Data: examples/dummy-data.md
   - Reference:
     - CLI Commands: reference/cli-commands.md
     - Configuration: reference/configuration.md
