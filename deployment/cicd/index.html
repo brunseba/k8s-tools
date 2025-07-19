@@ -12,13 +12,13 @@
         <meta name="author" content="K8s Tools Team">
       
       
-        <link rel="canonical" href="https://k8s-tools.github.io/k8s-tools/reference/cli-commands/">
+        <link rel="canonical" href="https://k8s-tools.github.io/k8s-tools/deployment/cicd/">
       
       
-        <link rel="prev" href="../../examples/custom-dashboards/">
+        <link rel="prev" href="../kubernetes/">
       
       
-        <link rel="next" href="../configuration/">
+        <link rel="next" href="../../examples/basic-usage/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -26,7 +26,7 @@
     
     
       
-        <title>CLI Commands - K8s Tools Documentation</title>
+        <title>CI/CD Integration - K8s Tools Documentation</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cli-commands-reference" class="md-skip">
+        <a href="#cicd-integration" class="md-skip">
           Skip to content
         </a>
       
@@ -120,7 +120,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              CLI Commands
+              CI/CD Integration
             
           </span>
         </div>
@@ -336,11 +336,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../deployment/installation/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../installation/" class="md-tabs__link">
           
   
   
@@ -376,13 +378,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../reference/cli-commands/" class="md-tabs__link">
           
   
   
@@ -1281,28 +1281,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
-        
-          
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -1315,7 +1318,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             Deployment
@@ -1329,7 +1332,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/installation/" class="md-nav__link">
+      <a href="../installation/" class="md-nav__link">
         
   
   
@@ -1352,7 +1355,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/docker/" class="md-nav__link">
+      <a href="../docker/" class="md-nav__link">
         
   
   
@@ -1375,7 +1378,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/kubernetes/" class="md-nav__link">
+      <a href="../kubernetes/" class="md-nav__link">
         
   
   
@@ -1395,10 +1398,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../deployment/cicd/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    CI/CD Integration
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1409,6 +1434,209 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      GitHub Actions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GitHub Actions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setting Up GitHub Actions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#triggers-and-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Triggers and Conditions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jenkins-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Jenkins Pipeline
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Jenkins Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-a-jenkinsfile" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creating a Jenkinsfile
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuring-jenkins" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuring Jenkins
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gitlab-cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      GitLab CI/CD
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GitLab CI/CD">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-gitlab-ciyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example .gitlab-ci.yml
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment Management
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#secrets-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      Secrets Management
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependency-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dependency Management
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-and-alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring and Alerts
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Monitoring and Alerts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#real-time-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real-Time Monitoring
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status-dashboards" class="md-nav__link">
+    <span class="md-ellipsis">
+      Status Dashboards
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Practices
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Documentation
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1569,31 +1797,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
         
           
-          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -1606,7 +1831,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             Reference
@@ -1617,32 +1842,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    CLI Commands
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../reference/cli-commands/" class="md-nav__link">
         
   
   
@@ -1653,134 +1856,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#k8s-analyzer-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      k8s-analyzer Commands
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="k8s-analyzer Commands">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#analyzer-analyze" class="md-nav__link">
-    <span class="md-ellipsis">
-      analyzer analyze
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#analyzer-report" class="md-nav__link">
-    <span class="md-ellipsis">
-      analyzer report
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#k8s-reporter-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      k8s-reporter Commands
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="k8s-reporter Commands">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#reporter-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      reporter start
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#reporter-generate" class="md-nav__link">
-    <span class="md-ellipsis">
-      reporter generate
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#general-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      General Options
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#advanced-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Advanced Usage
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Advanced Usage">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#using-with-continuous-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Using with Continuous Integration
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-script-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Custom Script Integration
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1793,7 +1868,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../configuration/" class="md-nav__link">
+      <a href="../../reference/configuration/" class="md-nav__link">
         
   
   
@@ -1816,7 +1891,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../database-schema/" class="md-nav__link">
+      <a href="../../reference/database-schema/" class="md-nav__link">
         
   
   
@@ -1839,7 +1914,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../troubleshooting/" class="md-nav__link">
+      <a href="../../reference/troubleshooting/" class="md-nav__link">
         
   
   
@@ -1862,7 +1937,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../faq/" class="md-nav__link">
+      <a href="../../reference/faq/" class="md-nav__link">
         
   
   
@@ -2033,28 +2108,37 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#k8s-analyzer-commands" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
-      k8s-analyzer Commands
+      Overview
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="k8s-analyzer Commands">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      GitHub Actions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GitHub Actions">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#analyzer-analyze" class="md-nav__link">
+  <a href="#setting-up-github-actions" class="md-nav__link">
     <span class="md-ellipsis">
-      analyzer analyze
+      Setting Up GitHub Actions
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#analyzer-report" class="md-nav__link">
+  <a href="#triggers-and-conditions" class="md-nav__link">
     <span class="md-ellipsis">
-      analyzer report
+      Triggers and Conditions
     </span>
   </a>
   
@@ -2066,28 +2150,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#k8s-reporter-commands" class="md-nav__link">
+  <a href="#jenkins-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
-      k8s-reporter Commands
+      Jenkins Pipeline
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="k8s-reporter Commands">
+    <nav class="md-nav" aria-label="Jenkins Pipeline">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#reporter-start" class="md-nav__link">
+  <a href="#creating-a-jenkinsfile" class="md-nav__link">
     <span class="md-ellipsis">
-      reporter start
+      Creating a Jenkinsfile
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#reporter-generate" class="md-nav__link">
+  <a href="#configuring-jenkins" class="md-nav__link">
     <span class="md-ellipsis">
-      reporter generate
+      Configuring Jenkins
     </span>
   </a>
   
@@ -2099,37 +2183,19 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#general-options" class="md-nav__link">
+  <a href="#gitlab-cicd" class="md-nav__link">
     <span class="md-ellipsis">
-      General Options
+      GitLab CI/CD
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#advanced-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Advanced Usage
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Advanced Usage">
+    <nav class="md-nav" aria-label="GitLab CI/CD">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#using-with-continuous-integration" class="md-nav__link">
+  <a href="#example-gitlab-ciyml" class="md-nav__link">
     <span class="md-ellipsis">
-      Using with Continuous Integration
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-script-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Custom Script Integration
+      Example .gitlab-ci.yml
     </span>
   </a>
   
@@ -2137,6 +2203,90 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment Management
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#secrets-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      Secrets Management
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependency-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dependency Management
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-and-alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring and Alerts
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Monitoring and Alerts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#real-time-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real-Time Monitoring
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status-dashboards" class="md-nav__link">
+    <span class="md-ellipsis">
+      Status Dashboards
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Practices
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Documentation
+    </span>
+  </a>
   
 </li>
       
@@ -2156,7 +2306,7 @@
 
 
   
-    <a href="https://github.com/k8s-tools/k8s-tools/edit/main/docs/reference/cli-commands.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/k8s-tools/k8s-tools/edit/main/docs/deployment/cicd.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -2165,80 +2315,168 @@
     
       
     
-    <a href="https://github.com/k8s-tools/k8s-tools/raw/main/docs/reference/cli-commands.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/k8s-tools/k8s-tools/raw/main/docs/deployment/cicd.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
     </a>
   
 
 
-<h1 id="cli-commands-reference">🗒️ CLI Commands Reference</h1>
-<p>This document provides a comprehensive reference for all CLI commands available in the k8s-tools suite, offering detailed information on their usage, options, arguments, and practical examples.</p>
-<h2 id="k8s-analyzer-commands">k8s-analyzer Commands</h2>
-<h3 id="analyzer-analyze"><code>analyzer analyze</code></h3>
-<p>Analyzes the current state of the Kubernetes cluster or provided YAML files.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>k8s-analyzer<span class="w"> </span>analyze<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</span></code></pre></div>
-<p><strong>Options:</strong>
-- <code>--output</code>: Path to output file where analysis result will be stored.
-- <code>--stdin</code>: Read input from standard input.
-- <code>--verbose</code>: Enable verbose output for detailed analysis logs.</p>
-<p><strong>Examples:</strong>
-- Analyze current cluster: <code>k8s-analyzer analyze</code>
-- Analyze and export results: <code>k8s-analyzer analyze --output analysis.json</code></p>
-<h3 id="analyzer-report"><code>analyzer report</code></h3>
-<p>Generates a report from analysis data in various formats.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>k8s-analyzer<span class="w"> </span>report<span class="w"> </span><span class="o">[</span>SOURCE<span class="o">]</span><span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</span></code></pre></div>
-<p><strong>Options:</strong>
-- <code>--format</code>: Output format (html, json, csv).
-- <code>--output</code>: Path to output report file.
-- <code>--title</code>: Title for the generated report.</p>
-<p><strong>Examples:</strong>
-- Generate HTML report: <code>k8s-analyzer report analysis.json --format html --output report.html</code></p>
-<h2 id="k8s-reporter-commands">k8s-reporter Commands</h2>
-<h3 id="reporter-start"><code>reporter start</code></h3>
-<p>Starts the k8s-reporter dashboard service.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>k8s-reporter<span class="w"> </span>start<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</span></code></pre></div>
-<p><strong>Options:</strong>
-- <code>--config</code>: Path to configuration file.</p>
-<p><strong>Examples:</strong>
-- Start service with config: <code>k8s-reporter start --config config.yaml</code></p>
-<h3 id="reporter-generate"><code>reporter generate</code></h3>
-<p>Generates reports based on the specified schedule and configuration.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>k8s-reporter<span class="w"> </span>generate<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</span></code></pre></div>
-<p><strong>Options:</strong>
-- <code>--format</code>: Output format (html, pdf).
-- <code>--output</code>: Path to output report directory.</p>
-<p><strong>Examples:</strong>
-- Generate HTML report: <code>k8s-reporter generate --format html --output reports/</code></p>
-<h2 id="general-options">General Options</h2>
+<h1 id="cicd-integration">CI/CD Integration</h1>
+<p>This guide covers integrating K8s Tools into continuous integration and continuous deployment (CI/CD) pipelines using GitHub Actions, Jenkins, and GitLab CI.</p>
+<h2 id="overview">Overview</h2>
+<p>CI/CD integration provides:</p>
 <ul>
-<li><code>--help</code>: Show help information for any command.</li>
+<li><strong>Automation</strong>: Streamlined workflows from code commit to deployment</li>
+<li><strong>Consistency</strong>: Reproducible environments and deployments</li>
+<li><strong>Monitoring and Feedback</strong>: Real-time insights through automated tests and reports</li>
 </ul>
-<h2 id="advanced-usage">Advanced Usage</h2>
-<h3 id="using-with-continuous-integration">Using with Continuous Integration</h3>
-<p>Integrate CLI commands in CI pipelines for automated analysis and reporting.</p>
-<p><strong>Example with GitHub Actions:</strong>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">jobs</span><span class="p">:</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">analyze</span><span class="p">:</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">k8s-analyzer analyze --output analysis.json</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">k8s-analyzer report analysis.json --format html --output report.html</span>
-</span></code></pre></div></p>
-<h3 id="custom-script-integration">Custom Script Integration</h3>
-<p>Utilize CLI commands in scripts to automate routine tasks.</p>
-<p><strong>Example Script:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Automate analysis and reporting</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">date</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>k8s-analyzer<span class="w"> </span>analyze<span class="w"> </span>--output<span class="w"> </span>analysis-<span class="si">${</span><span class="nv">date</span><span class="si">}</span>.json
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>k8s-analyzer<span class="w"> </span>report<span class="w"> </span>analysis-<span class="si">${</span><span class="nv">date</span><span class="si">}</span>.json<span class="w"> </span>--format<span class="w"> </span>html<span class="w"> </span>--output<span class="w"> </span>reports/<span class="si">${</span><span class="nv">date</span><span class="si">}</span>-report.html
-</span></code></pre></div></p>
-<p>This CLI reference enables users to effectively utilize k8s-tools commands, enhancing productivity and integration into various environments.</p>
+<h2 id="github-actions">GitHub Actions</h2>
+<h3 id="setting-up-github-actions">Setting Up GitHub Actions</h3>
+<p>Create a workflow file in <code>.github/workflows/ci.yml</code>:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">K8s Tools CI</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">on</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">push</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">pull_request</span><span class="p p-Indicator">]</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">jobs</span><span class="p">:</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="nt">build</span><span class="p">:</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set up Python</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v4</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">      </span><span class="nt">with</span><span class="p">:</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">        </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.x&#39;</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install Dependencies</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">        </span><span class="no">pip install uv</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">        </span><span class="no">uv sync --dev</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run Tests</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">        </span><span class="no">pytest --cov=.</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span><span class="nt">deploy</span><span class="p">:</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">    </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deploy to K8s</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">        </span><span class="no">kubectl apply -f k8s-tools-deployment.yaml</span>
+</span></code></pre></div>
+<h3 id="triggers-and-conditions">Triggers and Conditions</h3>
+<ul>
+<li><strong>Push</strong>: Run on every push to main</li>
+<li><strong>Pull Request</strong>: Validate changes in PRs</li>
+<li><strong>Scheduled</strong>: Use cron for scheduled runs</li>
+</ul>
+<h2 id="jenkins-pipeline">Jenkins Pipeline</h2>
+<h3 id="creating-a-jenkinsfile">Creating a Jenkinsfile</h3>
+<p>Create <code>Jenkinsfile</code> in the root of your repository:</p>
+<div class="language-groovy highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="n">any</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Build&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;uv sync --dev&#39;</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">            </span><span class="o">}</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span><span class="o">}</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Test&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;pytest --cov=.&#39;</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">            </span><span class="o">}</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">        </span><span class="o">}</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;Deploy&#39;</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">                </span><span class="n">sh</span><span class="w"> </span><span class="s1">&#39;kubectl apply -f k8s-tools-deployment.yaml&#39;</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">            </span><span class="o">}</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">        </span><span class="o">}</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">    </span><span class="o">}</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">    </span><span class="n">post</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">        </span><span class="n">success</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">            </span><span class="n">echo</span><span class="w"> </span><span class="s1">&#39;Pipeline successfully completed.&#39;</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">        </span><span class="o">}</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">        </span><span class="n">failure</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">            </span><span class="n">echo</span><span class="w"> </span><span class="s1">&#39;Pipeline failed.&#39;</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">        </span><span class="o">}</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">    </span><span class="o">}</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="o">}</span>
+</span></code></pre></div>
+<h3 id="configuring-jenkins">Configuring Jenkins</h3>
+<ol>
+<li><strong>Install Plugins</strong>: GitHub, Kubernetes CLI</li>
+<li><strong>Configure Credentials</strong>: Setup kubeconfig for deployment</li>
+<li><strong>Create Pipelines</strong>: Use the Jenkinsfile above</li>
+</ol>
+<h2 id="gitlab-cicd">GitLab CI/CD</h2>
+<h3 id="example-gitlab-ciyml">Example .gitlab-ci.yml</h3>
+<p>Create <code>.gitlab-ci.yml</code> in the root of your repository:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">stages</span><span class="p">:</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nt">variables</span><span class="p">:</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">KUBECONFIG</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/kube/config</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nt">build</span><span class="p">:</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python:3.11</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install uv</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uv sync --dev</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="nt">unit_tests</span><span class="p">:</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python:3.11</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest --cov=.</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="nt">deploy</span><span class="p">:</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deploy</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">registry.gitlab.com/gitlab-org/cloud-build</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubectl apply -f k8s-tools-deployment.yaml</span>
+</span></code></pre></div>
+<h2 id="environment-management">Environment Management</h2>
+<h3 id="secrets-management">Secrets Management</h3>
+<ul>
+<li><strong>GitHub Secrets</strong>: Manage sensitive data in GitHub Actions</li>
+<li><strong>Jenkins Credentials</strong>: Securely store kubeconfig and other secrets</li>
+<li><strong>GitLab Variables</strong>: Store environment-specific configurations</li>
+</ul>
+<h3 id="dependency-management">Dependency Management</h3>
+<p>Use dependency management tools to ensure reproducibility:</p>
+<ul>
+<li><strong>pipx</strong>: Isolated Python version management</li>
+<li><strong>uv</strong>: Fast and consistent dependency installation</li>
+</ul>
+<h2 id="monitoring-and-alerts">Monitoring and Alerts</h2>
+<h3 id="real-time-monitoring">Real-Time Monitoring</h3>
+<p>Integrate with monitoring solutions to track deployment status:</p>
+<ul>
+<li><strong>Prometheus/Grafana</strong>: Visualize deployment metrics</li>
+<li><strong>Slack Notifications</strong>: Receive alerts via Slack for build/deployments</li>
+</ul>
+<h3 id="status-dashboards">Status Dashboards</h3>
+<p>Create custom dashboards in Jenkins and GitLab to report CI/CD status:</p>
+<ul>
+<li><strong>Build Status</strong>: Track latest build state</li>
+<li><strong>Test Coverage</strong>: Ensure sufficient test coverage</li>
+<li><strong>Deployment Success</strong>: Confirm successful deployments</li>
+</ul>
+<h2 id="best-practices">Best Practices</h2>
+<ol>
+<li><strong>Reusable Workflows</strong>: Modularize CI/CD scripts</li>
+<li><strong>Parallel Stages</strong>: Optimize build/test times</li>
+<li><strong>Rollback Plans</strong>: Prepare for easy rollback in deployments</li>
+<li><strong>Continuous Improvement</strong>: Keep pipelines updated</li>
+</ol>
+<h2 id="related-documentation">Related Documentation</h2>
+<ul>
+<li><a href="../setup.md">Setup Guide</a></li>
+<li><a href="../kubernetes/">Kubernetes Deployment</a></li>
+<li><a href="../docker/">Docker Deployment</a></li>
+</ul>
 
 
 
@@ -2261,7 +2499,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 26, 2025 07:39:04 UTC">June 26, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 19, 2025 07:50:53 UTC">July 19, 2025</span>
   </span>
 
     
@@ -2271,7 +2509,7 @@
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 26, 2025 07:39:04 UTC">June 26, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 19, 2025 07:50:53 UTC">July 19, 2025</span>
   </span>
 
     

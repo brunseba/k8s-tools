@@ -12,13 +12,13 @@
         <meta name="author" content="K8s Tools Team">
       
       
-        <link rel="canonical" href="https://k8s-tools.github.io/k8s-tools/reference/cli-commands/">
+        <link rel="canonical" href="https://k8s-tools.github.io/k8s-tools/examples/advanced-workflows/">
       
       
-        <link rel="prev" href="../../examples/custom-dashboards/">
+        <link rel="prev" href="../basic-usage/">
       
       
-        <link rel="next" href="../configuration/">
+        <link rel="next" href="../multi-cluster/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -26,7 +26,7 @@
     
     
       
-        <title>CLI Commands - K8s Tools Documentation</title>
+        <title>Advanced Workflows - K8s Tools Documentation</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cli-commands-reference" class="md-skip">
+        <a href="#advanced-workflows" class="md-skip">
           Skip to content
         </a>
       
@@ -120,7 +120,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              CLI Commands
+              Advanced Workflows
             
           </span>
         </div>
@@ -356,11 +356,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../examples/basic-usage/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../basic-usage/" class="md-tabs__link">
           
   
   
@@ -376,13 +378,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../reference/cli-commands/" class="md-tabs__link">
           
   
   
@@ -1425,28 +1425,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
-        
-          
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
             
   
   
@@ -1459,7 +1462,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             Examples
@@ -1473,7 +1476,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/basic-usage/" class="md-nav__link">
+      <a href="../basic-usage/" class="md-nav__link">
         
   
   
@@ -1493,10 +1496,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../examples/advanced-workflows/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Advanced Workflows
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1507,6 +1532,218 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripting-and-automation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scripting and Automation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scripting and Automation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using Scripts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automation-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automation Tools
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-integrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Integrations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="API Integrations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rest-api-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      REST API Access
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#webhooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Webhooks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cicd-pipeline-integrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      CI/CD Pipeline Integrations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-analytics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Analytics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom Analytics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plugin-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Plugin Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extending-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extending CLI
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scalability-and-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scalability and Performance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scalability and Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhancements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Practices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#security-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Considerations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keeping-code-clean" class="md-nav__link">
+    <span class="md-ellipsis">
+      Keeping Code Clean
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#citation-and-acknowledgment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Citation and Acknowledgment
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Documentation
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1519,7 +1756,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/multi-cluster/" class="md-nav__link">
+      <a href="../multi-cluster/" class="md-nav__link">
         
   
   
@@ -1542,7 +1779,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/custom-dashboards/" class="md-nav__link">
+      <a href="../custom-dashboards/" class="md-nav__link">
         
   
   
@@ -1569,31 +1806,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
         
           
-          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -1606,7 +1840,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             Reference
@@ -1617,32 +1851,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    CLI Commands
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../reference/cli-commands/" class="md-nav__link">
         
   
   
@@ -1653,134 +1865,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#k8s-analyzer-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      k8s-analyzer Commands
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="k8s-analyzer Commands">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#analyzer-analyze" class="md-nav__link">
-    <span class="md-ellipsis">
-      analyzer analyze
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#analyzer-report" class="md-nav__link">
-    <span class="md-ellipsis">
-      analyzer report
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#k8s-reporter-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      k8s-reporter Commands
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="k8s-reporter Commands">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#reporter-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      reporter start
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#reporter-generate" class="md-nav__link">
-    <span class="md-ellipsis">
-      reporter generate
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#general-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      General Options
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#advanced-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Advanced Usage
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Advanced Usage">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#using-with-continuous-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Using with Continuous Integration
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-script-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Custom Script Integration
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1793,7 +1877,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../configuration/" class="md-nav__link">
+      <a href="../../reference/configuration/" class="md-nav__link">
         
   
   
@@ -1816,7 +1900,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../database-schema/" class="md-nav__link">
+      <a href="../../reference/database-schema/" class="md-nav__link">
         
   
   
@@ -1839,7 +1923,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../troubleshooting/" class="md-nav__link">
+      <a href="../../reference/troubleshooting/" class="md-nav__link">
         
   
   
@@ -1862,7 +1946,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../faq/" class="md-nav__link">
+      <a href="../../reference/faq/" class="md-nav__link">
         
   
   
@@ -2033,28 +2117,37 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#k8s-analyzer-commands" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
-      k8s-analyzer Commands
+      Overview
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="k8s-analyzer Commands">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scripting-and-automation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scripting and Automation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scripting and Automation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#analyzer-analyze" class="md-nav__link">
+  <a href="#using-scripts" class="md-nav__link">
     <span class="md-ellipsis">
-      analyzer analyze
+      Using Scripts
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#analyzer-report" class="md-nav__link">
+  <a href="#automation-tools" class="md-nav__link">
     <span class="md-ellipsis">
-      analyzer report
+      Automation Tools
     </span>
   </a>
   
@@ -2066,28 +2159,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#k8s-reporter-commands" class="md-nav__link">
+  <a href="#api-integrations" class="md-nav__link">
     <span class="md-ellipsis">
-      k8s-reporter Commands
+      API Integrations
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="k8s-reporter Commands">
+    <nav class="md-nav" aria-label="API Integrations">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#reporter-start" class="md-nav__link">
+  <a href="#rest-api-access" class="md-nav__link">
     <span class="md-ellipsis">
-      reporter start
+      REST API Access
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#reporter-generate" class="md-nav__link">
+  <a href="#webhooks" class="md-nav__link">
     <span class="md-ellipsis">
-      reporter generate
+      Webhooks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cicd-pipeline-integrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      CI/CD Pipeline Integrations
     </span>
   </a>
   
@@ -2099,37 +2201,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#general-options" class="md-nav__link">
+  <a href="#custom-analytics" class="md-nav__link">
     <span class="md-ellipsis">
-      General Options
+      Custom Analytics
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#advanced-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Advanced Usage
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Advanced Usage">
+    <nav class="md-nav" aria-label="Custom Analytics">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#using-with-continuous-integration" class="md-nav__link">
+  <a href="#plugin-architecture" class="md-nav__link">
     <span class="md-ellipsis">
-      Using with Continuous Integration
+      Plugin Architecture
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#custom-script-integration" class="md-nav__link">
+  <a href="#extending-cli" class="md-nav__link">
     <span class="md-ellipsis">
-      Custom Script Integration
+      Extending CLI
     </span>
   </a>
   
@@ -2137,6 +2230,81 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scalability-and-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scalability and Performance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scalability and Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhancements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Practices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#security-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Considerations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keeping-code-clean" class="md-nav__link">
+    <span class="md-ellipsis">
+      Keeping Code Clean
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#citation-and-acknowledgment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Citation and Acknowledgment
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Documentation
+    </span>
+  </a>
   
 </li>
       
@@ -2156,7 +2324,7 @@
 
 
   
-    <a href="https://github.com/k8s-tools/k8s-tools/edit/main/docs/reference/cli-commands.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/k8s-tools/k8s-tools/edit/main/docs/examples/advanced-workflows.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -2165,80 +2333,120 @@
     
       
     
-    <a href="https://github.com/k8s-tools/k8s-tools/raw/main/docs/reference/cli-commands.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/k8s-tools/k8s-tools/raw/main/docs/examples/advanced-workflows.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
     </a>
   
 
 
-<h1 id="cli-commands-reference">🗒️ CLI Commands Reference</h1>
-<p>This document provides a comprehensive reference for all CLI commands available in the k8s-tools suite, offering detailed information on their usage, options, arguments, and practical examples.</p>
-<h2 id="k8s-analyzer-commands">k8s-analyzer Commands</h2>
-<h3 id="analyzer-analyze"><code>analyzer analyze</code></h3>
-<p>Analyzes the current state of the Kubernetes cluster or provided YAML files.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>k8s-analyzer<span class="w"> </span>analyze<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</span></code></pre></div>
-<p><strong>Options:</strong>
-- <code>--output</code>: Path to output file where analysis result will be stored.
-- <code>--stdin</code>: Read input from standard input.
-- <code>--verbose</code>: Enable verbose output for detailed analysis logs.</p>
-<p><strong>Examples:</strong>
-- Analyze current cluster: <code>k8s-analyzer analyze</code>
-- Analyze and export results: <code>k8s-analyzer analyze --output analysis.json</code></p>
-<h3 id="analyzer-report"><code>analyzer report</code></h3>
-<p>Generates a report from analysis data in various formats.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>k8s-analyzer<span class="w"> </span>report<span class="w"> </span><span class="o">[</span>SOURCE<span class="o">]</span><span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</span></code></pre></div>
-<p><strong>Options:</strong>
-- <code>--format</code>: Output format (html, json, csv).
-- <code>--output</code>: Path to output report file.
-- <code>--title</code>: Title for the generated report.</p>
-<p><strong>Examples:</strong>
-- Generate HTML report: <code>k8s-analyzer report analysis.json --format html --output report.html</code></p>
-<h2 id="k8s-reporter-commands">k8s-reporter Commands</h2>
-<h3 id="reporter-start"><code>reporter start</code></h3>
-<p>Starts the k8s-reporter dashboard service.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>k8s-reporter<span class="w"> </span>start<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</span></code></pre></div>
-<p><strong>Options:</strong>
-- <code>--config</code>: Path to configuration file.</p>
-<p><strong>Examples:</strong>
-- Start service with config: <code>k8s-reporter start --config config.yaml</code></p>
-<h3 id="reporter-generate"><code>reporter generate</code></h3>
-<p>Generates reports based on the specified schedule and configuration.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>k8s-reporter<span class="w"> </span>generate<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</span></code></pre></div>
-<p><strong>Options:</strong>
-- <code>--format</code>: Output format (html, pdf).
-- <code>--output</code>: Path to output report directory.</p>
-<p><strong>Examples:</strong>
-- Generate HTML report: <code>k8s-reporter generate --format html --output reports/</code></p>
-<h2 id="general-options">General Options</h2>
+<h1 id="advanced-workflows">Advanced Workflows</h1>
+<p>This document outlines advanced workflows and features available in K8s Tools, focusing on scripting, API integrations, and custom analytics.</p>
+<h2 id="overview">Overview</h2>
+<p>K8s Tools provides advanced configurations for complex workflows:</p>
 <ul>
-<li><code>--help</code>: Show help information for any command.</li>
+<li><strong>Scripting</strong>: Automation through custom scripts</li>
+<li><strong>API Integrations</strong>: Access via external systems</li>
+<li><strong>Custom Analytics</strong>: Extending analysis capability</li>
 </ul>
-<h2 id="advanced-usage">Advanced Usage</h2>
-<h3 id="using-with-continuous-integration">Using with Continuous Integration</h3>
-<p>Integrate CLI commands in CI pipelines for automated analysis and reporting.</p>
-<p><strong>Example with GitHub Actions:</strong>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">jobs</span><span class="p">:</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">analyze</span><span class="p">:</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">k8s-analyzer analyze --output analysis.json</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">k8s-analyzer report analysis.json --format html --output report.html</span>
-</span></code></pre></div></p>
-<h3 id="custom-script-integration">Custom Script Integration</h3>
-<p>Utilize CLI commands in scripts to automate routine tasks.</p>
-<p><strong>Example Script:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Automate analysis and reporting</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">date</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>k8s-analyzer<span class="w"> </span>analyze<span class="w"> </span>--output<span class="w"> </span>analysis-<span class="si">${</span><span class="nv">date</span><span class="si">}</span>.json
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>k8s-analyzer<span class="w"> </span>report<span class="w"> </span>analysis-<span class="si">${</span><span class="nv">date</span><span class="si">}</span>.json<span class="w"> </span>--format<span class="w"> </span>html<span class="w"> </span>--output<span class="w"> </span>reports/<span class="si">${</span><span class="nv">date</span><span class="si">}</span>-report.html
-</span></code></pre></div></p>
-<p>This CLI reference enables users to effectively utilize k8s-tools commands, enhancing productivity and integration into various environments.</p>
+<h2 id="scripting-and-automation">Scripting and Automation</h2>
+<h3 id="using-scripts">Using Scripts</h3>
+<p>Create scripts to automate tasks:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="ch">#!/bin/bash</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Custom script to analyze clusters nightly</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>k8s-analyzer<span class="w"> </span>analyze<span class="w"> </span>--view<span class="w"> </span>cluster-overview<span class="w"> </span>--output<span class="w"> </span>reports/overviews/<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.html
+</span></code></pre></div>
+<p>Schedule script execution using cron:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>crontab<span class="w"> </span>-e
+</span></code></pre></div>
+<p>Add entry:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>0 1 * * * /path/to/script.sh
+</span></code></pre></div>
+<h3 id="automation-tools">Automation Tools</h3>
+<p>Use tools like <code>make</code> for complex automation scenarios:</p>
+<div class="language-makefile highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nf">all</span><span class="o">:</span><span class="w"> </span><span class="n">analyze</span> <span class="n">report</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nf">analyze</span><span class="o">:</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>k8s-analyzer<span class="w"> </span>analyze<span class="w"> </span>--view<span class="w"> </span>cluster-overview
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nf">report</span><span class="o">:</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span>k8s-analyzer<span class="w"> </span>report<span class="w"> </span>--format<span class="w"> </span>html<span class="w"> </span>--output<span class="w"> </span>report.html
+</span></code></pre></div>
+<h2 id="api-integrations">API Integrations</h2>
+<h3 id="rest-api-access">REST API Access</h3>
+<p>Call REST API endpoints via command line:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;http://api.k8s-tools.local/analysis&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;accept: application/json&quot;</span>
+</span></code></pre></div>
+<h3 id="webhooks">Webhooks</h3>
+<p>Trigger analysis with webhooks:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># Example webhook payload
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>action: &quot;analyze&quot;
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>target: &quot;cluster-overview&quot;
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>output: &quot;http://webhook-server/reports&quot;
+</span></code></pre></div>
+<h3 id="cicd-pipeline-integrations">CI/CD Pipeline Integrations</h3>
+<p>Integrate with CI/CD tools:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># GitHub Actions</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nt">action</span><span class="p">:</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">use</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v2</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">k8s-analyzer analyze --view cluster-overview --output $GITHUB_WORKSPACE/reports</span>
+</span></code></pre></div>
+<h2 id="custom-analytics">Custom Analytics</h2>
+<h3 id="plugin-architecture">Plugin Architecture</h3>
+<p>Develop custom plugins for analysis and reporting:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyCustomAnalysis</span><span class="p">(</span><span class="n">AnalysisView</span><span class="p">):</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">analyze</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cluster_data</span><span class="p">:</span> <span class="n">ClusterData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ViewResult</span><span class="p">:</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>        <span class="c1"># Custom analysis logic</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>        <span class="k">return</span> <span class="n">ViewResult</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s2">&quot;custom analysis result&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="extending-cli">Extending CLI</h3>
+<p>Add new commands to the CLI:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nd">@click</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--custom&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">my_command</span><span class="p">(</span><span class="n">custom</span><span class="p">):</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;My custom CLI command.&quot;&quot;&quot;</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="k">pass</span>
+</span></code></pre></div>
+<p>Register with CLI:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">cli</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">my_command</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="scalability-and-performance">Scalability and Performance</h2>
+<h3 id="enhancements">Enhancements</h3>
+<ul>
+<li><strong>Parallel Processing</strong>: Use threading or multiprocessing</li>
+<li><strong>Load Balancing</strong>: Distribute loads across multiple nodes</li>
+<li><strong>Caching</strong>: Implement result caching for frequent queries</li>
+</ul>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/analysis&#39;</span><span class="p">)</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="nd">@functools</span><span class="o">.</span><span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_analysis</span><span class="p">():</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>    <span class="k">return</span> <span class="n">compute_analysis</span><span class="p">()</span>
+</span></code></pre></div>
+<h2 id="best-practices">Best Practices</h2>
+<h3 id="security-considerations">Security Considerations</h3>
+<p>Protect sensitive data and configurations:</p>
+<ul>
+<li><strong>Authentication</strong>: Use token-based authentication for API</li>
+<li><strong>Encryption</strong>: Secure data transmission with SSL/TLS</li>
+</ul>
+<h3 id="keeping-code-clean">Keeping Code Clean</h3>
+<ul>
+<li><strong>Modularity</strong>: Write clean, modular functions</li>
+<li><strong>Documentation</strong>: Maintain clear and comprehensive documentation</li>
+</ul>
+<h2 id="citation-and-acknowledgment">Citation and Acknowledgment</h2>
+<p>Special thanks to the contributors and communities that provide valuable insights into the evolving Kubernetes ecosystem.</p>
+<h2 id="related-documentation">Related Documentation</h2>
+<ul>
+<li><a href="../basic-usage/">Basic Usage</a></li>
+<li><a href="../config.md">Configuration Guide</a></li>
+<li><a href="../../development/setup/">Development Setup</a></li>
+</ul>
 
 
 
@@ -2261,7 +2469,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 26, 2025 07:39:04 UTC">June 26, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 19, 2025 07:50:53 UTC">July 19, 2025</span>
   </span>
 
     
@@ -2271,7 +2479,7 @@
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 26, 2025 07:39:04 UTC">June 26, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 19, 2025 07:50:53 UTC">July 19, 2025</span>
   </span>
 
     

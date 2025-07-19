@@ -65,7 +65,55 @@
          <lastmod>2025-07-19</lastmod>
     </url>
     <url>
+         <loc>https://k8s-tools.github.io/k8s-tools/deployment/cicd/</loc>
+         <lastmod>2025-07-19</lastmod>
+    </url>
+    <url>
+         <loc>https://k8s-tools.github.io/k8s-tools/deployment/docker/</loc>
+         <lastmod>2025-07-19</lastmod>
+    </url>
+    <url>
+         <loc>https://k8s-tools.github.io/k8s-tools/deployment/installation/</loc>
+         <lastmod>2025-07-19</lastmod>
+    </url>
+    <url>
+         <loc>https://k8s-tools.github.io/k8s-tools/deployment/kubernetes/</loc>
+         <lastmod>2025-07-19</lastmod>
+    </url>
+    <url>
+         <loc>https://k8s-tools.github.io/k8s-tools/development/api-reference/</loc>
+         <lastmod>2025-07-19</lastmod>
+    </url>
+    <url>
+         <loc>https://k8s-tools.github.io/k8s-tools/development/architecture/</loc>
+         <lastmod>2025-07-19</lastmod>
+    </url>
+    <url>
+         <loc>https://k8s-tools.github.io/k8s-tools/development/contributing/</loc>
+         <lastmod>2025-07-19</lastmod>
+    </url>
+    <url>
          <loc>https://k8s-tools.github.io/k8s-tools/development/setup/</loc>
+         <lastmod>2025-07-19</lastmod>
+    </url>
+    <url>
+         <loc>https://k8s-tools.github.io/k8s-tools/development/testing/</loc>
+         <lastmod>2025-07-19</lastmod>
+    </url>
+    <url>
+         <loc>https://k8s-tools.github.io/k8s-tools/examples/advanced-workflows/</loc>
+         <lastmod>2025-07-19</lastmod>
+    </url>
+    <url>
+         <loc>https://k8s-tools.github.io/k8s-tools/examples/basic-usage/</loc>
+         <lastmod>2025-07-19</lastmod>
+    </url>
+    <url>
+         <loc>https://k8s-tools.github.io/k8s-tools/examples/custom-dashboards/</loc>
+         <lastmod>2025-07-19</lastmod>
+    </url>
+    <url>
+         <loc>https://k8s-tools.github.io/k8s-tools/examples/multi-cluster/</loc>
          <lastmod>2025-07-19</lastmod>
     </url>
     <url>

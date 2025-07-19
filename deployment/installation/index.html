@@ -12,13 +12,13 @@
         <meta name="author" content="K8s Tools Team">
       
       
-        <link rel="canonical" href="https://k8s-tools.github.io/k8s-tools/reference/cli-commands/">
+        <link rel="canonical" href="https://k8s-tools.github.io/k8s-tools/deployment/installation/">
       
       
-        <link rel="prev" href="../../examples/custom-dashboards/">
+        <link rel="prev" href="../../development/api-reference/">
       
       
-        <link rel="next" href="../configuration/">
+        <link rel="next" href="../docker/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -26,7 +26,7 @@
     
     
       
-        <title>CLI Commands - K8s Tools Documentation</title>
+        <title>Installation - K8s Tools Documentation</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cli-commands-reference" class="md-skip">
+        <a href="#installation" class="md-skip">
           Skip to content
         </a>
       
@@ -120,7 +120,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              CLI Commands
+              Installation
             
           </span>
         </div>
@@ -336,11 +336,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../deployment/installation/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
           
   
   
@@ -376,13 +378,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../reference/cli-commands/" class="md-tabs__link">
           
   
   
@@ -1281,28 +1281,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
-        
-          
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -1315,7 +1318,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             Deployment
@@ -1326,10 +1329,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../deployment/installation/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1340,6 +1365,188 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#system-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      System Requirements
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation Options
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-pipx" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using pipx
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-pip" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using pip
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      From Source
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using Docker
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup-and-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup and Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setup and Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kubernetes Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment Variables
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-commit-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pre-Commit Hooks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#initial-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Initial Testing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Issues
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting Help
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uninstallation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Uninstallation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Resources
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1352,7 +1559,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/docker/" class="md-nav__link">
+      <a href="../docker/" class="md-nav__link">
         
   
   
@@ -1375,7 +1582,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/kubernetes/" class="md-nav__link">
+      <a href="../kubernetes/" class="md-nav__link">
         
   
   
@@ -1398,7 +1605,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/cicd/" class="md-nav__link">
+      <a href="../cicd/" class="md-nav__link">
         
   
   
@@ -1569,31 +1776,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
         
           
-          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -1606,7 +1810,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             Reference
@@ -1617,32 +1821,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    CLI Commands
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../reference/cli-commands/" class="md-nav__link">
         
   
   
@@ -1653,134 +1835,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#k8s-analyzer-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      k8s-analyzer Commands
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="k8s-analyzer Commands">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#analyzer-analyze" class="md-nav__link">
-    <span class="md-ellipsis">
-      analyzer analyze
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#analyzer-report" class="md-nav__link">
-    <span class="md-ellipsis">
-      analyzer report
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#k8s-reporter-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      k8s-reporter Commands
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="k8s-reporter Commands">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#reporter-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      reporter start
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#reporter-generate" class="md-nav__link">
-    <span class="md-ellipsis">
-      reporter generate
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#general-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      General Options
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#advanced-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Advanced Usage
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Advanced Usage">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#using-with-continuous-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Using with Continuous Integration
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-script-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Custom Script Integration
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1793,7 +1847,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../configuration/" class="md-nav__link">
+      <a href="../../reference/configuration/" class="md-nav__link">
         
   
   
@@ -1816,7 +1870,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../database-schema/" class="md-nav__link">
+      <a href="../../reference/database-schema/" class="md-nav__link">
         
   
   
@@ -1839,7 +1893,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../troubleshooting/" class="md-nav__link">
+      <a href="../../reference/troubleshooting/" class="md-nav__link">
         
   
   
@@ -1862,7 +1916,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../faq/" class="md-nav__link">
+      <a href="../../reference/faq/" class="md-nav__link">
         
   
   
@@ -2033,28 +2087,55 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#k8s-analyzer-commands" class="md-nav__link">
+  <a href="#system-requirements" class="md-nav__link">
     <span class="md-ellipsis">
-      k8s-analyzer Commands
+      System Requirements
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="k8s-analyzer Commands">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation Options
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation Options">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#analyzer-analyze" class="md-nav__link">
+  <a href="#using-pipx" class="md-nav__link">
     <span class="md-ellipsis">
-      analyzer analyze
+      Using pipx
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#analyzer-report" class="md-nav__link">
+  <a href="#using-pip" class="md-nav__link">
     <span class="md-ellipsis">
-      analyzer report
+      Using pip
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      From Source
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using Docker
     </span>
   </a>
   
@@ -2066,28 +2147,46 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#k8s-reporter-commands" class="md-nav__link">
+  <a href="#setup-and-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      k8s-reporter Commands
+      Setup and Configuration
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="k8s-reporter Commands">
+    <nav class="md-nav" aria-label="Setup and Configuration">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#reporter-start" class="md-nav__link">
+  <a href="#kubernetes-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      reporter start
+      Kubernetes Configuration
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#reporter-generate" class="md-nav__link">
+  <a href="#environment-variables" class="md-nav__link">
     <span class="md-ellipsis">
-      reporter generate
+      Environment Variables
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-commit-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pre-Commit Hooks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#initial-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Initial Testing
     </span>
   </a>
   
@@ -2099,37 +2198,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#general-options" class="md-nav__link">
+  <a href="#troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
-      General Options
+      Troubleshooting
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#advanced-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Advanced Usage
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Advanced Usage">
+    <nav class="md-nav" aria-label="Troubleshooting">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#using-with-continuous-integration" class="md-nav__link">
+  <a href="#common-issues" class="md-nav__link">
     <span class="md-ellipsis">
-      Using with Continuous Integration
+      Common Issues
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#custom-script-integration" class="md-nav__link">
+  <a href="#getting-help" class="md-nav__link">
     <span class="md-ellipsis">
-      Custom Script Integration
+      Getting Help
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uninstallation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Uninstallation
     </span>
   </a>
   
@@ -2137,6 +2236,15 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Resources
+    </span>
+  </a>
   
 </li>
       
@@ -2156,7 +2264,7 @@
 
 
   
-    <a href="https://github.com/k8s-tools/k8s-tools/edit/main/docs/reference/cli-commands.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/k8s-tools/k8s-tools/edit/main/docs/deployment/installation.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -2165,80 +2273,116 @@
     
       
     
-    <a href="https://github.com/k8s-tools/k8s-tools/raw/main/docs/reference/cli-commands.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/k8s-tools/k8s-tools/raw/main/docs/deployment/installation.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
     </a>
   
 
 
-<h1 id="cli-commands-reference">🗒️ CLI Commands Reference</h1>
-<p>This document provides a comprehensive reference for all CLI commands available in the k8s-tools suite, offering detailed information on their usage, options, arguments, and practical examples.</p>
-<h2 id="k8s-analyzer-commands">k8s-analyzer Commands</h2>
-<h3 id="analyzer-analyze"><code>analyzer analyze</code></h3>
-<p>Analyzes the current state of the Kubernetes cluster or provided YAML files.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>k8s-analyzer<span class="w"> </span>analyze<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</span></code></pre></div>
-<p><strong>Options:</strong>
-- <code>--output</code>: Path to output file where analysis result will be stored.
-- <code>--stdin</code>: Read input from standard input.
-- <code>--verbose</code>: Enable verbose output for detailed analysis logs.</p>
-<p><strong>Examples:</strong>
-- Analyze current cluster: <code>k8s-analyzer analyze</code>
-- Analyze and export results: <code>k8s-analyzer analyze --output analysis.json</code></p>
-<h3 id="analyzer-report"><code>analyzer report</code></h3>
-<p>Generates a report from analysis data in various formats.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>k8s-analyzer<span class="w"> </span>report<span class="w"> </span><span class="o">[</span>SOURCE<span class="o">]</span><span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</span></code></pre></div>
-<p><strong>Options:</strong>
-- <code>--format</code>: Output format (html, json, csv).
-- <code>--output</code>: Path to output report file.
-- <code>--title</code>: Title for the generated report.</p>
-<p><strong>Examples:</strong>
-- Generate HTML report: <code>k8s-analyzer report analysis.json --format html --output report.html</code></p>
-<h2 id="k8s-reporter-commands">k8s-reporter Commands</h2>
-<h3 id="reporter-start"><code>reporter start</code></h3>
-<p>Starts the k8s-reporter dashboard service.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>k8s-reporter<span class="w"> </span>start<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</span></code></pre></div>
-<p><strong>Options:</strong>
-- <code>--config</code>: Path to configuration file.</p>
-<p><strong>Examples:</strong>
-- Start service with config: <code>k8s-reporter start --config config.yaml</code></p>
-<h3 id="reporter-generate"><code>reporter generate</code></h3>
-<p>Generates reports based on the specified schedule and configuration.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>k8s-reporter<span class="w"> </span>generate<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</span></code></pre></div>
-<p><strong>Options:</strong>
-- <code>--format</code>: Output format (html, pdf).
-- <code>--output</code>: Path to output report directory.</p>
-<p><strong>Examples:</strong>
-- Generate HTML report: <code>k8s-reporter generate --format html --output reports/</code></p>
-<h2 id="general-options">General Options</h2>
+<h1 id="installation">Installation</h1>
+<p>This document provides detailed instructions for installing K8s Tools, including system requirements, installation steps, and initial setup guidelines.</p>
+<h2 id="system-requirements">System Requirements</h2>
 <ul>
-<li><code>--help</code>: Show help information for any command.</li>
+<li><strong>Operating System</strong>: Windows, macOS, or Linux</li>
+<li><strong>Python Version</strong>: &gt;= 3.10</li>
+<li><strong>Kubernetes Cluster</strong>: Version &gt;= 1.21 (for Kubernetes resources)</li>
+<li><strong>Access</strong>: Ability to access the Kubernetes API server</li>
 </ul>
-<h2 id="advanced-usage">Advanced Usage</h2>
-<h3 id="using-with-continuous-integration">Using with Continuous Integration</h3>
-<p>Integrate CLI commands in CI pipelines for automated analysis and reporting.</p>
-<p><strong>Example with GitHub Actions:</strong>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">jobs</span><span class="p">:</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">analyze</span><span class="p">:</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">k8s-analyzer analyze --output analysis.json</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">k8s-analyzer report analysis.json --format html --output report.html</span>
-</span></code></pre></div></p>
-<h3 id="custom-script-integration">Custom Script Integration</h3>
-<p>Utilize CLI commands in scripts to automate routine tasks.</p>
-<p><strong>Example Script:</strong>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="ch">#!/bin/bash</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Automate analysis and reporting</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">date</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>k8s-analyzer<span class="w"> </span>analyze<span class="w"> </span>--output<span class="w"> </span>analysis-<span class="si">${</span><span class="nv">date</span><span class="si">}</span>.json
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>k8s-analyzer<span class="w"> </span>report<span class="w"> </span>analysis-<span class="si">${</span><span class="nv">date</span><span class="si">}</span>.json<span class="w"> </span>--format<span class="w"> </span>html<span class="w"> </span>--output<span class="w"> </span>reports/<span class="si">${</span><span class="nv">date</span><span class="si">}</span>-report.html
-</span></code></pre></div></p>
-<p>This CLI reference enables users to effectively utilize k8s-tools commands, enhancing productivity and integration into various environments.</p>
+<h2 id="installation-options">Installation Options</h2>
+<h3 id="using-pipx">Using pipx</h3>
+<p>We recommend using <strong>pipx</strong> for isolated installations. If pipx is not installed, you can install it first:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>pipx
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>python3<span class="w"> </span>-m<span class="w"> </span>pipx<span class="w"> </span>ensurepath
+</span></code></pre></div>
+<p>To install K8s Tools using pipx:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pipx<span class="w"> </span>install<span class="w"> </span>k8s-tools
+</span></code></pre></div>
+<h3 id="using-pip">Using pip</h3>
+<p>Alternatively, you can install K8s Tools directly with pip:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pip<span class="w"> </span>install<span class="w"> </span>k8s-tools
+</span></code></pre></div>
+<h3 id="from-source">From Source</h3>
+<p>To install from source, clone the repository and install using pip:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/k8s-tools/k8s-tools.git
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">cd</span><span class="w"> </span>k8s-tools
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>pip<span class="w"> </span>install<span class="w"> </span>.
+</span></code></pre></div>
+<h3 id="using-docker">Using Docker</h3>
+<p>K8s Tools can also be run in a Docker container:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Pull Docker image</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>docker<span class="w"> </span>pull<span class="w"> </span>k8stools/k8s-tools
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Run container</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>docker<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span>~/.kube:/home/user/.kube<span class="w"> </span>k8stools/k8s-tools<span class="w"> </span>analyze
+</span></code></pre></div>
+<h2 id="setup-and-configuration">Setup and Configuration</h2>
+<h3 id="kubernetes-configuration">Kubernetes Configuration</h3>
+<p>Ensure that your <code>kubeconfig</code> is set up correctly:</p>
+<ul>
+<li>By default, K8s Tools uses the kubeconfig located at <code>~/.kube/config</code></li>
+<li>You can specify a different kubeconfig path with the <code>--kubeconfig</code> option:</li>
+</ul>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>k8s-tools<span class="w"> </span>analyze<span class="w"> </span>--kubeconfig<span class="w"> </span>/path/to/config
+</span></code></pre></div>
+<h3 id="environment-variables">Environment Variables</h3>
+<p>You may set environment variables to customize behavior:</p>
+<ul>
+<li><code>K8S_TOOLS_CONFIG</code> - Path to the configuration file</li>
+<li><code>KUBECONFIG</code> - Override kubeconfig location</li>
+</ul>
+<h3 id="pre-commit-hooks">Pre-Commit Hooks</h3>
+<p>Set up pre-commit hooks for development:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>pre-commit<span class="w"> </span>install
+</span></code></pre></div>
+<h3 id="initial-testing">Initial Testing</h3>
+<p>Run initial tests to verify installation:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Run unit tests</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>pytest
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>test/test_initialization.py
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Check version</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>k8s-tools<span class="w"> </span>--version
+</span></code></pre></div>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="common-issues">Common Issues</h3>
+<ul>
+<li><strong>Dependency Resolution</strong>: Conflicts with existing packages</li>
+<li>
+<p>Use <code>pip check</code> to identify conflicts</p>
+</li>
+<li>
+<p><strong>Kubeconfig Errors</strong>: Issues with Kubernetes configuration</p>
+</li>
+<li>Ensure the correct context is set in kubeconfig</li>
+</ul>
+<h3 id="getting-help">Getting Help</h3>
+<ul>
+<li><strong>Documentation</strong>: Refer to detailed usage guides and examples</li>
+<li><strong>Community Support</strong>: Reach out via GitHub issues or discussions</li>
+</ul>
+<h3 id="uninstallation">Uninstallation</h3>
+<p>To remove K8s Tools:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>pipx<span class="w"> </span>uninstall<span class="w"> </span>k8s-tools
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># or if installed with pip</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>pip<span class="w"> </span>uninstall<span class="w"> </span>k8s-tools
+</span></code></pre></div>
+<h2 id="related-resources">Related Resources</h2>
+<ul>
+<li><a href="getting-started.md">Quick Start Guide</a></li>
+<li><a href="CHANGELOG.md">Changelog</a></li>
+<li><a href="examples/basic-usage.md">Usage Examples</a></li>
+</ul>
+<p>0citations1
+0document1
+0document_type1RULE0/document_type1
+0document_id1mHRxidOov0WLb90jeiS2uG0/document_id1
+0/document1
+0document1
+0document_type1RULE0/document_type1
+0document_id1FtUk1rgWdKE6veAClNpAqC0/document_id1
+0/document1
+0/citations1</p>
 
 
 
@@ -2261,7 +2405,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 26, 2025 07:39:04 UTC">June 26, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 19, 2025 07:50:53 UTC">July 19, 2025</span>
   </span>
 
     
@@ -2271,7 +2415,7 @@
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 26, 2025 07:39:04 UTC">June 26, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 19, 2025 07:50:53 UTC">July 19, 2025</span>
   </span>
 
     
