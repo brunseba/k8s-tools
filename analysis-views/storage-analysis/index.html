@@ -12,13 +12,13 @@
         <meta name="author" content="K8s Tools Team">
       
       
-        <link rel="canonical" href="https://k8s-tools.github.io/k8s-tools/reference/troubleshooting/">
+        <link rel="canonical" href="https://k8s-tools.github.io/k8s-tools/analysis-views/storage-analysis/">
       
       
-        <link rel="prev" href="../database-schema/">
+        <link rel="prev" href="../resource-efficiency/">
       
       
-        <link rel="next" href="../faq/">
+        <link rel="next" href="../temporal-analysis/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -26,7 +26,7 @@
     
     
       
-        <title>Troubleshooting - K8s Tools Documentation</title>
+        <title>Storage Analysis - K8s Tools Documentation</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#troubleshooting-guide" class="md-skip">
+        <a href="#storage-analysis" class="md-skip">
           Skip to content
         </a>
       
@@ -120,7 +120,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Troubleshooting
+              Storage Analysis
             
           </span>
         </div>
@@ -296,11 +296,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../analysis-views/overview/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../overview/" class="md-tabs__link">
           
   
   
@@ -376,13 +378,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../cli-commands/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../reference/cli-commands/" class="md-tabs__link">
           
   
   
@@ -855,28 +855,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -889,7 +892,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             Analysis Views
@@ -903,7 +906,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analysis-views/overview/" class="md-nav__link">
+      <a href="../overview/" class="md-nav__link">
         
   
   
@@ -926,7 +929,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analysis-views/cluster-overview/" class="md-nav__link">
+      <a href="../cluster-overview/" class="md-nav__link">
         
   
   
@@ -949,7 +952,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analysis-views/security-analysis/" class="md-nav__link">
+      <a href="../security-analysis/" class="md-nav__link">
         
   
   
@@ -972,7 +975,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analysis-views/resource-efficiency/" class="md-nav__link">
+      <a href="../resource-efficiency/" class="md-nav__link">
         
   
   
@@ -992,10 +995,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../analysis-views/storage-analysis/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Storage Analysis
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1006,6 +1031,293 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Components
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage-utilization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Storage Utilization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persistent-volumes-pvs-and-claims-pvcs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Persistent Volumes (PVs) and Claims (PVCs)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Analysis
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-classes-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Storage Classes Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Storage Classes Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#available-storage-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Available Storage Classes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimization-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimization Recommendations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#volume-lifecycle-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      Volume Lifecycle Management
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Volume Lifecycle Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#volume-status-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      Volume Status Tracking
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cleanup-opportunities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cleanup Opportunities
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-cost-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Storage Cost Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Storage Cost Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cost-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cost Breakdown
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#budget-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Budget Optimization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Monitoring
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#io-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      I/O Metrics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bottleneck-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bottleneck Analysis
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage Examples
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring Integration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Monitoring Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prometheus-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prometheus Metrics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grafana-dashboards" class="md-nav__link">
+    <span class="md-ellipsis">
+      Grafana Dashboards
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maintenance-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Maintenance Recommendations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Maintenance Recommendations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#regular-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Regular Tasks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automated-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automated Policies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Views
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1018,7 +1330,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analysis-views/temporal-analysis/" class="md-nav__link">
+      <a href="../temporal-analysis/" class="md-nav__link">
         
   
   
@@ -1041,7 +1353,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analysis-views/namespace-analysis/" class="md-nav__link">
+      <a href="../namespace-analysis/" class="md-nav__link">
         
   
   
@@ -1064,7 +1376,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analysis-views/health-dashboard/" class="md-nav__link">
+      <a href="../health-dashboard/" class="md-nav__link">
         
   
   
@@ -1087,7 +1399,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../analysis-views/relationship-analysis/" class="md-nav__link">
+      <a href="../relationship-analysis/" class="md-nav__link">
         
   
   
@@ -1569,31 +1881,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
         
           
-          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -1606,7 +1915,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             Reference
@@ -1620,7 +1929,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli-commands/" class="md-nav__link">
+      <a href="../../reference/cli-commands/" class="md-nav__link">
         
   
   
@@ -1643,7 +1952,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../configuration/" class="md-nav__link">
+      <a href="../../reference/configuration/" class="md-nav__link">
         
   
   
@@ -1666,7 +1975,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../database-schema/" class="md-nav__link">
+      <a href="../../reference/database-schema/" class="md-nav__link">
         
   
   
@@ -1686,32 +1995,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Troubleshooting
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../reference/troubleshooting/" class="md-nav__link">
         
   
   
@@ -1722,185 +2009,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#general-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      General Issues
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="General Issues">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#installation-problems" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installation Problems
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#network-connectivity" class="md-nav__link">
-    <span class="md-ellipsis">
-      Network Connectivity
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#k8s-analyzer-specific-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      k8s-analyzer Specific Issues
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="k8s-analyzer Specific Issues">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#analysis-errors" class="md-nav__link">
-    <span class="md-ellipsis">
-      Analysis Errors
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#report-generation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Report Generation
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#k8s-reporter-specific-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      k8s-reporter Specific Issues
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="k8s-reporter Specific Issues">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#dashboard-not-loading" class="md-nav__link">
-    <span class="md-ellipsis">
-      Dashboard Not Loading
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#authentication-failures" class="md-nav__link">
-    <span class="md-ellipsis">
-      Authentication Failures
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#logs-and-monitoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      Logs and Monitoring
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Logs and Monitoring">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#accessing-logs" class="md-nav__link">
-    <span class="md-ellipsis">
-      Accessing Logs
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#performance-monitoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      Performance Monitoring
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      Common Commands
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
-    <span class="md-ellipsis">
-      References
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#support" class="md-nav__link">
-    <span class="md-ellipsis">
-      Support
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1913,7 +2021,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../faq/" class="md-nav__link">
+      <a href="../../reference/faq/" class="md-nav__link">
         
   
   
@@ -2084,28 +2192,46 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#general-issues" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
-      General Issues
+      Overview
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="General Issues">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Components
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Components">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#installation-problems" class="md-nav__link">
+  <a href="#storage-utilization" class="md-nav__link">
     <span class="md-ellipsis">
-      Installation Problems
+      Storage Utilization
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#network-connectivity" class="md-nav__link">
+  <a href="#persistent-volumes-pvs-and-claims-pvcs" class="md-nav__link">
     <span class="md-ellipsis">
-      Network Connectivity
+      Persistent Volumes (PVs) and Claims (PVCs)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Analysis
     </span>
   </a>
   
@@ -2117,28 +2243,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#k8s-analyzer-specific-issues" class="md-nav__link">
+  <a href="#storage-classes-analysis" class="md-nav__link">
     <span class="md-ellipsis">
-      k8s-analyzer Specific Issues
+      Storage Classes Analysis
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="k8s-analyzer Specific Issues">
+    <nav class="md-nav" aria-label="Storage Classes Analysis">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#analysis-errors" class="md-nav__link">
+  <a href="#available-storage-classes" class="md-nav__link">
     <span class="md-ellipsis">
-      Analysis Errors
+      Available Storage Classes
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#report-generation" class="md-nav__link">
+  <a href="#optimization-recommendations" class="md-nav__link">
     <span class="md-ellipsis">
-      Report Generation
+      Optimization Recommendations
     </span>
   </a>
   
@@ -2150,28 +2276,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#k8s-reporter-specific-issues" class="md-nav__link">
+  <a href="#volume-lifecycle-management" class="md-nav__link">
     <span class="md-ellipsis">
-      k8s-reporter Specific Issues
+      Volume Lifecycle Management
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="k8s-reporter Specific Issues">
+    <nav class="md-nav" aria-label="Volume Lifecycle Management">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#dashboard-not-loading" class="md-nav__link">
+  <a href="#volume-status-tracking" class="md-nav__link">
     <span class="md-ellipsis">
-      Dashboard Not Loading
+      Volume Status Tracking
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#authentication-failures" class="md-nav__link">
+  <a href="#cleanup-opportunities" class="md-nav__link">
     <span class="md-ellipsis">
-      Authentication Failures
+      Cleanup Opportunities
     </span>
   </a>
   
@@ -2183,31 +2309,64 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#logs-and-monitoring" class="md-nav__link">
+  <a href="#storage-cost-analysis" class="md-nav__link">
     <span class="md-ellipsis">
-      Logs and Monitoring
+      Storage Cost Analysis
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Logs and Monitoring">
+    <nav class="md-nav" aria-label="Storage Cost Analysis">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#accessing-logs" class="md-nav__link">
+  <a href="#cost-breakdown" class="md-nav__link">
     <span class="md-ellipsis">
-      Accessing Logs
+      Cost Breakdown
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
+  <a href="#budget-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Budget Optimization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#performance-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       Performance Monitoring
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Performance Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#io-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      I/O Metrics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bottleneck-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bottleneck Analysis
+    </span>
+  </a>
+  
 </li>
         
       </ul>
@@ -2216,27 +2375,84 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-commands" class="md-nav__link">
+  <a href="#usage-examples" class="md-nav__link">
     <span class="md-ellipsis">
-      Common Commands
+      Usage Examples
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
+  <a href="#monitoring-integration" class="md-nav__link">
     <span class="md-ellipsis">
-      References
+      Monitoring Integration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Monitoring Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prometheus-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prometheus Metrics
     </span>
   </a>
   
 </li>
+        
+          <li class="md-nav__item">
+  <a href="#grafana-dashboards" class="md-nav__link">
+    <span class="md-ellipsis">
+      Grafana Dashboards
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#support" class="md-nav__link">
+  <a href="#maintenance-recommendations" class="md-nav__link">
     <span class="md-ellipsis">
-      Support
+      Maintenance Recommendations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Maintenance Recommendations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#regular-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Regular Tasks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automated-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automated Policies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Views
     </span>
   </a>
   
@@ -2258,7 +2474,7 @@
 
 
   
-    <a href="https://github.com/k8s-tools/k8s-tools/edit/main/docs/reference/troubleshooting.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/k8s-tools/k8s-tools/edit/main/docs/analysis-views/storage-analysis.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -2267,73 +2483,166 @@
     
       
     
-    <a href="https://github.com/k8s-tools/k8s-tools/raw/main/docs/reference/troubleshooting.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/k8s-tools/k8s-tools/raw/main/docs/analysis-views/storage-analysis.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
     </a>
   
 
 
-<h1 id="troubleshooting-guide">🛠️ Troubleshooting Guide</h1>
-<p>This troubleshooting guide provides solutions to common issues encountered while using the k8s-tools suite, including both k8s-analyzer and k8s-reporter.</p>
-<h2 id="general-issues">General Issues</h2>
-<h3 id="installation-problems">Installation Problems</h3>
+<h1 id="storage-analysis">Storage Analysis</h1>
+<p>The Storage Analysis view provides comprehensive insights into your Kubernetes cluster's storage usage, performance, and optimization opportunities.</p>
+<h2 id="overview">Overview</h2>
+<p>This analysis covers:</p>
 <ul>
-<li><strong>Problem</strong>: Installation fails with permission errors.</li>
-<li><strong>Solution</strong>: Ensure you have the necessary permissions to install software. Try running the installation command with <code>sudo</code>.</li>
+<li><strong>Storage Utilization</strong>: Volume usage across the cluster</li>
+<li><strong>Performance Metrics</strong>: I/O patterns and bottlenecks</li>
+<li><strong>Storage Classes</strong>: Usage and optimization recommendations</li>
+<li><strong>Persistent Volume Claims</strong>: Allocation and efficiency</li>
+<li><strong>Cost Analysis</strong>: Storage costs and optimization opportunities</li>
 </ul>
-<h3 id="network-connectivity">Network Connectivity</h3>
+<h2 id="key-components">Key Components</h2>
+<h3 id="storage-utilization">Storage Utilization</h3>
 <ul>
-<li><strong>Problem</strong>: Unable to connect to the cluster API.</li>
-<li><strong>Solution</strong>: Verify your kubeconfig file and ensure the correct context is set. Check network policies and firewall settings.</li>
+<li>Total storage capacity and usage</li>
+<li>Per-namespace storage consumption</li>
+<li>Volume usage trends over time</li>
+<li>Storage growth projections</li>
 </ul>
-<h2 id="k8s-analyzer-specific-issues">k8s-analyzer Specific Issues</h2>
-<h3 id="analysis-errors">Analysis Errors</h3>
+<h3 id="persistent-volumes-pvs-and-claims-pvcs">Persistent Volumes (PVs) and Claims (PVCs)</h3>
 <ul>
-<li><strong>Problem</strong>: Analysis fails with "Resource not found" errors.</li>
-<li><strong>Solution</strong>: Verify the existence of resources and check your access permissions. Refresh the resource cache.</li>
+<li>PV/PVC pairing and status</li>
+<li>Unused or orphaned volumes</li>
+<li>Reclaim policy analysis</li>
+<li>Storage class distribution</li>
 </ul>
-<h3 id="report-generation">Report Generation</h3>
+<h3 id="performance-analysis">Performance Analysis</h3>
 <ul>
-<li><strong>Problem</strong>: Report generation fails or output is empty.</li>
-<li><strong>Solution</strong>: Ensure that the analysis phase completed successfully. Verify that the output directory is writable.</li>
+<li>I/O throughput metrics</li>
+<li>Latency measurements</li>
+<li>Storage bottleneck identification</li>
+<li>Performance per storage class</li>
 </ul>
-<h2 id="k8s-reporter-specific-issues">k8s-reporter Specific Issues</h2>
-<h3 id="dashboard-not-loading">Dashboard Not Loading</h3>
+<h2 id="storage-classes-analysis">Storage Classes Analysis</h2>
+<h3 id="available-storage-classes">Available Storage Classes</h3>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Example storage class analysis output</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">List</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">items</span><span class="p">:</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fast-ssd</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="nt">provisioner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubernetes.io/aws-ebs</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nt">usage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">45%</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="nt">cost_per_gb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$0.20</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="nt">performance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">high</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span><span class="nt">recommended_for</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">databases</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">high-iops-workloads</span><span class="p p-Indicator">]</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">standard</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="nt">provisioner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubernetes.io/aws-ebs</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span><span class="nt">usage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">78%</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="nt">cost_per_gb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$0.10</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span><span class="nt">performance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">medium</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span><span class="nt">recommended_for</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">general-workloads</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">development</span><span class="p p-Indicator">]</span>
+</span></code></pre></div>
+<h3 id="optimization-recommendations">Optimization Recommendations</h3>
 <ul>
-<li><strong>Problem</strong>: The dashboard doesn't load in the browser.</li>
-<li><strong>Solution</strong>: Confirm that the service is running. Check the server logs for errors. Verify network and firewall settings.</li>
+<li>Right-sizing volume requests</li>
+<li>Storage class migration suggestions</li>
+<li>Unused volume cleanup</li>
+<li>Cost-performance optimization</li>
 </ul>
-<h3 id="authentication-failures">Authentication Failures</h3>
+<h2 id="volume-lifecycle-management">Volume Lifecycle Management</h2>
+<h3 id="volume-status-tracking">Volume Status Tracking</h3>
 <ul>
-<li><strong>Problem</strong>: Cannot log in to the dashboard with provided credentials.</li>
-<li><strong>Solution</strong>: Check the authentication settings in your configuration file. Reset credentials if necessary.</li>
+<li><strong>Bound</strong>: Volumes successfully claimed</li>
+<li><strong>Available</strong>: Unbound volumes ready for use</li>
+<li><strong>Released</strong>: Volumes released but not reclaimed</li>
+<li><strong>Failed</strong>: Volumes in error state</li>
 </ul>
-<h2 id="logs-and-monitoring">Logs and Monitoring</h2>
-<h3 id="accessing-logs">Accessing Logs</h3>
+<h3 id="cleanup-opportunities">Cleanup Opportunities</h3>
 <ul>
-<li><strong>Problem</strong>: Difficulty accessing logs for debugging.</li>
-<li><strong>Solution</strong>: Ensure logging is enabled and logs are being written to the correct location. Use <code>kubectl logs</code> for pod logs.</li>
+<li>Orphaned PVs without PVCs</li>
+<li>Released volumes pending cleanup</li>
+<li>Over-provisioned storage requests</li>
+<li>Unused volumes in development environments</li>
 </ul>
-<h3 id="performance-monitoring">Performance Monitoring</h3>
+<h2 id="storage-cost-analysis">Storage Cost Analysis</h2>
+<h3 id="cost-breakdown">Cost Breakdown</h3>
 <ul>
-<li><strong>Problem</strong>: Performance degradation over time.</li>
-<li><strong>Solution</strong>: Monitor resource usage and optimize configurations. Consider scaling resources or using more powerful nodes.</li>
+<li>Storage costs by namespace</li>
+<li>Storage class cost comparison</li>
+<li>Growth-based cost projections</li>
+<li>Waste identification and potential savings</li>
 </ul>
-<h2 id="common-commands">Common Commands</h2>
+<h3 id="budget-optimization">Budget Optimization</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Generate storage cost report</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>k8s-analyzer<span class="w"> </span>analyze<span class="w"> </span>--view<span class="w"> </span>storage-analysis<span class="w"> </span>--cost-report
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Identify optimization opportunities</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>k8s-analyzer<span class="w"> </span>optimize<span class="w"> </span>--storage<span class="w"> </span>--savings-report
+</span></code></pre></div>
+<h2 id="performance-monitoring">Performance Monitoring</h2>
+<h3 id="io-metrics">I/O Metrics</h3>
 <ul>
-<li>Restart dashboard service: <code>systemctl restart k8s-reporter</code></li>
-<li>Check service status: <code>systemctl status k8s-reporter</code></li>
-<li>View logs: <code>tail -f /var/log/k8s-tools.log</code></li>
+<li>Read/write IOPS</li>
+<li>Throughput measurements</li>
+<li>Queue depths and wait times</li>
+<li>Storage latency percentiles</li>
 </ul>
-<h2 id="references">References</h2>
+<h3 id="bottleneck-analysis">Bottleneck Analysis</h3>
 <ul>
-<li><a href="https://kubernetes.io/docs/reference/access-authn-authz/">Kubernetes API Access Control</a></li>
-<li><a href="https://kubernetes.io/docs/reference/kubectl/cheatsheet/">Kubectl Command Cheat Sheet</a></li>
+<li>High I/O wait workloads</li>
+<li>Storage-constrained applications</li>
+<li>Network storage performance issues</li>
+<li>Node-local vs. remote storage performance</li>
 </ul>
-<h2 id="support">Support</h2>
+<h2 id="usage-examples">Usage Examples</h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Comprehensive storage analysis</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>k8s-analyzer<span class="w"> </span>analyze<span class="w"> </span>--view<span class="w"> </span>storage-analysis
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Focus on specific namespace</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>k8s-analyzer<span class="w"> </span>analyze<span class="w"> </span>--view<span class="w"> </span>storage-analysis<span class="w"> </span>--namespace<span class="w"> </span>production
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Performance-focused analysis</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>k8s-analyzer<span class="w"> </span>analyze<span class="w"> </span>--view<span class="w"> </span>storage-analysis<span class="w"> </span>--metrics<span class="w"> </span>io-performance
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Generate cleanup recommendations</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>k8s-analyzer<span class="w"> </span>storage<span class="w"> </span>cleanup<span class="w"> </span>--dry-run
+</span></code></pre></div>
+<h2 id="monitoring-integration">Monitoring Integration</h2>
+<h3 id="prometheus-metrics">Prometheus Metrics</h3>
+<div class="language-promql highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Storage utilization query examples</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">kubelet_volume_stats_used_bytes</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nv">kubelet_volume_stats_capacity_bytes</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># PVC usage by namespace</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">sum</span><span class="o">(</span><span class="nv">kubelet_volume_stats_used_bytes</span><span class="o">)</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">namespace</span><span class="p">,</span><span class="w"> </span><span class="nv">persistentvolumeclaim</span><span class="o">)</span>
+</span></code></pre></div>
+<h3 id="grafana-dashboards">Grafana Dashboards</h3>
 <ul>
-<li>For further assistance, refer to the official documentation or reach out to the community forums and support channels.</li>
+<li>Storage utilization trends</li>
+<li>PV/PVC status overview</li>
+<li>Performance metrics visualization</li>
+<li>Cost tracking dashboards</li>
+</ul>
+<h2 id="maintenance-recommendations">Maintenance Recommendations</h2>
+<h3 id="regular-tasks">Regular Tasks</h3>
+<ol>
+<li><strong>Volume Cleanup</strong>: Remove unused PVs and PVCs</li>
+<li><strong>Capacity Planning</strong>: Monitor growth trends</li>
+<li><strong>Performance Tuning</strong>: Optimize storage classes</li>
+<li><strong>Cost Optimization</strong>: Right-size storage requests</li>
+</ol>
+<h3 id="automated-policies">Automated Policies</h3>
+<ul>
+<li>PVC expansion policies</li>
+<li>Automated cleanup schedules</li>
+<li>Storage quota management</li>
+<li>Performance-based auto-scaling</li>
+</ul>
+<h2 id="related-views">Related Views</h2>
+<ul>
+<li><a href="../resource-efficiency/">Resource Efficiency</a></li>
+<li><a href="../cluster-overview/">Cluster Overview</a></li>
+<li><a href="../temporal-analysis/">Temporal Analysis</a></li>
 </ul>
 
 
@@ -2357,7 +2666,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 26, 2025 07:39:04 UTC">June 26, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 19, 2025 07:36:52 UTC">July 19, 2025</span>
   </span>
 
     
@@ -2367,7 +2676,7 @@
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 26, 2025 07:39:04 UTC">June 26, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 19, 2025 07:36:52 UTC">July 19, 2025</span>
   </span>
 
     

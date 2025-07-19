@@ -13,7 +13,39 @@
          <lastmod>2025-07-19</lastmod>
     </url>
     <url>
+         <loc>https://k8s-tools.github.io/k8s-tools/analysis-views/cluster-overview/</loc>
+         <lastmod>2025-07-19</lastmod>
+    </url>
+    <url>
+         <loc>https://k8s-tools.github.io/k8s-tools/analysis-views/health-dashboard/</loc>
+         <lastmod>2025-07-19</lastmod>
+    </url>
+    <url>
+         <loc>https://k8s-tools.github.io/k8s-tools/analysis-views/namespace-analysis/</loc>
+         <lastmod>2025-07-19</lastmod>
+    </url>
+    <url>
          <loc>https://k8s-tools.github.io/k8s-tools/analysis-views/overview/</loc>
+         <lastmod>2025-07-19</lastmod>
+    </url>
+    <url>
+         <loc>https://k8s-tools.github.io/k8s-tools/analysis-views/relationship-analysis/</loc>
+         <lastmod>2025-07-19</lastmod>
+    </url>
+    <url>
+         <loc>https://k8s-tools.github.io/k8s-tools/analysis-views/resource-efficiency/</loc>
+         <lastmod>2025-07-19</lastmod>
+    </url>
+    <url>
+         <loc>https://k8s-tools.github.io/k8s-tools/analysis-views/security-analysis/</loc>
+         <lastmod>2025-07-19</lastmod>
+    </url>
+    <url>
+         <loc>https://k8s-tools.github.io/k8s-tools/analysis-views/storage-analysis/</loc>
+         <lastmod>2025-07-19</lastmod>
+    </url>
+    <url>
+         <loc>https://k8s-tools.github.io/k8s-tools/analysis-views/temporal-analysis/</loc>
          <lastmod>2025-07-19</lastmod>
     </url>
     <url>
