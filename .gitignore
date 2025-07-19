@@ -75,3 +75,7 @@ logs/
 *.tmp
 *.temp
 .cache/
+
+# MkDocs
+site/
+.mkdocs_cache/
