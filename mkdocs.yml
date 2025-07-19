@@ -147,6 +147,6 @@ nav:
     - Troubleshooting: reference/troubleshooting.md
     - FAQ: reference/faq.md
   - About:
-    - Changelog: ../CHANGELOG.md
+    - Changelog: CHANGELOG.md
     - License: ../LICENSE
     - Contributing: ../CONTRIBUTING.md
