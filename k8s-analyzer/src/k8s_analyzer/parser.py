@@ -48,6 +48,7 @@ class ResourceParser:
         self.parsed_count = 0
         self.error_count = 0
         self.skipped_count = 0
+        self.skipped_kinds = {}  # Track counts of skipped kinds
     
     def parse_file(self, file_path: Union[str, Path]) -> ClusterState:
         """Parse a kubectl export file and return cluster state."""
@@ -77,6 +78,7 @@ class ResourceParser:
         cluster_state = ClusterState()
         total_files = len(file_paths)
         
+        # We'll use a single parser instance to accumulate all stats
         for i, file_path in enumerate(file_paths, 1):
             try:
                 logger.info(f"Processing file {i}/{total_files}: {Path(file_path).name}")
@@ -176,6 +178,8 @@ class ResourceParser:
             if kind not in self.SUPPORTED_KINDS:
                 logger.debug(f"Unsupported resource kind: {kind}, skipping")
                 self.skipped_count += 1
+                # Track the specific kind that was skipped
+                self.skipped_kinds[kind] = self.skipped_kinds.get(kind, 0) + 1
                 return None
             
             # Parse metadata
@@ -253,12 +257,13 @@ class ResourceParser:
         
         return class_mapping.get(kind, KubernetesResource)
     
-    def get_parse_stats(self) -> Dict[str, int]:
+    def get_parse_stats(self) -> Dict[str, Any]:
         """Get parsing statistics."""
         return {
             "parsed": self.parsed_count,
             "errors": self.error_count,
             "skipped": self.skipped_count,
+            "skipped_kinds": self.skipped_kinds.copy(),
             "total": self.parsed_count + self.error_count + self.skipped_count,
         }
 
@@ -358,6 +363,10 @@ def discover_and_parse(
     
     stats = parser.get_parse_stats()
     logger.info(f"Directory parsing complete: {stats}")
+    logger.debug(f"Skipped kinds detailed: {stats.get('skipped_kinds', {})}")
+    
+    # Store parser stats in cluster state for display purposes
+    cluster_state.cluster_info["parse_stats"] = stats
     
     return cluster_state
 
@@ -386,5 +395,8 @@ def parse_kubectl_export(
     
     stats = parser.get_parse_stats()
     logger.info(f"Parsing complete: {stats}")
+    
+    # Store parser stats in cluster state for display purposes
+    cluster_state.cluster_info["parse_stats"] = stats
     
     return cluster_state

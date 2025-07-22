@@ -643,6 +643,7 @@ def export_csv(
 def _display_parse_results(cluster_state: ClusterState) -> None:
     """Display parsing results."""
     summary = cluster_state.summary
+    parse_stats = cluster_state.cluster_info.get("parse_stats", {})
     
     # Create summary table
     table = Table(title="Parse Results", show_header=True, header_style="bold magenta")
@@ -652,17 +653,46 @@ def _display_parse_results(cluster_state: ClusterState) -> None:
     table.add_row("Total Resources", str(summary.get("total_resources", 0)))
     table.add_row("Namespaces", str(len(summary.get("namespaces", {}))))
     
+    # Add parsing statistics
+    if parse_stats:
+        table.add_row("Parsed Successfully", str(parse_stats.get("parsed", 0)))
+        if parse_stats.get("skipped", 0) > 0:
+            table.add_row("Skipped Resources", f"[yellow]{parse_stats.get('skipped', 0)}[/yellow]")
+        if parse_stats.get("errors", 0) > 0:
+            table.add_row("Parse Errors", f"[red]{parse_stats.get('errors', 0)}[/red]")
+    
     # Add resource type breakdown
     resource_types = summary.get("resource_types", {})
     for resource_type, count in sorted(resource_types.items()):
         table.add_row(f"  {resource_type}", str(count))
     
     console.print(table)
+    
+    # Display skipped kinds if any
+    skipped_kinds = parse_stats.get("skipped_kinds", {})
+    if skipped_kinds:
+        skipped_table = Table(title="Skipped Kubernetes Kinds", show_header=True, header_style="bold yellow")
+        skipped_table.add_column("Kind", style="cyan")
+        skipped_table.add_column("Count", justify="right", style="yellow")
+        skipped_table.add_column("Reason", style="dim")
+        
+        for kind, count in sorted(skipped_kinds.items()):
+            skipped_table.add_row(kind, str(count), "Unsupported resource type")
+        
+        console.print(skipped_table)
 
 
 def _display_analysis_results(cluster_state: ClusterState) -> None:
     """Display analysis results."""
     summary = cluster_state.summary
+    parse_stats = cluster_state.cluster_info.get("parse_stats", {})
+    
+    # Debug: Print parse_stats to console
+    if parse_stats:
+        logger.debug(f"Parse stats found: {parse_stats}")
+        # Force output of skipped kinds if any
+        skipped_kinds = parse_stats.get("skipped_kinds", {})
+        logger.info(f"DEBUG: Skipped kinds from parse_stats: {skipped_kinds}")
     
     # Summary table
     table = Table(title="Analysis Results", show_header=True, header_style="bold magenta")
@@ -672,6 +702,14 @@ def _display_analysis_results(cluster_state: ClusterState) -> None:
     table.add_row("Total Resources", str(summary.get("total_resources", 0)))
     table.add_row("Total Relationships", str(summary.get("total_relationships", 0)))
     table.add_row("Namespaces", str(len(summary.get("namespaces", {}))))
+    
+    # Add parsing statistics
+    if parse_stats:
+        table.add_row("Parsed Successfully", str(parse_stats.get("parsed", 0)))
+        if parse_stats.get("skipped", 0) > 0:
+            table.add_row("Skipped Resources", f"[yellow]{parse_stats.get('skipped', 0)}[/yellow]")
+        if parse_stats.get("errors", 0) > 0:
+            table.add_row("Parse Errors", f"[red]{parse_stats.get('errors', 0)}[/red]")
     
     console.print(table)
     
@@ -694,6 +732,20 @@ def _display_analysis_results(cluster_state: ClusterState) -> None:
         health_table.add_row(status.title(), f"[{style}]{count}[/{style}]")
     
     console.print(health_table)
+    
+    # Display skipped kinds if any
+    skipped_kinds = parse_stats.get("skipped_kinds", {})
+    if skipped_kinds:
+        console.print()  # Add spacing
+        skipped_table = Table(title="Skipped Kubernetes Kinds", show_header=True, header_style="bold yellow")
+        skipped_table.add_column("Kind", style="cyan")
+        skipped_table.add_column("Count", justify="right", style="yellow")
+        skipped_table.add_column("Reason", style="dim")
+        
+        for kind, count in sorted(skipped_kinds.items()):
+            skipped_table.add_row(kind, str(count), "Unsupported resource type")
+        
+        console.print(skipped_table)
 
 
 def _display_relationship_graph(
