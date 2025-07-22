@@ -4,9 +4,15 @@ CLI interface for Kubernetes Resource Analyzer.
 
 import json
 import logging
+import re
+import subprocess
+import tempfile
+import urllib.request
+import urllib.error
 from datetime import datetime
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Dict, Set
+from .__version__ import __version__
 
 import typer
 from rich.console import Console
@@ -23,8 +29,35 @@ from .sqlite_exporter import SQLiteExporter, export_cluster_to_sqlite
 app = typer.Typer(
     name="k8s-analyzer",
     help="Kubernetes Resource Analyzer - Analyze kubectl exports and build resource relationships",
-    no_args_is_help=True,
+    rich_markup_mode="rich",
+    pretty_exceptions_enable=False,
+    add_completion=False
 )
+
+def version_callback(value: bool):
+    """Callback to show version and exit."""
+    if value:
+        console = Console()
+        console.print(f"[bold green]k8s-analyzer version {__version__}[/bold green]")
+        raise typer.Exit()
+
+@app.callback(invoke_without_command=True)
+def main(
+    ctx: typer.Context,
+    version: Optional[bool] = typer.Option(
+        None,
+        "--version",
+        callback=version_callback,
+        help="Show the application's version and exit",
+        is_eager=True
+    )
+):
+    """Kubernetes Resource Analyzer - Main CLI entry point."""
+    # If no subcommand was invoked, show help and exit
+    if ctx.invoked_subcommand is None:
+        console.print(ctx.get_help())
+        raise typer.Exit()
+
 console = Console()
 
 # Configure logging
@@ -35,6 +68,102 @@ logging.basicConfig(
     handlers=[RichHandler(console=console, rich_tracebacks=True)],
 )
 logger = logging.getLogger(__name__)
+
+
+def fetch_kinds_from_kubernetes_api(version: str) -> Set[str]:
+    """Fetch Kubernetes resource kinds from the official API documentation."""
+    kinds = set()
+    
+    # Clean up version format
+    version_clean = version.lstrip('v')
+    if version_clean.startswith('release-'):
+        version_clean = version_clean.replace('release-', '')
+    
+    # Map version format for the API documentation URL
+    # The API docs use format like "v1.31" for their URLs
+    version_parts = version_clean.split('.')
+    if len(version_parts) >= 2:
+        api_version = f"v{version_parts[0]}.{version_parts[1]}"
+    else:
+        api_version = f"v{version_clean}"
+    
+    console.print(f"[dim]Fetching from Kubernetes API documentation for {api_version}...[/dim]")
+    
+    # URLs to scrape for resource kinds
+    api_urls = [
+        f"https://kubernetes.io/docs/reference/kubernetes-api/",  # Main API reference
+        f"https://kubernetes.io/docs/reference/kubernetes-api/service-resources/",
+        f"https://kubernetes.io/docs/reference/kubernetes-api/authentication-resources/",
+        f"https://kubernetes.io/docs/reference/kubernetes-api/authorization-resources/",
+        f"https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/",
+        f"https://kubernetes.io/docs/reference/kubernetes-api/extend-resources/",
+        f"https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/", 
+    ]
+    
+    for url in api_urls:
+        try:
+            console.print(f"[dim]Fetching: {url}[/dim]")
+            
+            # Set up the request with a user agent
+            req = urllib.request.Request(
+                url,
+                headers={'User-Agent': 'k8s-analyzer/1.0 (https://github.com/your-repo)'}
+            )
+            
+            with urllib.request.urlopen(req, timeout=10) as response:
+                html_content = response.read().decode('utf-8')
+                
+                # Parse HTML to extract resource kinds
+                # Look for patterns like "kind: ResourceName" in the documentation
+                kind_patterns = [
+                    r'"kind":\s*"([A-Z][a-zA-Z0-9]+)"',  # JSON format
+                    r'kind:\s*([A-Z][a-zA-Z0-9]+)',      # YAML format
+                    r'<code>kind:\s*([A-Z][a-zA-Z0-9]+)</code>',  # HTML code blocks
+                    r'apiVersion.*?kind:\s*([A-Z][a-zA-Z0-9]+)',  # Mixed format
+                    r'"([A-Z][a-zA-Z0-9]+)" \(kind\)',   # Description format
+                    r'<h[1-6][^>]*>([A-Z][a-zA-Z0-9]+)</h[1-6]>',  # Headers
+                ]
+                
+                for pattern in kind_patterns:
+                    matches = re.finditer(pattern, html_content, re.MULTILINE | re.IGNORECASE)
+                    for match in matches:
+                        kind = match.group(1)
+                        # Filter out common false positives
+                        if (
+                            len(kind) > 1 and 
+                            kind.isalpha() and
+                            kind[0].isupper() and
+                            kind not in {'Http', 'Pod', 'Api', 'Yaml', 'Json', 'Html', 'Xml', 'String', 'Boolean', 'Integer', 'Object', 'Array'} and
+                            not kind.lower() in {'version', 'metadata', 'spec', 'status', 'data', 'type', 'name', 'namespace'}
+                        ):
+                            kinds.add(kind)
+                            
+        except urllib.error.URLError as e:
+            console.print(f"[dim]Warning: Could not fetch {url}: {e}[/dim]")
+            continue
+        except Exception as e:
+            console.print(f"[dim]Warning: Error processing {url}: {e}[/dim]")
+            continue
+    
+    # Add some well-known resource kinds that might not be captured by scraping
+    well_known_kinds = {
+        'Pod', 'Service', 'Deployment', 'ReplicaSet', 'StatefulSet', 'DaemonSet', 
+        'Job', 'CronJob', 'ConfigMap', 'Secret', 'PersistentVolume', 'PersistentVolumeClaim',
+        'Namespace', 'Node', 'ServiceAccount', 'Role', 'RoleBinding', 'ClusterRole', 'ClusterRoleBinding',
+        'Ingress', 'NetworkPolicy', 'PodSecurityPolicy', 'ResourceQuota', 'LimitRange',
+        'HorizontalPodAutoscaler', 'VerticalPodAutoscaler', 'PodDisruptionBudget',
+        'CustomResourceDefinition', 'Event', 'Endpoints', 'EndpointSlice',
+        'StorageClass', 'VolumeAttachment', 'CSIDriver', 'CSINode', 'CSIStorageCapacity',
+        'IngressClass', 'RuntimeClass', 'PodTemplate', 'ReplicationController',
+        'ComponentStatus', 'Certificate', 'CertificateSigningRequest', 'Lease',
+        'PriorityClass', 'TokenReview', 'SubjectAccessReview', 'SelfSubjectAccessReview',
+        'LocalSubjectAccessReview', 'SelfSubjectRulesReview', 'ValidatingAdmissionWebhook',
+        'MutatingAdmissionWebhook', 'FlowSchema', 'PriorityLevelConfiguration'
+    }
+    
+    kinds.update(well_known_kinds)
+    
+    return kinds
 
 
 @app.command()
@@ -342,6 +471,61 @@ def list_files(
         
     except Exception as e:
         console.print(f"[red]Error listing files:[/red] {e}")
+        raise typer.Exit(1)
+
+
+@app.command(name="get-supported-kinds")
+def get_supported_kinds(
+    version: Optional[str] = typer.Argument(None, help="Kubernetes version (e.g., v1.31.0, release-1.31)"),
+    list_available: bool = typer.Option(False, "--list-available", "-l", help="List all available Kubernetes versions/tags"),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose logging"),
+) -> None:
+    """Fetch Kubernetes resource kinds for a specified version or list available versions."""
+    
+    if verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+    
+    if list_available:
+        _list_available_kubernetes_versions()
+        return
+    
+    if not version:
+        console.print("[red]Error: Version is required when not using --list-available[/red]")
+        console.print("[dim]Use --list-available to see available versions[/dim]")
+        raise typer.Exit(1)
+    
+    console.print(f"[bold blue]Fetching Kubernetes kinds for version:[/bold blue] {version}")
+
+    try:
+        kinds = fetch_kinds_from_kubernetes_api(version)
+        if not kinds:
+            console.print(f"[yellow]Warning: No resource kinds found for version {version}[/yellow]")
+            return
+
+        # Print the resource kinds
+        console.print(f"[bold green]Found {len(kinds)} Supported Resource Kinds for {version}:[/bold green]")
+        
+        # Get supported kinds from parser for comparison
+        from .parser import ResourceParser
+        analyzer_supported_kinds = ResourceParser.SUPPORTED_KINDS
+        
+        # Display in a nice table format
+        table = Table(title=f"Kubernetes Resource Kinds - {version}", show_header=True, header_style="bold magenta")
+        table.add_column("#", style="dim", width=4)
+        table.add_column("Kind", style="cyan")
+        table.add_column("Supported by k8s-analyzer", style="green", justify="center")
+        
+        for i, kind in enumerate(sorted(kinds), 1):
+            # Check if kind is supported by k8s-analyzer
+            is_supported = kind in analyzer_supported_kinds
+            support_status = "[green]✓[/green]" if is_supported else "[red]✗[/red]"
+            
+            table.add_row(str(i), kind, support_status)
+        
+        console.print(table)
+
+    except Exception as e:
+        console.print(f"[red]Error fetching kinds: {e}[/red]")
         raise typer.Exit(1)
 
 
@@ -826,6 +1010,114 @@ def _save_cluster_state(cluster_state: ClusterState, output_path: str) -> None:
     
     with output_file.open("w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, default=str)
+
+
+def _list_available_kubernetes_versions() -> None:
+    """List available Kubernetes versions/tags from the GitHub repository."""
+    console.print("[bold blue]Fetching available Kubernetes versions...[/bold blue]")
+    
+    try:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_url = "https://github.com/kubernetes/kubernetes.git"
+            target_dir = Path(tmpdir) / "kubernetes"
+            
+            # Initialize repository and fetch tags
+            console.print("[dim]Initializing Git repository...[/dim]")
+            subprocess.run(["git", "init", str(target_dir)], check=True, capture_output=True)
+            subprocess.run(["git", "-C", str(target_dir), "remote", "add", "origin", repo_url], check=True, capture_output=True)
+            
+            console.print("[dim]Fetching tags and branches...[/dim]")
+            # Fetch tags and branches
+            subprocess.run(["git", "-C", str(target_dir), "fetch", "origin", "--tags"], check=True, capture_output=True)
+            subprocess.run(["git", "-C", str(target_dir), "fetch", "origin"], check=True, capture_output=True)
+            
+            # Get tags (releases)
+            tags_result = subprocess.run(
+                ["git", "-C", str(target_dir), "tag", "-l", "v*"], 
+                check=True, capture_output=True, text=True
+            )
+            
+            # Get release branches
+            branches_result = subprocess.run(
+                ["git", "-C", str(target_dir), "branch", "-r", "--list", "origin/release-*"], 
+                check=True, capture_output=True, text=True
+            )
+            
+            # Parse and sort tags
+            tags = [tag.strip() for tag in tags_result.stdout.split('\n') if tag.strip()]
+            # Filter out non-standard tags and sort by version
+            version_tags = []
+            for tag in tags:
+                # Match standard version tags like v1.30.5, v1.31.0-beta.1, etc.
+                if re.match(r'^v\d+\.\d+\.\d+', tag):
+                    version_tags.append(tag)
+            
+            # Sort tags by version number (descending)
+            def version_key(tag):
+                # Extract version numbers for sorting
+                match = re.match(r'^v(\d+)\.(\d+)\.(\d+)', tag)
+                if match:
+                    return (int(match.group(1)), int(match.group(2)), int(match.group(3)))
+                return (0, 0, 0)
+            
+            version_tags.sort(key=version_key, reverse=True)
+            
+            # Parse and sort branches
+            branches = []
+            for branch in branches_result.stdout.split('\n'):
+                branch = branch.strip()
+                if 'origin/release-' in branch:
+                    # Extract just the release-X.Y part
+                    release_branch = branch.replace('origin/', '')
+                    branches.append(release_branch)
+            
+            branches.sort(reverse=True)
+            
+            # Display results in tables
+            if version_tags:
+                console.print("[bold green]Recent Release Tags (last 15):[/bold green]")
+                tags_table = Table(title="Kubernetes Release Tags", show_header=True, header_style="bold magenta")
+                tags_table.add_column("#", style="dim", width=4)
+                tags_table.add_column("Version Tag", style="cyan")
+                tags_table.add_column("Type", style="green")
+                
+                for i, tag in enumerate(version_tags[:15], 1):
+                    tag_type = "Stable"
+                    if "alpha" in tag:
+                        tag_type = "Alpha"
+                    elif "beta" in tag:
+                        tag_type = "Beta"
+                    elif "rc" in tag:
+                        tag_type = "Release Candidate"
+                    
+                    tags_table.add_row(str(i), tag, tag_type)
+                
+                console.print(tags_table)
+            
+            if branches:
+                console.print("\n[bold green]Release Branches:[/bold green]")
+                branches_table = Table(title="Kubernetes Release Branches", show_header=True, header_style="bold magenta")
+                branches_table.add_column("#", style="dim", width=4)
+                branches_table.add_column("Branch", style="cyan")
+                branches_table.add_column("Status", style="yellow")
+                
+                for i, branch in enumerate(branches[:10], 1):
+                    branches_table.add_row(str(i), branch, "Active Development")
+                
+                console.print(branches_table)
+            
+            console.print("\n[dim]Usage examples:[/dim]")
+            console.print("[dim]  k8s-analyzer get-supported-kinds v1.31.0[/dim]")
+            console.print("[dim]  k8s-analyzer get-supported-kinds release-1.31[/dim]")
+            console.print("[dim]  k8s-analyzer get-supported-kinds v1.30.5[/dim]")
+            
+    except subprocess.CalledProcessError as e:
+        console.print(f"[red]Failed to fetch versions: {e}[/red]")
+        console.print("[yellow]You can still try common version formats like v1.31.0, release-1.31[/yellow]")
+        raise typer.Exit(1)
+    except Exception as e:
+        console.print(f"[red]Error listing versions: {e}[/red]")
+        raise typer.Exit(1)
 
 
 def _generate_html_report(cluster_state: ClusterState, output_path: str) -> None:
